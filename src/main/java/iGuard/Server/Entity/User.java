@@ -31,6 +31,9 @@ public class User {
     @Column(name = "longitude")
     private Float longitude;
 
+    @Column(name = "phone_number")
+    private String phone_number;
+
     @Column(name = "address", length = 100)
     private String address;
 
