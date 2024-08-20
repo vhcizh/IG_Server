@@ -21,6 +21,9 @@ public class Shelter {
     @Column(name = "longitude")
     private Float longitude;
 
+    @Column(name = "phone_number")
+    private String phone_number;
+
     @Column(name = "capacity")
     private Integer capacity;
 
