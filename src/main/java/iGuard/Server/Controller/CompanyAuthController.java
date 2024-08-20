@@ -24,25 +24,20 @@ public class CompanyAuthController {
     public String register(@RequestParam String email, Model model) {
         String code = emailService.generateVerificationCode();
         emailService.sendVerificationEmail(email, code);
-        model.addAttribute("message", "인증메일이 보내졌습니다.");
-        return "company_register";
+        model.addAttribute("email", email); // 이메일 주소를 뷰로 전달
+        model.addAttribute("message", "인증메일이 보내졌습니다. 아래에 인증코드를 입력해 주세요.");
+        return "verify"; // 인증 코드 입력 페이지로 이동
     }
 
-    // 인증 폼 표시
-    @GetMapping("/verify")
-    public String showVerifyForm() {
-        return "verify";
-    }
-
+    // 인증 코드 검증
     @PostMapping("/verify")
     public String verify(@RequestParam String email, @RequestParam String code, Model model) {
         boolean isValid = emailService.verifyCode(email, code);
         if (isValid) {
-            System.out.println("인증되었습니다");
             model.addAttribute("message", "성공적으로 인증되었습니다.");
         } else {
             model.addAttribute("message", "유효하지 않습니다.");
         }
-        return "verify";
+        return "verify"; // 인증 결과를 표시할 페이지
     }
 }
