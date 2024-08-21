@@ -3,6 +3,8 @@ package iGuard.Server.Service.auth;
 import iGuard.Server.Dto.UserRequest;
 import iGuard.Server.Dto.UserResponse;
 
+import java.util.Optional;
+
 public interface UserService {
 
     // 회원가입
