@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -20,19 +21,16 @@ public class User {
 
     @Column(name = "age")
     @Temporal(TemporalType.DATE)
-    private Date age;
+    private LocalDate age;
 
-    @Column(name = "latitude")
-    private Float latitude;
-    
     @Column(name ="accepted" ) //동의 여부
     private boolean accepted;
 
-    @Column(name = "longitude")
-    private Float longitude;
-
     @Column(name = "address", length = 100)
     private String address;
+
+    @Column(name = "phone_number", length = 14)
+    private String phone_number;
 
     @Column(name = "id", length = 50)
     private String id;
