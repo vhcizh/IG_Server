@@ -15,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userid;
@@ -23,19 +24,19 @@ public class User {
     @Temporal(TemporalType.DATE)
     private LocalDate age;
 
-    @Column(name ="accepted" ) //동의 여부
+    @Column(name ="accepted", nullable = false) //동의 여부
     private boolean accepted;
 
     @Column(name = "address", length = 100)
     private String address;
 
-    @Column(name = "phone_number", length = 14)
+    @Column(name = "phone_number", length = 14, unique = true, nullable = false)
     private String phone_number;
 
-    @Column(name = "id", length = 50)
+    @Column(name = "id", length = 50, unique = true, nullable = false)
     private String id;
 
-    @Column(name = "password", length = 50)
+    @Column(name = "password", length = 60)
     private String password;
 
     @OneToMany(mappedBy = "user")
