@@ -1,6 +1,7 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Dto.UserRequest;
+import iGuard.Server.Dto.UserResponse;
 import iGuard.Server.Service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -8,19 +9,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
+    // 회원가입 페이지
     @GetMapping("/join")
     public String joinPage(Model model) {
         model.addAttribute("userRequest", new UserRequest());
         return "join"; // join.html로 이동
     }
 
-    // 회원 가입 처리 메서드
+    // 회원가입 처리
     @PostMapping("/join")
     public String join(@ModelAttribute UserRequest userRequest, RedirectAttributes redirectAttributes) {
         userService.registerUser(userRequest);
@@ -28,10 +32,24 @@ public class UserController {
         return "redirect:home"; // 리다이렉트 경로 수정
     }
 
-    // 홈 페이지 표시 메서드
+    // 로그인 페이지
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // home.html로 이동
+        return "login";
     }
+
+    // 마이 페이지
+    @GetMapping("/mypage")
+    public String mypage() {
+        return "mypage";
+    }
+
+    // 내 정보 페이지
+    @GetMapping("/mypage/me")
+    public String myInfoPage(Model model) {
+        model.addAttribute("user", userService.getUser());
+        return "myInfo"; // 사용자 정보를 보여줄 뷰 이름
+    }
+
 
 }
