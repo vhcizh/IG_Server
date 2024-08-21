@@ -7,19 +7,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/company/auth")
-public class CompanyAuthController {
+@RequestMapping("/admin")
+public class AdminAuthController {
 
     @Autowired
     private EmailService emailService;
 
     // 사용자 등록 폼 표시
-    @GetMapping("/register")
+    @GetMapping("/join")
     public String showRegisterForm() {
         return "company_register"; // register.html 템플릿을 반환
     }
 
-    // 사용자 등록 시 인증 이메일 발송
     @PostMapping("/register")
     public String register(@RequestParam String email, Model model) {
         String code = emailService.generateVerificationCode();
@@ -29,7 +28,6 @@ public class CompanyAuthController {
         return "verify"; // 인증 코드 입력 페이지로 이동
     }
 
-    // 인증 코드 검증
     @PostMapping("/verify")
     public String verify(@RequestParam String email, @RequestParam String code, Model model) {
         boolean isValid = emailService.verifyCode(email, code);
