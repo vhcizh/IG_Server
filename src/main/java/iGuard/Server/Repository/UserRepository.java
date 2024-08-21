@@ -1,4 +1,4 @@
-package iGuard.Server.repository;
+package iGuard.Server.Repository;
 
 import iGuard.Server.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package iGuard.Server.dto;
+package iGuard.Server.Dto;
 
 import iGuard.Server.Entity.User;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Builder

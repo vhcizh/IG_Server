@@ -1,7 +1,7 @@
-package iGuard.Server.controller;
+package iGuard.Server.Controller;
 
-import iGuard.Server.dto.UserRequest;
-import iGuard.Server.service.auth.UserService;
+import iGuard.Server.Dto.UserRequest;
+import iGuard.Server.Service.auth.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

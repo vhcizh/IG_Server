@@ -1,8 +1,7 @@
-package iGuard.Server.service.auth;
+package iGuard.Server.Service.auth;
 
-import iGuard.Server.Entity.User;
-import iGuard.Server.dto.UserRequest;
-import iGuard.Server.dto.UserResponse;
+import iGuard.Server.Dto.UserRequest;
+import iGuard.Server.Dto.UserResponse;
 
 public interface UserService {
 

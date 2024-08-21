@@ -1,8 +1,8 @@
-package iGuard.Server.service.auth;
+package iGuard.Server.Service.auth;
 
-import iGuard.Server.dto.UserRequest;
-import iGuard.Server.dto.UserResponse;
-import iGuard.Server.repository.UserRepository;
+import iGuard.Server.Dto.UserRequest;
+import iGuard.Server.Dto.UserResponse;
+import iGuard.Server.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
