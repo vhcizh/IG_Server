@@ -4,11 +4,18 @@
     <title>Register</title>
 </head>
 <body>
-<h1>등록</h1>
-<form action="/company/auth/register" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <button type="전송">Send Verification Email</button>
+<h1>회원가입</h1>
+<form action="/admin/register" method="post">
+    <label for="companyName">회사 이름:</label>
+    <input type="text" id="companyName" name="companyName" required><br><br>
+
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <button type="submit">가입하기</button>
 </form>
 </body>
 </html>
