@@ -1,7 +1,7 @@
 package iGuard.Server.Service.auth;
 
 import iGuard.Server.Dto.UserRequest;
-import iGuard.Server.Dto.UserResponse;
+//import iGuard.Server.Dto.UserResponse;
 import iGuard.Server.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,11 +30,13 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    /*
     @Override
     public UserResponse getUser() {
         // 시큐리티에서 유저 정보 가져오기
         return null;
     }
+     */
 
     @Override
     public void updateUser(UserRequest user) {

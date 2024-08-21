@@ -24,7 +24,7 @@ public class CompanyUser {
     @Column(name = "companyemail", length = 50)
     private String companyEmail;
 
-    @Column(name = "password", length = 20)
+    @Column(name = "password", length =255)
     private String password;
     
     @Column(name = "verified")
@@ -35,6 +35,5 @@ public class CompanyUser {
 
     @OneToMany(mappedBy = "corporateUser")
     private List<FinalRecommendation> finalRecommendations;
-
 
 }

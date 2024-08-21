@@ -2,7 +2,6 @@ package iGuard.Server.Controller;
 
 import iGuard.Server.Dto.UserRequest;
 import iGuard.Server.Service.auth.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,7 @@ public class UserController {
 
     // 회원 가입 처리 메서드
     @PostMapping("/join")
-    public String join(@Valid @ModelAttribute UserRequest userRequest, RedirectAttributes redirectAttributes) {
+    public String join(@ModelAttribute UserRequest userRequest, RedirectAttributes redirectAttributes) {
         userService.registerUser(userRequest);
         redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다.");
         return "redirect:home"; // 리다이렉트 경로 수정

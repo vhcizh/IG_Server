@@ -3,6 +3,7 @@ package iGuard.Server.Controller;
 import iGuard.Server.Entity.CompanyUser;
 import iGuard.Server.Repository.CompanyUserRepository;
 import iGuard.Server.Service.EmailService;
+import iGuard.Server.Service.auth.CompanyUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,9 @@ public class AdminAuthController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private CompanyUserService companyUserService;
 
     @Autowired
     private CompanyUserRepository cr;
@@ -33,15 +37,13 @@ public class AdminAuthController {
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         Model model) {
-        CompanyUser user = cr.findByCompanyEmailAndPassword(email, password);
-        System.out.println("hi");
-
-        if (user != null) {
-            return "redirect:/"; // 로그인 성공 시 표시할 페이지
-        }else {
+        CompanyUser user = companyUserService.findByCompanyEmail(email);
+        if (user != null && companyUserService.checkPassword(user, password)) {
+            return "redirect:/home"; // 로그인 성공 시 이동할 페이지
+        } else {
             model.addAttribute("message", "잘못된 이메일 또는 비밀번호입니다.");
+            return "company_login";
         }
-        return "company_login"; // 로그인 실패 시 로그인 페이지로 다시 이동
     }
 
     @PostMapping("/register")
@@ -49,13 +51,19 @@ public class AdminAuthController {
                            @RequestParam String password,
                            @RequestParam String companyName,
                            Model model) {
-        // 임시 저장, 인증 완료 전까지 verified는 false
+        // 사용자가 이미 존재하는지 확인
+        if (companyUserService.findByCompanyEmail(email) != null) {
+            model.addAttribute("message", "이미 등록된 이메일입니다.");
+            return "company_register";
+        }
+
+        // 사용자 등록
         CompanyUser user = new CompanyUser();
         user.setCompanyEmail(email);
         user.setPassword(password);
         user.setCompanyName(companyName);
         user.setVerified(false);
-        cr.save(user);
+        companyUserService.registerUser(user);
 
         // 인증 코드 생성 및 전송
         String code = emailService.generateVerificationCode();
