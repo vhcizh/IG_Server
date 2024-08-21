@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -14,33 +15,28 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userid;
 
     @Column(name = "age")
     @Temporal(TemporalType.DATE)
-    private Date age;
+    private LocalDate age;
 
-    @Column(name = "latitude")
-    private Float latitude;
-    
-    @Column(name ="accepted" ) //동의 여부
+    @Column(name ="accepted", nullable = false) //동의 여부
     private boolean accepted;
-
-    @Column(name = "longitude")
-    private Float longitude;
-
-    @Column(name = "phone_number")
-    private String phone_number;
 
     @Column(name = "address", length = 100)
     private String address;
 
-    @Column(name = "id", length = 50)
+    @Column(name = "phone_number", length = 14, unique = true, nullable = false)
+    private String phone_number;
+
+    @Column(name = "id", length = 50, unique = true, nullable = false)
     private String id;
 
-    @Column(name = "password", length = 50)
+    @Column(name = "password", length = 60)
     private String password;
 
     @OneToMany(mappedBy = "user")
