@@ -14,12 +14,12 @@ public class AdminAuthController {
     private EmailService emailService;
 
     // 사용자 등록 폼 표시
-    @GetMapping("/join")
+    @GetMapping("/sendcode")
     public String showRegisterForm() {
         return "company_register"; // register.html 템플릿을 반환
     }
 
-    @PostMapping("/register")
+    @PostMapping("/sendcode")
     public String register(@RequestParam String email, Model model) {
         String code = emailService.generateVerificationCode();
         emailService.sendVerificationEmail(email, code);
