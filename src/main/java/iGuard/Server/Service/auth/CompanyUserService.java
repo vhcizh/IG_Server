@@ -6,6 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CompanyUserService {
 
@@ -28,5 +30,19 @@ public class CompanyUserService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
+    }
+    // GET /mypage/me
+    public Optional<CompanyUser> getCompanyUserById(int companyUserId) {
+        return userRepository.findById(companyUserId);
+    }
+
+    // POST /mypage/me
+    public CompanyUser saveOrUpdateCompanyUser(CompanyUser companyUser) {
+        return userRepository.save(companyUser);
+    }
+
+    // DELETE /mypage/me
+    public void deleteCompanyUser(int companyUserId) {
+        userRepository.deleteById(companyUserId);
     }
 }

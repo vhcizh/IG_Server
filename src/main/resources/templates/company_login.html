@@ -5,7 +5,10 @@
 </head>
 <body>
 <h1>로그인</h1>
-<form action="/admin/login" method="post">
+<form th:action="@{/admin/login}" method="post">
+    <!-- CSRF Token -->
+    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
     <label for="email">이메일:</label>
     <input type="email" id="email" name="email" required><br><br>
 

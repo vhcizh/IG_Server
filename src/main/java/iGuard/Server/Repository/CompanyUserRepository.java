@@ -12,4 +12,6 @@ public interface CompanyUserRepository extends JpaRepository<CompanyUser,Integer
 
     CompanyUser findByCompanyEmailAndPassword(String companyEmail, String password);
 
+
+
 }
