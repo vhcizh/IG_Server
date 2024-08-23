@@ -45,4 +45,10 @@ public class CompanyUserService {
     public void deleteCompanyUser(int companyUserId) {
         userRepository.deleteById(companyUserId);
     }
+
+    public void updatePassword(CompanyUser companyUser, String newPassword) {
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        companyUser.setPassword(encodedPassword);
+        userRepository.save(companyUser);
+    }
 }

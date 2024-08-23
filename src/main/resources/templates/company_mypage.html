@@ -18,9 +18,9 @@
     <p>No user found.</p>
 </div>
 
-<form action="/admin/mypage/update-password" method="post">
+<form action="/admin/update-password" method="post">
     <input type="hidden" name="companyUserId" th:value="${companyUser.companyUserId}"/>
-    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
     <label for="currentPassword">현재 비밀번호:</label>
     <input type="password" id="currentPassword" name="currentPassword" required/><br/>
@@ -31,10 +31,9 @@
     <button type="submit">Update Password</button>
 </form>
 
-<form action="/admin/mypage/" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
-    <input type="hidden" name="_method" value="delete"/>
+<form action="/admin/mypage/delete" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
     <input type="hidden" name="companyUserId" th:value="${companyUser.companyUserId}"/>
-    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <button type="submit">Delete Account</button>
 </form>
 

@@ -16,14 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 @Slf4j
 @Controller
-@RequestMapping("/admin/mypage")
+@RequestMapping("/admin")
 public class CompanyUserController {
 
     @Autowired
     private CompanyUserService companyUserService;
 
 
-    @GetMapping
+    @GetMapping("/mypage")
     public String getCompanyUser(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             String email = authentication.getName();
@@ -47,24 +47,23 @@ public class CompanyUserController {
             CompanyUser companyUser = companyUserOpt.get();
 
             // Check if the current password matches
-            if (companyUser.getPassword().equals(currentPassword)) {
+            if (companyUserService.checkPassword(companyUser, currentPassword)) {
                 // Update the password
-                companyUser.setPassword(newPassword);
-                companyUserService.saveOrUpdateCompanyUser(companyUser);
-                model.addAttribute("Message", "성공적으로 바뀌었습니다.");
+                companyUserService.updatePassword(companyUser, newPassword);
+                model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
             } else {
-                model.addAttribute("Message", "현재 비밀번호와 다릅니다.");
+                model.addAttribute("message", "현재 비밀번호가 일치하지 않습니다.");
             }
         } else {
-            model.addAttribute("Message", "유저를 찾을 수 없습니다.");
+            model.addAttribute("message", "사용자를 찾을 수 없습니다.");
         }
 
-        return "redirect:/admin/mypage/?companyUserId=" + companyUserId;
+        return "redirect:/admin/mypage";
     }
 
-    @DeleteMapping
+    @PostMapping("/mypage/delete")
     public String deleteCompanyUser(@RequestParam int companyUserId) {
         companyUserService.deleteCompanyUser(companyUserId);
-        return "redirect:/admin/mypage/?deleted=true";
+        return "redirect:/home";
     }
 }
