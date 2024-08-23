@@ -38,6 +38,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security' // security
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'org.thymeleaf:thymeleaf-spring6'
 }
 
 tasks.named('test') {

@@ -3,8 +3,15 @@ package iGuard.Server.Controller;
 import iGuard.Server.Entity.CompanyUser;
 import iGuard.Server.Repository.CompanyUserRepository;
 import iGuard.Server.Service.EmailService;
+import iGuard.Server.Service.auth.CompanyUserDetailsService;
 import iGuard.Server.Service.auth.CompanyUserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +29,9 @@ public class AdminAuthController {
     @Autowired
     private CompanyUserRepository cr;
 
+    @Autowired
+    private CompanyUserDetailsService cds;
+
     @GetMapping("/register")
     public String register(){
         return "company_register";
@@ -33,15 +43,30 @@ public class AdminAuthController {
         return "company_login"; // login.html 템플릿을 반환
     }
 
+
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String password,
-                        Model model) {
+                        HttpServletRequest request
+    ) {
         CompanyUser user = companyUserService.findByCompanyEmail(email);
+
         if (user != null && companyUserService.checkPassword(user, password)) {
-            return "redirect:/home"; // 로그인 성공 시 이동할 페이지
+            // Create authentication token
+            UserDetails userDetails = cds.loadUserByUsername(email);
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+            // Set authentication in SecurityContext
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            securityContext.setAuthentication(authentication);
+
+            HttpSession session = request.getSession(true);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
+            // Redirect to home page
+            return "redirect:/home";
         } else {
-            model.addAttribute("message", "잘못된 이메일 또는 비밀번호입니다.");
             return "company_login";
         }
     }
