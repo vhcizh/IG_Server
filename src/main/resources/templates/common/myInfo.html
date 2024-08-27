@@ -3,6 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>내 정보</title>
+    <script>
+        function deleteMe() {
+            if (confirm('정말로 계정을 삭제하시겠습니까?')) {
+                fetch('/mypage/me', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url; // 리디렉션 URL로 이동
+                    } else {
+                        alert('계정 삭제에 실패했습니다.');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -22,6 +42,7 @@
         <label for="address">주소:</label>
         <input type="text" id="address" name="address" th:value="${user.address}" required><br><br>
 
+
         <label for="age">생년월일:</label>
         <input type="date" id="age" name="age" th:value="${user.birthDate}" required>
         (만 <span th:text="${user.age}">나이</span>세)<br><br>
@@ -31,6 +52,7 @@
 
         <button type="submit">정보 수정</button>
     </form>
+    <button onclick="deleteMe()">회원 탈퇴</button>
 </main>
 
 
