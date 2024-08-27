@@ -6,6 +6,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -43,7 +44,14 @@ public class SecurityConfig {
 //                        .permitAll()
 //                );
         http.logout(Customizer.withDefaults());
+        /**
+         * TODO: CSRF 설정 활성화
+         * 현재 임시로 비활성화해뒀지만 CSRF 설정 필요
+         */
         http.csrf(AbstractHttpConfigurer::disable);
+        // iframe 허용
+        http.headers(headers -> headers
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
 
         return http.build();
