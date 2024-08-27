@@ -1,5 +1,6 @@
 package iGuard.Server.Entity;
 
+import iGuard.Server.Dto.UserRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,5 +57,13 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<JobApplication> jobApplications;
+
+    public void updateInfo(UserRequest userRequest) {
+        this.setId(userRequest.getPassword());
+        this.setPassword(userRequest.getPassword());
+        this.setAge(userRequest.getAge());
+        this.setAddress(userRequest.getAddress());
+        this.setPhone_number(userRequest.getPhone_number());
+    }
 
 }
