@@ -1,9 +1,9 @@
-package iGuard.Server.Service.auth;
+package iGuard.Server.Service.admin;
 
 import iGuard.Server.Entity.CompanyUser;
 import iGuard.Server.Repository.CompanyUserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class CompanyUserService {
     private CompanyUserRepository userRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public CompanyUser findByCompanyEmail(String email) {
         return userRepository.findByCompanyEmail(email);

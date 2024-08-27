@@ -1,4 +1,4 @@
-package iGuard.Server.Service.auth;
+package iGuard.Server.Service.admin;
 
 import iGuard.Server.Entity.CompanyUser;
 import iGuard.Server.Repository.CompanyUserRepository;

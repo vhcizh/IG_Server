@@ -1,15 +1,14 @@
-package iGuard.Server.Service.auth;
+package iGuard.Server.Service.user;
 
 import iGuard.Server.Dto.UserRequest;
-//import iGuard.Server.Dto.UserResponse;
+import iGuard.Server.Dto.UserResponse;
+import iGuard.Server.Dto.UserUpdate;
 import iGuard.Server.Repository.UserRepository;
 import iGuard.Server.Util.SecurityUserContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,6 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
-    /*
     @Override
     public UserResponse getUser() {
         String id = userContextProvider.getLoginUserId();
@@ -42,10 +40,9 @@ public class UserServiceImpl implements UserService {
                 .map(UserResponse::getFrom)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
-     */
 
     @Override
-    public void updateUser(UserRequest user) {
+    public void updateUser(UserUpdate user) {
         String id = userContextProvider.getLoginUserId();
         userRepository.getById(id).ifPresent(
                 u -> u.updateInfo(user)

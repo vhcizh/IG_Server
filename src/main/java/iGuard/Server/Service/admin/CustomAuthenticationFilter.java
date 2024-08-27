@@ -1,4 +1,4 @@
-package iGuard.Server.Service.auth;
+package iGuard.Server.Service.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
