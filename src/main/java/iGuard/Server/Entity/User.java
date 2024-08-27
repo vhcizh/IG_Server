@@ -61,7 +61,11 @@ public class User {
     public void updateInfo(UserUpdate userRequest) {
         this.setPassword(userRequest.getPassword());
         this.setAge(userRequest.getAge());
-        this.setAddress(userRequest.getAddress());
+        this.setAddress(
+                userRequest.getDetailAddress()!=null
+                        ? userRequest.getAddress() + ", " + userRequest.getDetailAddress()
+                        : userRequest.getAddress()
+        );
         this.setPhone_number(userRequest.getPhone_number());
     }
 

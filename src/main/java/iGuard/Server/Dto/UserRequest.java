@@ -29,10 +29,15 @@ public class UserRequest {
     @NotBlank(message = "주소는 필수입니다.")
     private String address;
 
+    private String detailAddress;
+
     @NotBlank(message = "전화번호는 필수입니다.")
     @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 올바르지 않습니다.") // 예: 010-1234-5678
     private String phone_number;
 
+    /**
+     * TODO: 약관 동의 안해도 회원가입 되는 문제
+     */
     @AssertTrue(message = "약관에 동의해야 합니다.")
     private boolean accepted;
 
@@ -41,7 +46,11 @@ public class UserRequest {
         user.setId(id);
         user.setPassword(password);
         user.setAge(age);
-        user.setAddress(address);
+        user.setAddress(
+                detailAddress!=null
+                        ?address + ", " + detailAddress
+                        :address
+        );
         user.setPhone_number(phone_number);
         user.setAccepted(accepted);
         return user;

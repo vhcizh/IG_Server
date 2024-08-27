@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse getUser() {
         String id = userContextProvider.getLoginUserId();
         return userRepository.getById(id)
@@ -42,14 +43,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(UserUpdate user) {
         String id = userContextProvider.getLoginUserId();
         userRepository.getById(id).ifPresent(
-                u -> u.updateInfo(user)
+                u -> {
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    u.updateInfo(user);
+                }
         );
     }
 
     @Override
+    @Transactional
     public void deleteUser() {
         String id = userContextProvider.getLoginUserId();
         userRepository.getById(id).ifPresent(
