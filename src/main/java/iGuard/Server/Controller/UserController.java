@@ -1,7 +1,7 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Dto.UserRequest;
-import iGuard.Server.Dto.UserResponse;
+//import iGuard.Server.Dto.UserResponse;
 import iGuard.Server.Service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -45,11 +45,13 @@ public class UserController {
     }
 
     // 내 정보 페이지
+    /*
     @GetMapping("/mypage/me")
     public String myInfoPage(Model model) {
         model.addAttribute("user", userService.getUser());
         return "myInfo"; // 사용자 정보를 보여줄 뷰 이름
     }
+     */
 
 
 }

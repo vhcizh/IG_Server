@@ -41,6 +41,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	implementation 'org.thymeleaf:thymeleaf-spring6'
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	implementation 'org.apache.commons:commons-csv:1.8'
+	implementation 'com.opencsv:opencsv:5.7.1'
 }
 
 tasks.named('test') {
