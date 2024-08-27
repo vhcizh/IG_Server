@@ -1,16 +1,14 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Dto.UserRequest;
-import iGuard.Server.Dto.UserResponse;
-import iGuard.Server.Service.auth.UserService;
+import iGuard.Server.Dto.UserUpdate;
+import iGuard.Server.Service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -49,8 +47,17 @@ public class UserController {
     @GetMapping("/mypage/me")
     public String myInfoPage(Model model) {
         model.addAttribute("user", userService.getUser());
-        return "myInfo"; // 사용자 정보를 보여줄 뷰 이름
+        return "myInfo";
     }
+
+    // 내 정보 수정
+    @PostMapping("/mypage/me")
+    public String updateMyInfo(@Valid @ModelAttribute UserUpdate userRequest) {
+        userService.updateUser(userRequest);
+        return "redirect:/mypage/me";
+    }
+
+    // 회원 탈퇴
 
 
 }

@@ -1,9 +1,8 @@
-package iGuard.Server.Service.auth;
+package iGuard.Server.Service.user;
 
 import iGuard.Server.Dto.UserRequest;
 import iGuard.Server.Dto.UserResponse;
-
-import java.util.Optional;
+import iGuard.Server.Dto.UserUpdate;
 
 public interface UserService {
 
@@ -14,7 +13,7 @@ public interface UserService {
     UserResponse getUser();
 
     // 회원정보 수정
-    void updateUser(UserRequest user);
+    void updateUser(UserUpdate user);
 
     // 회원탈퇴
     void deleteUser();
