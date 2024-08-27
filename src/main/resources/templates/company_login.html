@@ -17,6 +17,7 @@
 
     <button type="submit">로그인</button>
 </form>
-<p th:text="${message}"></p> <!-- 로그인 결과 메시지 표시 -->
+<p th:if="${param.error}">로그인 실패. 다시 시도하세요.</p>
+<p th:if="${param.logout}">로그아웃되었습니다.</p>
 </body>
 </html>

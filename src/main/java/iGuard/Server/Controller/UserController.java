@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/common")
 public class UserController {
 
     private final UserService userService;
@@ -20,7 +21,7 @@ public class UserController {
     @GetMapping("/join")
     public String joinPage(Model model) {
         model.addAttribute("userRequest", new UserRequest());
-        return "join"; // join.html로 이동
+        return "common/join"; // join.html로 이동
     }
 
     // 회원가입 처리
@@ -34,30 +35,35 @@ public class UserController {
     // 로그인 페이지
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "common/login";
     }
 
     // 마이 페이지
     @GetMapping("/mypage")
     public String mypage() {
-        return "mypage";
+        return "common/mypage";
     }
 
     // 내 정보 페이지
     @GetMapping("/mypage/me")
     public String myInfoPage(Model model) {
         model.addAttribute("user", userService.getUser());
-        return "myInfo";
+        return "common/myInfo";
     }
 
     // 내 정보 수정
     @PostMapping("/mypage/me")
     public String updateMyInfo(@Valid @ModelAttribute UserUpdate userRequest) {
         userService.updateUser(userRequest);
-        return "redirect:/mypage/me";
+        return "redirect:mypage/me";
     }
 
     // 회원 탈퇴
+    @DeleteMapping("/mypage/me")
+    public String deleteMe() {
+        userService.deleteUser();
+        return "redirect:/home";
+    }
 
 
 }
