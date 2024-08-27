@@ -1,19 +1,16 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Entity.CompanyUser;
-import iGuard.Server.Service.*;
-import iGuard.Server.Service.auth.CompanyUserService;
+import iGuard.Server.Service.admin.CompanyUserService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 @Slf4j
 @Controller
 @RequestMapping("/admin")
