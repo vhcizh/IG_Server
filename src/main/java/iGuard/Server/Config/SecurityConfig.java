@@ -41,23 +41,6 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public SpringSecurityDialect springSecurityDialect() {
-        return new SpringSecurityDialect();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-
-
     @Autowired
     public SecurityConfig(
             @Qualifier("memberUserDetailsService") UserDetailsService memberUserDetailsService,
@@ -72,7 +55,7 @@ public class SecurityConfig {
                 .securityMatcher("/common/**")
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/static/**").permitAll() // resources/static 내의 모든 자원 허용
-                        .requestMatchers("/login", "/join", "/home").permitAll()
+                        .requestMatchers("/common/login", "/common/join", "/common/home").permitAll()
                         .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
                 .formLogin(form -> form
@@ -106,7 +89,6 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin/mypage", true)
-
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .failureUrl("/admin/login?error=true")
