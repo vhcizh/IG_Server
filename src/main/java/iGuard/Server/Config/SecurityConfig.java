@@ -25,6 +25,8 @@ public class SecurityConfig {
 
     private final UserDetailsService memberUserDetailsService;
     private final UserDetailsService companyUserDetailsService;
+
+
     @Bean
     public SpringSecurityDialect springSecurityDialect() {
         return new SpringSecurityDialect();
@@ -39,23 +41,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-    @Bean
-    public SpringSecurityDialect springSecurityDialect() {
-        return new SpringSecurityDialect();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-
 
     @Autowired
     public SecurityConfig(
@@ -88,7 +73,6 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                // 기타 필요한 설정...
                 .userDetailsService(memberUserDetailsService);
 
         return http.build();
@@ -105,7 +89,6 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin/mypage", true)
-
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .failureUrl("/admin/login?error=true")
@@ -130,7 +113,6 @@ public class SecurityConfig {
                         .tokenValiditySeconds(86400) // 24 hours
                 )
                 .addFilter(new CustomAuthenticationFilter(authenticationManager))
-                // 기타 필요한 설정...
                 .userDetailsService(companyUserDetailsService);
 
         return http.build();
