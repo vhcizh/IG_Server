@@ -2,7 +2,8 @@ package iGuard.Server.Controller;
 
 import iGuard.Server.Dto.UserRequest;
 //import iGuard.Server.Dto.UserResponse;
-import iGuard.Server.Service.auth.UserService;
+import iGuard.Server.Service.user.UserService;
+import iGuard.Server.Service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

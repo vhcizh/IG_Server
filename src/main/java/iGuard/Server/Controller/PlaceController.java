@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
-
 import java.util.List;
 
 @Controller
@@ -15,7 +14,7 @@ public class PlaceController {
     @Autowired
     private PlaceService ps;
 
-    @GetMapping("/home")
+    @GetMapping("/places")
     public String getPlaceNear(
             @RequestParam float lat,
             @RequestParam float lon,
@@ -25,7 +24,7 @@ public class PlaceController {
         List<Place> places = ps.getPlacesNear(lat, lon, range);
         model.addAttribute("places", places);
 
-        return "home";
+        return "places";
     }
 
 }

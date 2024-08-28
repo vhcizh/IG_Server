@@ -36,13 +36,11 @@ public class AdminAuthController {
     public String register(){
         return "company_register";
     }
-
     // 로그인 폼 표시
     @GetMapping("/login")
     public String showLoginForm() {
         return "company_login"; // login.html 템플릿을 반환
     }
-
 
     @PostMapping("/login")
     public String login(@RequestParam String email,
@@ -81,7 +79,6 @@ public class AdminAuthController {
             model.addAttribute("message", "이미 등록된 이메일입니다.");
             return "company_register";
         }
-
         // 사용자 등록
         CompanyUser user = new CompanyUser();
         user.setCompanyEmail(email);

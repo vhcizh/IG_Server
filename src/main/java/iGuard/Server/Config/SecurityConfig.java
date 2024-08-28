@@ -25,7 +25,6 @@ public class SecurityConfig {
 
     private final UserDetailsService memberUserDetailsService;
     private final UserDetailsService companyUserDetailsService;
-
     @Autowired
     public SecurityConfig(
             @Qualifier("memberUserDetailsService") UserDetailsService memberUserDetailsService,
@@ -33,7 +32,6 @@ public class SecurityConfig {
         this.memberUserDetailsService = memberUserDetailsService;
         this.companyUserDetailsService = adminUserDetailsService;
     }
-
     @Bean
     public SecurityFilterChain memberSecurityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -51,12 +49,9 @@ public class SecurityConfig {
                 )
                 .logout(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                // 기타 필요한 설정...
                 .userDetailsService(memberUserDetailsService);
-
         return http.build();
     }
-
     @Bean
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -71,7 +66,6 @@ public class SecurityConfig {
                         .failureUrl("/admin/login?error=true")
                         .permitAll()
                 )
-                // 기타 필요한 설정...
                 .userDetailsService(companyUserDetailsService);
 
         return http.build();
