@@ -54,8 +54,8 @@
 
     <label for="age">나이:</label>
     <input type="date" id="age" th:field="*{age}" required /><br/>
+<!--    <label for="postcode">우편번호:</label>-->
 
-    <!--    <label for="postcode">우편번호:</label>-->
     <input type="hidden" id="postcode" placeholder="우편번호" readonly /><br/>
     <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br/>
 
@@ -65,7 +65,8 @@
     <label for="detailAddress">상세주소:</label>
     <input type="text" id="detailAddress" th:field="*{detailAddress}" placeholder="상세주소" required /><br/>
 
-    <!--    <label for="extraAddress">참고항목:</label>-->
+<!--    <label for="extraAddress">참고항목:</label>-->
+
     <input type="hidden" id="extraAddress" placeholder="참고항목" readonly /><br/>
 
     <label for="phone_number">전화번호:</label>

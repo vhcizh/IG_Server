@@ -21,7 +21,7 @@ public class CompanyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         CompanyUser user= companyUserRepository.findByCompanyEmail(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with email: " + user.getCompanyEmail());
+            throw new UsernameNotFoundException("User not found with email: " + username);
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getCompanyEmail(),

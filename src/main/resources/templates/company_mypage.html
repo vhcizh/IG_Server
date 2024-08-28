@@ -37,5 +37,10 @@
     <button type="submit">Delete Account</button>
 </form>
 
+<form th:action="@{/admin/logout}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <button type="submit">로그아웃</button>
+</form>
+
 </body>
 </html>

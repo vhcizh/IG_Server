@@ -1,18 +1,15 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Dto.UserRequest;
-//import iGuard.Server.Dto.UserResponse;
 import iGuard.Server.Dto.UserUpdate;
 import iGuard.Server.Service.user.UserService;
-import iGuard.Server.Service.user.UserService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
