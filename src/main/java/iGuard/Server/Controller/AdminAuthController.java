@@ -63,7 +63,7 @@ public class AdminAuthController {
             session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
             // Redirect to home page
-            return "redirect:/home";
+            return "home";
         } else {
             return "company_login";
         }
