@@ -26,6 +26,20 @@ public class SecurityConfig {
 
     private final UserDetailsService memberUserDetailsService;
     private final UserDetailsService companyUserDetailsService;
+    @Bean
+    public SpringSecurityDialect springSecurityDialect() {
+        return new SpringSecurityDialect();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SpringSecurityDialect springSecurityDialect() {
@@ -59,7 +73,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/static/**").permitAll() // resources/static 내의 모든 자원 허용
                         .requestMatchers("/login", "/join", "/home").permitAll()
-                        .anyRequest().hasRole("MEMBER")
+                        .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
                 .formLogin(form -> form
                         .loginPage("/common/login")
@@ -80,7 +94,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
     @Bean
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
@@ -93,6 +106,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin/mypage", true)
+
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .failureUrl("/admin/login?error=true")
@@ -100,7 +114,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout") // 회원 로그아웃 URL
-                        .logoutSuccessUrl("/admin/login?logout=true") // 로그아웃 성공 후 이동할 페이지
+                        .logoutSuccessUrl("/admin/login?logout") // 로그아웃 성공 후 이동할 페이지
                         .permitAll()
                 )
                 .csrf(csrf -> csrf
@@ -126,52 +140,5 @@ public class SecurityConfig {
         return http.build();
     }
 
-
-
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-//        http
-//                .authorizeHttpRequests(req -> req
-//                        .requestMatchers("/", "/login", "/admin/login", "/join", "/admin/register", "/admin/verify", "/home").permitAll()
-//                        .requestMatchers("/admin/mypage/**").hasRole("ADMIN")
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .anyRequest().hasRole("MEMBER")
-//                );
-//
-//        http // form 로그인 설정
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/home", true)
-//                        .failureUrl("/login?error=true") // 로그인 실패 시 이동할 페이지
-//                        .permitAll()
-//                )
-//                .formLogin(form -> form
-//                        .loginPage("/admin/login")
-//                        .defaultSuccessUrl("/home", true)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login?logout")
-//                        .permitAll()
-//                )
-//                .csrf(csrf -> csrf
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .invalidSessionUrl("/login")
-//                        .maximumSessions(1)
-//                        .maxSessionsPreventsLogin(false)
-//                )
-//                .rememberMe(rememberMe -> rememberMe
-//                        .userDetailsService(this.userDetailsService)
-//                        .key("uniqueAndSecret")
-//                        .tokenValiditySeconds(86400) // 24 hours
-//                )
-//                .addFilter(new CustomAuthenticationFilter(authenticationManager));
-//
-//        return http.build();
-//    }
 
 }
