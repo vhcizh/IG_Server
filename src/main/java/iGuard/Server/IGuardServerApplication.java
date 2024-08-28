@@ -24,7 +24,7 @@ public class IGuardServerApplication {
 	@Autowired
 	private PlaceService placeService;
 
-	public static void main(String[] args) {
+	public static void main(String[] args)  {
 		SpringApplication.run(IGuardServerApplication.class, args);
 	}
 
@@ -54,4 +54,5 @@ public class IGuardServerApplication {
 		}
 	}
 	 */
+
 }
