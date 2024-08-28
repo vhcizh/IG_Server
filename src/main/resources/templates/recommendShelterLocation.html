@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <title>기관에게 쉼터 추천 페이지</title>
     <style>
-        /* 필요에 따라 iframe 스타일 조정 */
-        #mapFrame {
+        .tab {
+            display: none;
+        }
+        .tab-button {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            display: inline-block;
+        }
+        .active {
+            background-color: #ddd;
+        }
+        .mapFrame {
             width: 100%;
-            height: 600px; /* 적절한 높이 설정 */
-            border: none; /* 테두리 제거 */
+            height: 600px;
+            border: none;
         }
     </style>
 </head>
@@ -17,11 +29,63 @@
     <h1>기관에게 쉼터 추천 페이지</h1>
 </header>
 
-<!-- iframe을 사용하여 map.html 포함 -->
-<iframe id="mapFrame" src="/seoulRecommendationTotal.html"></iframe>
+<div>
+    <div class="tab-button active" onclick="showTab('tab1')">종합 추천</div>
+    <div class="tab-button" onclick="showTab('tab2')">노인 명소 개수</div>
+    <div class="tab-button" onclick="showTab('tab3')">노인 승하차 인원</div>
+    <div class="tab-button" onclick="showTab('tab4')">독거 노인</div>
+    <div class="tab-button" onclick="showTab('tab5')">독거노인 수급권자</div>
+    <div class="tab-button" onclick="showTab('tab6')">무더위 쉼터 개수</div>
+    <div class="tab-button" onclick="showTab('tab7')">전기 사용량</div>
+</div>
+
+<div id="tab1" class="tab active">
+    <iframe class="mapFrame" src="/admin/서울_위치제안_map.html"></iframe>
+</div>
+<div id="tab2" class="tab">
+    <iframe class="mapFrame" src="/admin/서울_노인명소개수_map.html"></iframe>
+</div>
+<div id="tab3" class="tab">
+    <iframe class="mapFrame" src="/admin/서울_노인승하차인원수_map.html"></iframe>
+</div>
+<div id="tab4" class="tab">
+    <iframe class="mapFrame" src="/admin/서울_독거노인_map.html"></iframe>
+</div>
+<div id="tab5" class="tab">
+    <iframe class="mapFrame" src="/admin/서울_독거노인_국민기초생활보장수급권자_map.html"></iframe>
+</div>
+<div id="tab6" class="tab">
+    <iframe class="mapFrame" src="/admin/서울_무더위쉼터개수_map.html"></iframe>
+</div>
+<div id="tab7" class="tab">
+    <iframe class="mapFrame" src="/admin/서울_전기사용량_map.html"></iframe>
+</div>
 
 <footer>
     <p>푸터 내용</p>
 </footer>
+
+<script>
+    function showTab(tabId) {
+        // 모든 탭 숨기기
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.style.display = 'none';
+        });
+
+        // 모든 버튼 비활성화
+        const buttons = document.querySelectorAll('.tab-button');
+        buttons.forEach(button => {
+            button.classList.remove('active');
+        });
+
+        // 선택된 탭 보이기
+        document.getElementById(tabId).style.display = 'block';
+        document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+    }
+
+    // 처음 로드할 때 첫 번째 탭 보이기
+    showTab('tab1');
+</script>
 </body>
 </html>
