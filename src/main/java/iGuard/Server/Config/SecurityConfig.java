@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/static/**").permitAll() // resources/static 내의 모든 자원 허용
                         .requestMatchers("/login", "/join", "/home").permitAll()
-                        .anyRequest().hasRole("MEMBER")
+                        .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
                 .formLogin(form -> form
                         .loginPage("/common/login")
@@ -97,7 +97,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout") // 회원 로그아웃 URL
-                        .logoutSuccessUrl("/admin/login?logout=true") // 로그아웃 성공 후 이동할 페이지
+                        .logoutSuccessUrl("/admin/login?logout") // 로그아웃 성공 후 이동할 페이지
                         .permitAll()
                 )
                 .csrf(csrf -> csrf
