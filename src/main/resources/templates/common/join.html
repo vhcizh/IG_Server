@@ -1,11 +1,51 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="kor">
 <head>
+    <meta charset="UTF-8">
     <title>회원 가입</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+        function sample6_execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var addr = ''; // 주소 변수
+                    var extraAddr = ''; // 참고항목 변수
+
+                    // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                    if (data.userSelectedType === 'R') {
+                        addr = data.roadAddress;
+                    } else {
+                        addr = data.jibunAddress;
+                    }
+
+                    // 도로명 주소일 경우 추가 정보 처리
+                    if (data.userSelectedType === 'R') {
+                        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                            extraAddr += data.bname;
+                        }
+                        if (data.buildingName !== '' && data.apartment === 'Y') {
+                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                        if (extraAddr !== '') {
+                            extraAddr = ' (' + extraAddr + ')';
+                        }
+                    } else {
+                        extraAddr = '';
+                    }
+
+                    // 우편번호와 주소 정보를 필드에 넣는다.
+                    document.getElementById('postcode').value = data.zonecode;
+                    document.getElementById('address').value = addr;
+                    document.getElementById('extraAddress').value = extraAddr;
+                    document.getElementById("detailAddress").focus();
+                }
+            }).open();
+        }
+    </script>
 </head>
 <body>
 <h1>회원 가입</h1>
-<form action="#" th:action="@{/join}" th:object="${userRequest}" method="post">
+<form action="#" th:action="@{/common/join}" th:object="${userRequest}" method="post">
     <label for="id">아이디:</label>
     <input type="text" id="id" th:field="*{id}" required /><br/>
 
@@ -15,8 +55,18 @@
     <label for="age">나이:</label>
     <input type="date" id="age" th:field="*{age}" required /><br/>
 
+    <!--    <label for="postcode">우편번호:</label>-->
+    <input type="hidden" id="postcode" placeholder="우편번호" readonly /><br/>
+    <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br/>
+
     <label for="address">주소:</label>
-    <input type="text" id="address" th:field="*{address}" required /><br/>
+    <input type="text" id="address" th:field="*{address}" placeholder="주소" required readonly /><br/>
+
+    <label for="detailAddress">상세주소:</label>
+    <input type="text" id="detailAddress" th:field="*{detailAddress}" placeholder="상세주소" required /><br/>
+
+    <!--    <label for="extraAddress">참고항목:</label>-->
+    <input type="hidden" id="extraAddress" placeholder="참고항목" readonly /><br/>
 
     <label for="phone_number">전화번호:</label>
     <input type="text" id="phone_number" th:field="*{phone_number}" placeholder="010-1234-5678" required /><br/>
