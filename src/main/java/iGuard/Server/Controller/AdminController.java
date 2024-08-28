@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @GetMapping("/recommendShelterLocation")
+    @GetMapping("/shelters")
     public String recommendShelterLocation() {
         return "recommendShelterLocation"; // 메인 페이지 템플릿 이름
     }
