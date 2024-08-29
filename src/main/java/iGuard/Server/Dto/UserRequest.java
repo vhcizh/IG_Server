@@ -1,8 +1,10 @@
 package iGuard.Server.Dto;
 
 import iGuard.Server.Entity.User;
+import iGuard.Server.Enum.ShelterCategory;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -23,7 +26,7 @@ public class UserRequest {
     @NotBlank(message = "비밀번호는 필수입니다.")
     private String password;
 
-    @NotBlank(message = "나이는 필수입니다.")
+    @NotNull(message = "나이는 필수입니다.")
     private LocalDate age;
 
     @NotBlank(message = "주소는 필수입니다.")
@@ -35,9 +38,8 @@ public class UserRequest {
     @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 올바르지 않습니다.") // 예: 010-1234-5678
     private String phone_number;
 
-    /**
-     * TODO: 약관 동의 안해도 회원가입 되는 문제
-     */
+    private List<ShelterCategory.Preference> preferences; // 카테고리 리스트 추가
+
     @AssertTrue(message = "약관에 동의해야 합니다.")
     private boolean accepted;
 

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "common_user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -57,6 +57,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<JobApplication> jobApplications;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserPreference> userPreferences;
 
     public void updateInfo(UserUpdate userRequest) {
         this.setPassword(userRequest.getPassword());
