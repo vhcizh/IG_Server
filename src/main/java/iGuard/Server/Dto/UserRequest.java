@@ -26,7 +26,7 @@ public class UserRequest {
     @NotBlank(message = "비밀번호는 필수입니다.")
     private String password;
 
-    @NotNull(message = "나이는 필수입니다.")
+    @NotNull(message = "생년월일은 필수입니다.")
     private LocalDate age;
 
     @NotBlank(message = "주소는 필수입니다.")

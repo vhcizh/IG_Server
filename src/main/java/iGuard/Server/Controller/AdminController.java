@@ -10,6 +10,6 @@ public class AdminController {
 
     @GetMapping("/shelters")
     public String recommendShelterLocation() {
-        return "recommendShelterLocation"; // 메인 페이지 템플릿 이름
+        return "admin/recommendShelterLocation"; // 메인 페이지 템플릿 이름
     }
 }

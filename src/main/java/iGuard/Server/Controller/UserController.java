@@ -34,7 +34,7 @@ public class UserController {
             return "redirect:join"; // join.html로 돌아감
         }
         userService.registerUser(userRequest);
-        return "redirect:home"; // 리다이렉트 경로 수정
+        return "redirect:/common/home"; // 리다이렉트 경로 수정
     }
 
     // 로그인 페이지
@@ -60,14 +60,14 @@ public class UserController {
     @PostMapping("/mypage/me")
     public String updateMyInfo(@Valid @ModelAttribute UserUpdate userRequest) {
         userService.updateUser(userRequest);
-        return "redirect:mypage/me";
+        return "redirect:/common/mypage/me";
     }
 
     // 회원 탈퇴
     @DeleteMapping("/mypage/me")
     public String deleteMe() {
         userService.deleteUser();
-        return "redirect:/home";
+        return "redirect:/common/home";
     }
 
 
