@@ -74,6 +74,7 @@
     </script>
 </head>
 <body>
+<div th:replace="common/header :: header"></div>
 <h1>회원 가입</h1>
 <form action="#" th:action="@{/common/join}" th:object="${userRequest}" method="post">
     <label for="id">아이디:</label>
@@ -147,6 +148,7 @@
     <!-- 플래시 메시지 표시 -->
     <div th:if="${message}" th:text="${message}"></div>
 </form>
+<div th:replace="common/footer :: footer"></div>
 </body>
 </html>
 

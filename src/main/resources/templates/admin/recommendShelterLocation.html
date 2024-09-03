@@ -25,9 +25,7 @@
     </style>
 </head>
 <body>
-<header>
-    <h1>기관에게 쉼터 추천 페이지</h1>
-</header>
+<div th:replace="admin/header :: header"></div>
 
 <div>
     <div class="tab-button active" onclick="showTab('tab1')">종합 추천</div>
@@ -61,9 +59,7 @@
     <iframe class="mapFrame" src="/admin/서울_전기사용량_map.html"></iframe>
 </div>
 
-<footer>
-    <p>푸터 내용</p>
-</footer>
+<div th:replace="common/footer :: footer"></div>
 
 <script>
     function showTab(tabId) {

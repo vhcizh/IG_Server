@@ -25,13 +25,11 @@
     </script>
 </head>
 <body>
-<header>
-    <h1>내 정보</h1>
-</header>
+<div th:replace="common/header :: header"></div>
 
 <main>
     <h2>사용자 정보</h2>
-    <form th:action="@{/mypage/me}" method="post">
+    <form th:action="@{/common/mypage/me}" method="post">
 
         <label for="id">아이디:</label>
         <input type="text" id="id" name="username" th:value="${user.id}" readonly><br><br>
@@ -54,11 +52,7 @@
     </form>
     <button onclick="deleteMe()">회원 탈퇴</button>
 </main>
-
-
-<footer>
-    <p>&copy; 2024 나의 웹사이트</p>
-</footer>
+<div th:replace="common/footer :: footer"></div>
 </body>
 </html>
 

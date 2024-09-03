@@ -17,13 +17,14 @@
     </style>
 </head>
 <body>
+<div th:replace="common/header :: header"></div>
 <h1>홈페이지</h1>
 <div id="map"></div>
 <div id="location-info">
     <p id="latitude">위도: ${latitude}</p>
     <p id="longitude">경도: ${longitude}</p>
 </div>
-
+<div th:replace="common/footer :: footer"></div>
 <script type="text/javascript">
     // 초기 위치 값 설정
     var lat = ${latitude};
