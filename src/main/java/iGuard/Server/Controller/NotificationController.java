@@ -38,7 +38,7 @@ public class NotificationController {
     }
 
     // 알림 전송 처리
-    @PostMapping("/send") //여기만 고치기?
+    @PostMapping("/send")
     public String sendNotification(@RequestParam("userid") Integer userId, @RequestParam("title") String title, @RequestParam("body") String body, Model model) {
         Optional<User> optionalUser = userRepository.findByUserid(userId);
         if (optionalUser.isPresent()) {

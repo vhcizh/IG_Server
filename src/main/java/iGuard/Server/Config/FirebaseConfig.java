@@ -1,5 +1,4 @@
 package iGuard.Server.Config;
-
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -20,11 +19,9 @@ public class FirebaseConfig {
             // 리소스 폴더에서 파일을 읽어오는 방식으로 변경
             Resource resource = new ClassPathResource("servicekey.json");
             FileInputStream serviceAccount = new FileInputStream(resource.getFile());
-
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
-
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
             }
