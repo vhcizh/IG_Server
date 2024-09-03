@@ -6,6 +6,12 @@ build/
 !**/src/test/**/build/
 build.gradle
 src/main/resources/application.properties
+src/main/resources/servicekey.json
+
+
+### Ignore SecurityConfig.java ###
+**/src/main/java/**/SecurityConfig.java
+
 
 ### STS ###
 .apt_generated

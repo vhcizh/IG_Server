@@ -23,104 +23,33 @@ import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final UserDetailsService memberUserDetailsService;
-    private final UserDetailsService companyUserDetailsService;
-
-
-    @Bean
-    public SpringSecurityDialect springSecurityDialect() {
-        return new SpringSecurityDialect();
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Autowired
-    public SecurityConfig(
-            @Qualifier("memberUserDetailsService") UserDetailsService memberUserDetailsService,
-            @Qualifier("companyUserDetailsService") UserDetailsService adminUserDetailsService) {
-        this.memberUserDetailsService = memberUserDetailsService;
-        this.companyUserDetailsService = adminUserDetailsService;
-    }
-
-    @Bean
-    public SecurityFilterChain memberSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/common/**")
-                .authorizeHttpRequests(req -> req
-                        .requestMatchers("/static/**").permitAll() // resources/static 내의 모든 자원 허용
-                        .requestMatchers("/login", "/join", "/home").permitAll()
-                        .anyRequest().hasAnyRole("MEMBER", "ADMIN")
+                .authorizeHttpRequests(authz -> authz
+                        .anyRequest().permitAll()  // 모든 요청을 허용
                 )
-                .formLogin(form -> form
-                        .loginPage("/common/login")
-                        .defaultSuccessUrl("/common/home", true)
-                        .usernameParameter("id")
-                        .passwordParameter("password")
-                        .failureUrl("/common/login?error=true")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/common/logout") // 회원 로그아웃 URL
-                        .logoutSuccessUrl("/common/login?logout") // 로그아웃 성공 후 이동할 페이지
-                        .permitAll()
-                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .userDetailsService(memberUserDetailsService);
-
-        return http.build();
-    }
-    @Bean
-    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        http
-                .securityMatcher("/admin/**")
-                .authorizeHttpRequests(req -> req
-                        .requestMatchers("/static/**").permitAll() // resources/static 내의 모든 자원 허용
-                        .requestMatchers("/admin/login", "/admin/register", "/admin/verify").permitAll()
-                        .anyRequest().hasRole("ADMIN")
-                )
-                .formLogin(form -> form
-                        .loginPage("/admin/login")
-                        .defaultSuccessUrl("/admin/mypage", true)
-                        .usernameParameter("email")
-                        .passwordParameter("password")
-                        .failureUrl("/admin/login?error=true")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/admin/logout") // 회원 로그아웃 URL
-                        .logoutSuccessUrl("/admin/login?logout") // 로그아웃 성공 후 이동할 페이지
-                        .permitAll()
-                )
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .headers(header -> header
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                .csrf(AbstractHttpConfigurer::disable  // CSRF 보호 설정
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .invalidSessionUrl("/login")
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // 상태 비저장 세션 관리
                 )
-                .rememberMe(rememberMe -> rememberMe
-                        .userDetailsService(this.companyUserDetailsService)
-                        .key("uniqueAndSecret")
-                        .tokenValiditySeconds(86400) // 24 hours
+                .formLogin(form -> form
+                        .loginPage("/admin/login")  // 로그인 페이지 URL 설정 (하지만 로그인을 사용하지 않음)
+                        .defaultSuccessUrl("/home", true)  // 로그인 성공 시 리다이렉트
+                        .permitAll()  // 로그인 페이지 접근 허용
                 )
-                .addFilter(new CustomAuthenticationFilter(authenticationManager))
-                .userDetailsService(companyUserDetailsService);
+                .logout(logout -> logout
+                        .logoutUrl("/logout")  // 로그아웃 URL
+                        .logoutSuccessUrl("/home")  // 로그아웃 후 리다이렉트
+                        .permitAll()  // 로그아웃 페이지 접근 허용
+                );
 
         return http.build();
     }
-
-
 }

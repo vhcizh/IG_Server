@@ -58,6 +58,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<JobApplication> jobApplications;
 
+    @Column(name = "fcm_token", length = 255)
+    private String fcmToken;
+
     public void updateInfo(UserUpdate userRequest) {
         this.setPassword(userRequest.getPassword());
         this.setAge(userRequest.getAge());
