@@ -1,16 +1,13 @@
 package iGuard.Server.Service.user;
 
-import iGuard.Server.Entity.VisitedShelter;
+import iGuard.Server.Dto.user.VisitedShelterResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface VisitedShelterService {
 
     // 방문한 쉼터 등록
-    public VisitedShelter createVisitedShelter(Integer shelterId, Integer userId);
+    void createVisitedShelter(Integer userId, Integer shelterId);
 
-    // 방문한 쉼터 리스트 조회
-    public List<VisitedShelter> getVisitedShelter(Integer userId);
-
+    List<VisitedShelterResponse> getVisitedShelter();
 }

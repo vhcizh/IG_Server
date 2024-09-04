@@ -43,12 +43,6 @@ public class UserController {
         return "common/login";
     }
 
-    // 마이 페이지
-    @GetMapping("/mypage")
-    public String mypage() {
-        return "common/mypage";
-    }
-
     // 내 정보 페이지
     @GetMapping("/mypage/me")
     public String myInfoPage(Model model) {

@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface VisitedShelterRepository extends JpaRepository<VisitedShelter, Integer> {
 
-    List<VisitedShelter> findAllByUser_userid(Integer userid);
+    List<VisitedShelter> findAllByUser_id(String id);
 
 }
