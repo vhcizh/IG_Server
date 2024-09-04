@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,15 +17,19 @@ public class VisitedShelter {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "shelterid")
+    @JoinColumn(name = "shelterid", nullable = false)
     private Shelter shelter;
 
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userid", nullable = false)
     private User user;
 
-    @Column(name = "date")
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
+
+    @PrePersist
+    protected void onCreate() {
+        this.date = LocalDateTime.now();
+    }
 
 }
