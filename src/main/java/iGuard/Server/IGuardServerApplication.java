@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SpringBootApplication
-public class IGuardServerApplication {
+public class IGuardServerApplication{
 	//implements CommandLineRunner
 	@Autowired
 	private CSVReaderUtil csvReaderUtil;
@@ -37,10 +37,10 @@ public class IGuardServerApplication {
 	/*
 	@Override
 	public void run(String... args) throws Exception {
-		csvService.importCSV("src/main/resources/shelter.csv");
+		csvService.importCSV1("src/main/resources/shade.csv");
+		csvService.importCSV2("src/main/resources/toilet.csv");
 	}
 	 */
-
 
 
 	/*
