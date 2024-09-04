@@ -17,6 +17,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
         table, th, td {
             border: 1px solid black;
@@ -33,6 +34,9 @@
 <div id="place-info">
     <p>위도: <span id="latitude"></span></p>
     <p>경도: <span id="longitude"></span></p>
+
+    <!-- 명소 목록 -->
+    <h2>명소</h2>
     <table>
         <thead>
         <tr>
@@ -42,37 +46,58 @@
         </tr>
         </thead>
         <tbody id="places-list">
-        <!-- 장소 데이터가 여기에 표시됩니다 -->
+        <!-- 명소 데이터가 여기에 표시됩니다 -->
+        </tbody>
+    </table>
+
+    <!-- 쉼터 목록 -->
+    <h2>쉼터</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>위도</th>
+            <th>경도</th>
+        </tr>
+        </thead>
+        <tbody id="shelters-list">
+        <!-- 쉼터 데이터가 여기에 표시됩니다 -->
         </tbody>
     </table>
 </div>
 
 <script th:inline="javascript">
-    // Thymeleaf를 사용하여 서버에서 전달받은 places 데이터를 JavaScript 변수로 설정
     var places = /*[[${places}]]*/ [];
+    var shelters = /*[[${shelters}]]*/ [];
 
-    // 페이지가 로드된 후 지도 초기화 함수
     function initMap() {
-        // URL 파라미터에서 위도, 경도, 범위를 가져옵니다
         const urlParams = new URLSearchParams(window.location.search);
         const lat = parseFloat(urlParams.get('lat'));
         const lon = parseFloat(urlParams.get('lon'));
         const range = parseFloat(urlParams.get('range'));
 
         if (lat && lon && range) {
-            // 지도 생성 및 표시
             const mapContainer = document.getElementById('map');
             const mapOption = {
                 center: new kakao.maps.LatLng(lat, lon),
-                level: 7 // 지도의 확대 레벨
+                level: 7
             };
             const map = new kakao.maps.Map(mapContainer, mapOption);
 
-            console.log('Places Data:', places); // 데이터 확인용 로그
+            // 파란색 마커 이미지 설정 (명소용)
+            const blueMarkerImage = new kakao.maps.MarkerImage(
+                'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
+                new kakao.maps.Size(24, 35)
+            );
 
-            // 장소 데이터가 비어있는지 확인
+            // 빨간색 마커 이미지 설정 (쉼터용)
+            const redMarkerImage = new kakao.maps.MarkerImage(
+                'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+                new kakao.maps.Size(24, 35)
+            );
+
+            // 명소 데이터 추가
             if (Array.isArray(places) && places.length > 0) {
-                // 장소를 테이블에 추가
                 const placesList = document.getElementById('places-list');
                 places.forEach(place => {
                     const row = document.createElement('tr');
@@ -83,14 +108,13 @@
                     `;
                     placesList.appendChild(row);
 
-                    // 마커 추가
                     const markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
                     const marker = new kakao.maps.Marker({
                         position: markerPosition,
-                        map: map
+                        map: map,
+                        image: blueMarkerImage
                     });
 
-                    // 장소에 대한 정보창 설정
                     const infoWindow = new kakao.maps.InfoWindow({
                         content: `<div style="padding:5px;">${place.name}</div>`
                     });
@@ -99,11 +123,37 @@
                         infoWindow.open(map, marker);
                     });
                 });
-            } else {
-                console.log('주변 장소 데이터가 없습니다.');
             }
 
-            // 위도와 경도를 표시합니다
+            // 쉼터 데이터 추가
+            if (Array.isArray(shelters) && shelters.length > 0) {
+                const sheltersList = document.getElementById('shelters-list');
+                shelters.forEach(shelter => {
+                    const row = document.createElement('tr');
+                    row.innerHTML += `
+                        <td>${shelter.shelterName}</td>
+                        <td>${shelter.latitude}</td>
+                        <td>${shelter.longitude}</td>
+                    `;
+                    sheltersList.appendChild(row);
+
+                    const shelterPosition = new kakao.maps.LatLng(shelter.latitude, shelter.longitude);
+                    const shelterMarker = new kakao.maps.Marker({
+                        position: shelterPosition,
+                        map: map,
+                        image: redMarkerImage
+                    });
+
+                    const shelterInfoWindow = new kakao.maps.InfoWindow({
+                        content: `<div style="padding:5px; color:red;">${shelter.shelterName}</div>`
+                    });
+
+                    kakao.maps.event.addListener(shelterMarker, 'click', function() {
+                        shelterInfoWindow.open(map, shelterMarker);
+                    });
+                });
+            }
+
             document.getElementById('latitude').textContent = lat;
             document.getElementById('longitude').textContent = lon;
         } else {
@@ -111,7 +161,6 @@
         }
     }
 
-    // 카카오 지도 API 로딩 후 지도 초기화
     kakao.maps.load(initMap);
 </script>
 </body>
