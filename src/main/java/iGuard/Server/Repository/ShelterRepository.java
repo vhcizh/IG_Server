@@ -18,4 +18,5 @@ public interface ShelterRepository extends JpaRepository<Shelter, Integer> {
             "ORDER BY distance ASC " +
             "LIMIT 5", nativeQuery = true)
     List<Shelter> findNearestShelters(@Param("latitude") double latitude, @Param("longitude") double longitude);
+
 }

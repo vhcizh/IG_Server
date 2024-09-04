@@ -67,8 +67,8 @@ public class CSVService {
                 Shade shade = new Shade();
                 shade.setName(row[0]);
                 shade.setType(row[1]);
-                shade.setLatitude(Float.parseFloat(row[2]));
-                shade.setLongitude(Float.parseFloat(row[3]));
+                shade.setLongitude(Float.parseFloat(row[2]));
+                shade.setLatitude(Float.parseFloat(row[3]));
                 sr.save(shade);
             }
         }
@@ -82,8 +82,8 @@ public class CSVService {
             for (String[] row : rows) {
                 Toilet toilet = new Toilet();
                 toilet.setName(row[0]);
-                toilet.setLatitude(Float.parseFloat(row[1]));
-                toilet.setLongitude(Float.parseFloat(row[2]));
+                toilet.setLongitude(Float.parseFloat(row[1]));
+                toilet.setLatitude(Float.parseFloat(row[2]));
                 tr.save(toilet);
             }
         }

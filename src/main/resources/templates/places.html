@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nearby Places</title>
-    <!-- 카카오 지도 API를 불러오는 스크립트 -->
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=00d1961c0cca06b3691129126dbc752c"></script>
     <style>
         #map {
@@ -46,7 +45,6 @@
         </tr>
         </thead>
         <tbody id="places-list">
-        <!-- 명소 데이터가 여기에 표시됩니다 -->
         </tbody>
     </table>
 
@@ -61,7 +59,34 @@
         </tr>
         </thead>
         <tbody id="shelters-list">
-        <!-- 쉼터 데이터가 여기에 표시됩니다 -->
+        </tbody>
+    </table>
+
+    <!-- 화장실 목록 -->
+    <h2>화장실</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>위도</th>
+            <th>경도</th>
+        </tr>
+        </thead>
+        <tbody id="toilets-list">
+        </tbody>
+    </table>
+
+    <!-- 그늘막 목록 -->
+    <h2>그늘막</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>위도</th>
+            <th>경도</th>
+        </tr>
+        </thead>
+        <tbody id="shades-list">
         </tbody>
     </table>
 </div>
@@ -69,6 +94,8 @@
 <script th:inline="javascript">
     var places = /*[[${places}]]*/ [];
     var shelters = /*[[${shelters}]]*/ [];
+    var toilets = /*[[${toilets}]]*/ [];
+    var shades = /*[[${shades}]]*/ [];
 
     function initMap() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -84,84 +111,59 @@
             };
             const map = new kakao.maps.Map(mapContainer, mapOption);
 
-            // 파란색 마커 이미지 설정 (명소용)
-            const blueMarkerImage = new kakao.maps.MarkerImage(
-                'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
-                new kakao.maps.Size(24, 35)
-            );
+            const markerImages = {
+                places: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', new kakao.maps.Size(24, 35)),
+                shelters: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', new kakao.maps.Size(24, 35)),
+                toilets: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', new kakao.maps.Size(10, 15)),
+                shades: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', new kakao.maps.Size(10, 15))
+            };
 
-            // 빨간색 마커 이미지 설정 (쉼터용)
-            const redMarkerImage = new kakao.maps.MarkerImage(
-                'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
-                new kakao.maps.Size(24, 35)
-            );
+            function addMarkers(data, listId, markerType, infoColor) {
+                const list = document.getElementById(listId);
+                if (list && Array.isArray(data) && data.length > 0) {
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.name || item.shelterName || item.toiletName || item.shadeName}</td>
+                            <td>${item.latitude}</td>
+                            <td>${item.longitude}</td>
+                        `;
+                        list.appendChild(row);
 
-            // 명소 데이터 추가
-            if (Array.isArray(places) && places.length > 0) {
-                const placesList = document.getElementById('places-list');
-                places.forEach(place => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${place.name}</td>
-                        <td>${place.latitude}</td>
-                        <td>${place.longitude}</td>
-                    `;
-                    placesList.appendChild(row);
+                        const position = new kakao.maps.LatLng(item.latitude, item.longitude);
+                        const marker = new kakao.maps.Marker({
+                            position: position,
+                            map: map,
+                            image: markerImages[markerType]
+                        });
 
-                    const markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
-                    const marker = new kakao.maps.Marker({
-                        position: markerPosition,
-                        map: map,
-                        image: blueMarkerImage
+                        const infoWindow = new kakao.maps.InfoWindow({
+                            content: `<div style="padding:5px; color:${infoColor};">${item.name || item.shelterName || item.toiletName || item.shadeName}</div>`
+                        });
+
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            infoWindow.open(map, marker);
+                        });
                     });
-
-                    const infoWindow = new kakao.maps.InfoWindow({
-                        content: `<div style="padding:5px;">${place.name}</div>`
-                    });
-
-                    kakao.maps.event.addListener(marker, 'click', function() {
-                        infoWindow.open(map, marker);
-                    });
-                });
+                } else {
+                    console.log(`${listId} 데이터가 없습니다.`);
+                }
             }
 
-            // 쉼터 데이터 추가
-            if (Array.isArray(shelters) && shelters.length > 0) {
-                const sheltersList = document.getElementById('shelters-list');
-                shelters.forEach(shelter => {
-                    const row = document.createElement('tr');
-                    row.innerHTML += `
-                        <td>${shelter.shelterName}</td>
-                        <td>${shelter.latitude}</td>
-                        <td>${shelter.longitude}</td>
-                    `;
-                    sheltersList.appendChild(row);
+            addMarkers(places, 'places-list', 'places', 'black');
+            addMarkers(shelters, 'shelters-list', 'shelters', 'red');
+            addMarkers(toilets, 'toilets-list', 'toilets', 'blue');
+            addMarkers(shades, 'shades-list', 'shades', 'yello');
 
-                    const shelterPosition = new kakao.maps.LatLng(shelter.latitude, shelter.longitude);
-                    const shelterMarker = new kakao.maps.Marker({
-                        position: shelterPosition,
-                        map: map,
-                        image: redMarkerImage
-                    });
-
-                    const shelterInfoWindow = new kakao.maps.InfoWindow({
-                        content: `<div style="padding:5px; color:red;">${shelter.shelterName}</div>`
-                    });
-
-                    kakao.maps.event.addListener(shelterMarker, 'click', function() {
-                        shelterInfoWindow.open(map, shelterMarker);
-                    });
-                });
-            }
-
-            document.getElementById('latitude').textContent = lat;
-            document.getElementById('longitude').textContent = lon;
+            document.getElementById('latitude').innerText = lat;
+            document.getElementById('longitude').innerText = lon;
         } else {
-            alert('위도, 경도 또는 범위 파라미터가 올바르지 않습니다.');
+            alert('위도, 경도, 거리 값을 확인하세요.');
         }
     }
 
-    kakao.maps.load(initMap);
+    // 지도 초기화
+    window.onload = initMap;
 </script>
 </body>
 </html>

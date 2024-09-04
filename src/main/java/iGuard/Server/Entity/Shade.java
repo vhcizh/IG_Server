@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "shade")
 public class Shade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
