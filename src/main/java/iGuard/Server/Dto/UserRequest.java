@@ -1,7 +1,7 @@
 package iGuard.Server.Dto;
 
 import iGuard.Server.Entity.User;
-import iGuard.Server.Enum.ShelterCategory;
+import iGuard.Server.Enum.ShelterPreference;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -38,7 +38,7 @@ public class UserRequest {
     @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 올바르지 않습니다.") // 예: 010-1234-5678
     private String phone_number;
 
-    private List<ShelterCategory.Preference> preferences; // 카테고리 리스트 추가
+    private List<ShelterPreference> preferences; // 카테고리 리스트 추가
 
     @AssertTrue(message = "약관에 동의해야 합니다.")
     private boolean accepted;

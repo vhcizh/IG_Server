@@ -1,6 +1,6 @@
 package iGuard.Server.Entity;
 
-import iGuard.Server.Enum.ShelterCategory;
+import iGuard.Server.Enum.ShelterPreference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +20,6 @@ public class UserPreference {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "preference", nullable = false)
-    private ShelterCategory.Preference preference;
+    private ShelterPreference preference;
 
 }

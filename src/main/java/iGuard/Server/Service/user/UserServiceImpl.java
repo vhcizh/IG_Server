@@ -5,7 +5,7 @@ import iGuard.Server.Dto.UserResponse;
 import iGuard.Server.Dto.UserUpdate;
 import iGuard.Server.Entity.User;
 import iGuard.Server.Entity.UserPreference;
-import iGuard.Server.Enum.ShelterCategory;
+import iGuard.Server.Enum.ShelterPreference;
 import iGuard.Server.Repository.UserPreferenceRepository;
 import iGuard.Server.Repository.UserRepository;
 import iGuard.Server.Util.SecurityUserContextProvider;
@@ -36,13 +36,15 @@ public class UserServiceImpl implements UserService {
         // 유저 선호도 저장
         if(userRequest.getPreferences() != null && !userRequest.getPreferences().isEmpty()) {
             List<UserPreference> userPreferences = new ArrayList<>();
-            for (ShelterCategory.Preference preference : userRequest.getPreferences()) {
-                UserPreference userPreference = new UserPreference();
-                userPreference.setUser(user); // 방금 저장한 유저 설정
-                userPreference.setPreference(preference); // 선호도 설정
-                userPreferences.add(userPreference); // 리스트에 추가
+            for (ShelterPreference preference : userRequest.getPreferences()) {
+                if (preference.isAvailableForSignup()) {
+                    UserPreference userPreference = new UserPreference();
+                    userPreference.setUser(user);
+                    userPreference.setPreference(preference);
+                    userPreferences.add(userPreference);
+                }
             }
-            userPreferenceRepository.saveAll(userPreferences); // 한 번에 저장
+            userPreferenceRepository.saveAll(userPreferences);
         }
     }
 
