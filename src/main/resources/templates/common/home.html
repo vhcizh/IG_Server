@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kakao Map Example</title>
+    <title>홈페이지</title>
     <!-- 카카오 지도 API를 불러오는 스크립트 -->
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=	00d1961c0cca06b3691129126dbc752c"></script>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=00d1961c0cca06b3691129126dbc752c"></script>
     <style>
         #map {
             width: 100%;
@@ -21,51 +21,59 @@
 <h1>홈페이지</h1>
 <div id="map"></div>
 <div id="location-info">
-    <p id="latitude">위도: ${latitude}</p>
-    <p id="longitude">경도: ${longitude}</p>
+    <p id="latitude">위도: </p>
+    <p id="longitude">경도: </p>
 </div>
 <div th:replace="common/footer :: footer"></div>
 <script type="text/javascript">
-    // 초기 위치 값 설정
-    var lat = ${latitude};
-    var lon = ${longitude};
+    // 페이지가 로드될 때 실행될 함수
+    function initMap() {
+        // Geolocation API를 사용하여 현재 위치를 가져옵니다
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
 
-    // 지도 생성 및 표시
-    var mapContainer = document.getElementById('map'); // 지도를 표시할 div
-    var mapOption = {
-        center: new kakao.maps.LatLng(lat, lon), // 사용자의 현재 위치로 중심 설정
-        level: 2 // 지도의 확대 레벨
-    };
+                // 지도 생성 및 표시
+                var mapContainer = document.getElementById('map'); // 지도를 표시할 div
+                var mapOption = {
+                    center: new kakao.maps.LatLng(lat, lon), // 사용자의 현재 위치로 중심 설정
+                    level: 3 // 지도의 확대 레벨
+                };
 
-    // 지도를 생성합니다
-    var map = new kakao.maps.Map(mapContainer, mapOption);
+                // 지도를 생성합니다
+                var map = new kakao.maps.Map(mapContainer, mapOption);
 
-    // 마커가 표시될 위치입니다
-    var markerPosition = new kakao.maps.LatLng(lat, lon);
+                // 마커를 생성합니다
+                var marker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(lat, lon) // 마커의 위치
+                });
 
-    // 마커를 생성합니다
-    var marker = new kakao.maps.Marker({
-        position: markerPosition
-    });
+                // 마커를 지도에 표시합니다
+                marker.setMap(map);
 
-    // 마커가 지도 위에 표시되도록 설정합니다
-    marker.setMap(map);
+                // 위도와 경도를 표시합니다
+                document.getElementById('latitude').textContent = '위도: ' + lat;
+                document.getElementById('longitude').textContent = '경도: ' + lon;
 
-    // 장소 데이터 처리
-    var places = ${places}; // 서버로부터 전달된 장소 데이터
+                // 위치 정보를 `/places` 페이지에 전달할 수 있는 버튼
+                var button = document.createElement('button');
+                button.textContent = '주변 장소 보기';
+                button.onclick = function() {
+                    window.location.href = '/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
+                };
+                document.getElementById('location-info').appendChild(button);
 
-    places.forEach(place => {
-        var placeLatLng = new kakao.maps.LatLng(place.latitude, place.longitude);
+            }, function(error) {
+                alert('위치 정보를 가져올 수 없습니다. 에러 코드: ' + error.code);
+            });
+        } else {
+            alert('이 브라우저는 Geolocation API를 지원하지 않습니다.');
+        }
+    }
 
-        // 장소 마커를 생성합니다
-        var placeMarker = new kakao.maps.Marker({
-            position: placeLatLng,
-            title: place.name
-        });
-
-        // 마커가 지도 위에 표시되도록 설정합니다
-        placeMarker.setMap(map);
-    });
+    // 페이지 로드 후 지도 초기화
+    window.onload = initMap;
 </script>
 </body>
 </html>

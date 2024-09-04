@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+</head>
+<body>
+<h1>Result</h1>
+<p th:text="${message}"></p>
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+<a th:href="@{/notifications/send}">Send Another Notification</a>
+</body>
+</html>
+
