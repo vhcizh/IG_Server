@@ -32,11 +32,11 @@ public class CSVService {
                 shelter.setIsAvailable(Boolean.parseBoolean(row[3]));
                 shelter.setArea(Double.parseDouble(row[4]));
                 shelter.setCapacity(Integer.parseInt(row[5]));
-                shelter.setHasFan(Boolean.parseBoolean(row[6]));
-                shelter.setHasAirConditioner(Boolean.parseBoolean(row[7]));
-                shelter.setIsOpenAtNight(Boolean.parseBoolean(row[8]));
-                shelter.setIsOpenOnHolidays(Boolean.parseBoolean(row[9]));
-                shelter.setAllowsAccommodation(Boolean.parseBoolean(row[10]));
+                shelter.setHasFan(Integer.parseInt(row[6]));
+                shelter.setHasAirConditioner(Integer.parseInt(row[7]));
+                shelter.setIsOpenAtNight("y".equalsIgnoreCase(row[8]));
+                shelter.setIsOpenOnHolidays("y".equalsIgnoreCase(row[9]));
+                shelter.setAllowsAccommodation("y".equalsIgnoreCase(row[9]));
                 shelter.setNotes(row[11]);
                 shelter.setManagementAgency(row[12]);
                 shelter.setManagementAgencyPhone(row[13]);
