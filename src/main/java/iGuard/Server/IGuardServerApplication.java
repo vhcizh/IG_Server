@@ -17,22 +17,23 @@ import java.util.List;
 import java.util.Objects;
 
 @SpringBootApplication
-public class IGuardServerApplication {
-	//implements CommandLineRunner
-	@Autowired
-	private CSVReaderUtil csvReaderUtil;
+public class IGuardServerApplication
+//		implements CommandLineRunner
+{
 
-	@Autowired
-	private PlaceService placeService;
 
-	@Autowired
-	private CSVService csvService;
+//	@Autowired
+//	private CSVReaderUtil csvReaderUtil;
+//
+//	@Autowired
+//	private PlaceService placeService;
+//
+//	@Autowired
+//	private CSVService csvService;
 
 	public static void main(String[] args)  {
 		SpringApplication.run(IGuardServerApplication.class, args);
 	}
-
-
 
 	/*
 	@Override
@@ -40,8 +41,6 @@ public class IGuardServerApplication {
 		csvService.importCSV("src/main/resources/shelter.csv");
 	}
 	 */
-
-
 
 	/*
 	@Override

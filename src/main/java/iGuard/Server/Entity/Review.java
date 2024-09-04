@@ -1,6 +1,6 @@
 package iGuard.Server.Entity;
 
-import iGuard.Server.Enum.ReviewContent;
+import iGuard.Server.Enum.ShelterPreference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ public class Review {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "contents", nullable = false)
-    private ReviewContent contents;
+    private ShelterPreference contents;
 
     @Column(name = "rating", nullable = false)
     private Integer rating;
