@@ -1,9 +1,10 @@
 package iGuard.Server.Entity;
 
-import iGuard.Server.Enum.ShelterPreference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "review")
@@ -22,11 +23,14 @@ public class Review {
     @JoinColumn(name = "shelterid")
     private Shelter shelter;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "contents", nullable = false)
-    private ShelterPreference contents;
-
     @Column(name = "rating", nullable = false)
-    private Integer rating;
+    private Double rating;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
 }

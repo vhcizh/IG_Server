@@ -1,13 +1,11 @@
 package iGuard.Server.Controller;
 
+import iGuard.Server.Dto.user.ReviewDto;
 import iGuard.Server.Service.user.VisitedShelterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/common/mypage")
@@ -20,6 +18,7 @@ public class VisitedShelterController {
     @GetMapping("")
     public String getShelter(Model model) {
         model.addAttribute("shelters", visitedShelterService.getVisitedShelter());
+        model.addAttribute("reviewDto", new ReviewDto());
         return "common/mypage";
     }
 
@@ -31,16 +30,21 @@ public class VisitedShelterController {
     }
 
     // 쉼터 리뷰 작성
-    @PostMapping("/shelter/{shelterId}/review")
-    public String writeReview() {
-        return "";
+    @PostMapping("/shelter/review")
+    public String writeReview(@ModelAttribute ReviewDto reviewDto) {
+        System.out.println(reviewDto.getShelterId());
+        System.out.println(reviewDto.getRating());
+        System.out.println(reviewDto.getCategories());
+        System.out.println(reviewDto.getVisitedShelterId());
+        visitedShelterService.createReview(reviewDto);
+        return "redirect:/common/mypage";
     }
 
     // 내가 작성한 리뷰 조회 /mypage/shelter/reviews
-    @GetMapping("/shelter/reviews")
-    public String getMyReviews() {
-        return "";
-    }
+//    @GetMapping("/shelter/reviews")
+//    public String getMyReviews() {
+//        return "";
+//    }
 
     // 쉼터로그 작성
 

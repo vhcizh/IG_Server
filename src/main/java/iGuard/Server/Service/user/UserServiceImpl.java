@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,18 +31,20 @@ public class UserServiceImpl implements UserService {
         validateDuplicateUser(userRequest);
         userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         User user = userRepository.save(userRequest.toEntity());
+        List<ShelterPreference> preferences = userRequest.getPreferences();
 
         // 유저 선호도 저장
-        if(userRequest.getPreferences() != null && !userRequest.getPreferences().isEmpty()) {
-            List<UserPreference> userPreferences = new ArrayList<>();
-            for (ShelterPreference preference : userRequest.getPreferences()) {
-                if (preference.isAvailableForSignup()) {
-                    UserPreference userPreference = new UserPreference();
-                    userPreference.setUser(user);
-                    userPreference.setPreference(preference);
-                    userPreferences.add(userPreference);
-                }
-            }
+        if (preferences != null && !preferences.isEmpty()) {
+            List<UserPreference> userPreferences = preferences.stream()
+                    .filter(ShelterPreference::isAvailableForSignup)
+                    .map(preference -> {
+                        UserPreference userPreference = new UserPreference();
+                        userPreference.setUser(user);
+                        userPreference.setPreference(preference);
+                        return userPreference;
+                    })
+                    .toList();
+
             userPreferenceRepository.saveAll(userPreferences);
         }
     }

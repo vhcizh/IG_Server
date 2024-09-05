@@ -4,11 +4,11 @@ import iGuard.Server.Entity.Shelter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @AllArgsConstructor
 public class VisitedShelterResponse {
+    Integer visitedShelterId;
     Shelter shelter;
     String date;
+    Boolean reviewed;
 }

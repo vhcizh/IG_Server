@@ -60,7 +60,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/common/login")
-                        .defaultSuccessUrl("/common/home", true)
+                        .defaultSuccessUrl("/common/home", false)
                         .usernameParameter("id")
                         .passwordParameter("password")
                         .failureUrl("/common/login?error=true")
@@ -88,7 +88,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/admin/login")
-                        .defaultSuccessUrl("/admin/mypage", true)
+                        .defaultSuccessUrl("/admin/mypage", false)
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .failureUrl("/admin/login?error=true")

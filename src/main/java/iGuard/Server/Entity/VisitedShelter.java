@@ -27,6 +27,9 @@ public class VisitedShelter {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean reviewed;
+
     @PrePersist
     protected void onCreate() {
         this.date = LocalDateTime.now();
