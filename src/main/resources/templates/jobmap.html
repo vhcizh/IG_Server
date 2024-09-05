@@ -46,8 +46,8 @@
         <tbody id="shelters-list">
         </tbody>
     </table>
-
 </div>
+
 <script th:inline="javascript">
     var shelters = /*[[${shelters}]]*/ [];
 
@@ -93,6 +93,12 @@
                             image: markerImages[markerType]
                         });
 
+                        // 마커 클릭 시 팝업 창을 통해 일자리 등록 페이지로 이동
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            const shelterId = item.shelterId; // 쉼터 ID 가져오기
+                            const popup = window.open(`/job/create/${shelterId}`, 'jobPopup', 'width=600,height=400'); // 팝업 창 열기
+                        });
+
                         // 마커 클릭 시 정보창 열기
                         const infoWindow = new kakao.maps.InfoWindow({
                             content: `<div style="padding:5px; color:${infoColor};">${item.shelterName}</div>`
@@ -108,7 +114,7 @@
             }
 
             // 쉼터 목록과 마커 추가
-            addMarkers(shelters, 'shelters-list', 'shelters', 'red');
+            addMarkers(shelters, 'shelters-list', 'shelters', 'black');
 
             // 위도, 경도 값을 화면에 표시
             document.getElementById('latitude').innerText = lat;
