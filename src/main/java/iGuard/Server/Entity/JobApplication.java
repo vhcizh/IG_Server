@@ -23,5 +23,4 @@ public class JobApplication {
 
     @Column(name = "application_text", columnDefinition = "TEXT")
     private String applicationText;
-
 }

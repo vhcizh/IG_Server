@@ -1,5 +1,6 @@
 package iGuard.Server.Entity;
 
+import iGuard.Server.Enum.JobType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +16,10 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer jobId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "job_type", length = 50, nullable = false)
-    private String jobType;
+    private JobType jobType;
+
 
     @ManyToOne
     @JoinColumn(name = "shelter_id")
