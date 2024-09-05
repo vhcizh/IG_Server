@@ -1,8 +1,10 @@
 package iGuard.Server.Service.user;
 
 import iGuard.Server.Dto.user.ReviewDto;
+import iGuard.Server.Dto.user.ReviewResponse;
 import iGuard.Server.Dto.user.VisitedShelterResponse;
 import iGuard.Server.Entity.*;
+import iGuard.Server.Enum.ShelterPreference;
 import iGuard.Server.Repository.*;
 import iGuard.Server.Util.SecurityUserContextProvider;
 import lombok.RequiredArgsConstructor;
@@ -102,6 +104,22 @@ public class VisitedShelterServiceImpl implements VisitedShelterService {
         }
 
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewResponse> getMyReviews() {
+        String id = userContextProvider.getLoginUserId();
+        User user = userRepository.getById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        List<ReviewResponse> reviewList = reviewRepository.findReviewListByUserId(user.getUserid());
+
+        for (ReviewResponse review : reviewList) {
+            List<ShelterPreference> categories = reviewRepository.findCategoriesByReviewId(review.getReviewId());
+            review.setCategories(categories);
+        }
+
+        return reviewList;
     }
 
 }

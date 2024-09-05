@@ -32,19 +32,16 @@ public class VisitedShelterController {
     // 쉼터 리뷰 작성
     @PostMapping("/shelter/review")
     public String writeReview(@ModelAttribute ReviewDto reviewDto) {
-        System.out.println(reviewDto.getShelterId());
-        System.out.println(reviewDto.getRating());
-        System.out.println(reviewDto.getCategories());
-        System.out.println(reviewDto.getVisitedShelterId());
         visitedShelterService.createReview(reviewDto);
         return "redirect:/common/mypage";
     }
 
-    // 내가 작성한 리뷰 조회 /mypage/shelter/reviews
-//    @GetMapping("/shelter/reviews")
-//    public String getMyReviews() {
-//        return "";
-//    }
+    // 내가 작성한 리뷰
+    @GetMapping("/shelter/reviews")
+    public String getMyReviews(Model model) {
+        model.addAttribute("reviews", visitedShelterService.getMyReviews());
+        return "common/review";
+    }
 
     // 쉼터로그 작성
 
