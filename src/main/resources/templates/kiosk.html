@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shelter Kiosk</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+        h1 { color: #333; }
+        form { margin-bottom: 20px; }
+        input { margin-bottom: 10px; padding: 5px; width: 200px; }
+        button { background-color: #4CAF50; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; }
+        .message { background-color: #d4edda; border-color: #c3e6cb; color: #155724; padding: 10px; margin-bottom: 10px; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; padding: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+<h1>Shelter Kiosk</h1>
+
+<div th:if="${message}" class="message" th:text="${message}"></div>
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<h2>Enter Shelter</h2>
+<form action="/kiosk/enter" method="post">
+    <input type="number" name="shelterId" placeholder="Shelter ID" required><br>
+    <input type="tel" name="phoneNumber" placeholder="Phone Number" required><br>
+    <button type="submit">Enter</button>
+</form>
+
+<h2>Exit Shelter</h2>
+<form action="/kiosk/exit" method="post">
+    <input type="number" name="shelterId" placeholder="Shelter ID" required><br>
+    <input type="tel" name="phoneNumber" placeholder="Phone Number" required><br>
+    <button type="submit">Exit</button>
+</form>
+</body>
+</html>

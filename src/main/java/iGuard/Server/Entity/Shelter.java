@@ -30,6 +30,9 @@ public class Shelter {
     @Column(name = "area")
     private Double area;
 
+    @Column(name="current_person")
+    private Integer current;
+
     @Column(name = "capacity")
     private Integer capacity;
 

@@ -51,7 +51,7 @@ public class UserRequest {
                         ?address + ", " + detailAddress
                         :address
         );
-        user.setPhone_number(phone_number);
+        user.setPhoneNumber(phone_number);
         user.setAccepted(accepted);
         return user;
     }

@@ -27,7 +27,7 @@ public class UserResponse {
                 .age(AgeUtil.calculateAge(user.getAge()))
                 .birthDate(user.getAge())
                 .address(user.getAddress())
-                .phone_number(user.getPhone_number())
+                .phone_number(user.getPhoneNumber())
                 .build();
     }
 

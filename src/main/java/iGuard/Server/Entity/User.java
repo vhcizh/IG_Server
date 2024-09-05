@@ -32,7 +32,7 @@ public class User {
     private String address;
 
     @Column(name = "phone_number", length = 14, unique = true, nullable = false)
-    private String phone_number;
+    private String phoneNumber;
 
     @Column(name = "id", length = 50, unique = true, nullable = false)
     private String id;
@@ -69,7 +69,7 @@ public class User {
                         ? userRequest.getAddress() + ", " + userRequest.getDetailAddress()
                         : userRequest.getAddress()
         );
-        this.setPhone_number(userRequest.getPhone_number());
+        this.setPhoneNumber(userRequest.getPhone_number());
     }
 
 }
