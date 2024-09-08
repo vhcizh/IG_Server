@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Token Update Result</title>
+</head>
+<body>
+<h1>FCM Token Update Result</h1>
+<p th:text="${message}">Token update status will be displayed here.</p>
+<a href="/notifications/updateToken?userid=${user.userid}">Go back to update token</a>
+</body>
+</html>

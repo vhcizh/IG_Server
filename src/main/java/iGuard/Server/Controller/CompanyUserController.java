@@ -19,7 +19,6 @@ public class CompanyUserController {
     @Autowired
     private CompanyUserService companyUserService;
 
-
     @GetMapping("/mypage")
     public String getCompanyUser(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {

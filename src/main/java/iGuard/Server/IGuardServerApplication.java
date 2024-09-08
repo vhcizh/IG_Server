@@ -3,6 +3,7 @@ package iGuard.Server;
 import com.opencsv.exceptions.CsvValidationException;
 import iGuard.Server.Component.CSVReaderUtil;
 import iGuard.Server.Dto.PlaceDto;
+import iGuard.Server.Service.CSVService;
 import iGuard.Server.Service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,16 +18,27 @@ import java.util.Objects;
 
 @SpringBootApplication
 public class IGuardServerApplication {
-	//implements CommandLineRunner
+		//implements CommandLineRunner
+
 	@Autowired
 	private CSVReaderUtil csvReaderUtil;
 
 	@Autowired
 	private PlaceService placeService;
 
+	@Autowired
+	private CSVService csvService;
+
 	public static void main(String[] args)  {
 		SpringApplication.run(IGuardServerApplication.class, args);
 	}
+
+	/*
+	@Override
+	public void run(String... args) throws Exception {
+		csvService.importCSV("src/main/resources/shelter.csv");
+	}
+	 */
 
 	/*
 	@Override

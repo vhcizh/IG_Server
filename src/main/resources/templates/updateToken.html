@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FCM Token Update</title>
+</head>
+<body>
+<h1>FCM Token Update</h1>
+<form th:action="@{/notifications/updateToken(userid=${user.userid})}" method="post">
+    <input type="hidden" name="userid" th:value="${user.userid}">
+    <label for="token">Token:</label>
+    <input type="text" id="token" name="token" required>
+    <button type="submit">Update Token</button>
+</form>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+<script th:inline="javascript">
+    // Firebase 초기화 코드
+    const firebaseConfig = {
+        // Firebase 설정값
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const messaging = firebase.messaging();
+    messaging.getToken().then((currentToken) => {
+        if (currentToken) {
+            document.getElementById('token').value = currentToken;
+        } else {
+            console.log('No registration token available. Request permission to generate one.');
+        }
+    }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+    });
+</script>
+</body>
+</html>

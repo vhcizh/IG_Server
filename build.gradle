@@ -21,6 +21,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	google()
 }
 
 dependencies {
@@ -46,6 +47,9 @@ dependencies {
 	implementation 'org.apache.commons:commons-csv:1.8'
 	implementation 'com.opencsv:opencsv:5.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
+	implementation 'com.google.firebase:firebase-messaging:23.0.0'
+	implementation 'com.google.firebase:firebase-firestore:24.0.0'
 
 }
 

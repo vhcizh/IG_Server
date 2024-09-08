@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FCM Token Management</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+</head>
+<body>
+<h1>FCM Token Management</h1>
+
+<p>User ID: <span th:text="${userid}"></span></p>
+<p>Current FCM Token: <span th:text="${token}">No token available</span></p>
+
+<button onclick="getNewToken()">Get New Token</button>
+
+<script th:inline="javascript">
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiAfx7t19a2pF6llcR_2r02Jr23URKQBI",
+      authDomain: "iguard-f7d74.firebaseapp.com",
+      projectId: "iguard-f7d74",
+      storageBucket: "iguard-f7d74.appspot.com",
+      messagingSenderId: "434747743462",
+      appId: "1:434747743462:web:91ed529af1cab5383c6f27",
+      measurementId: "G-SC45BCKZ1Z"
+    };
+
+    // Firebase 초기화
+    firebase.initializeApp(firebaseConfig);
+
+    // VAPID Key
+    const vapidKey = "BFujyx3ze_DwRxyTryTvAe4ituxNMXz-XsY7Tjh6L8lCanQaniqqpcathIaH3qTtkaM54BFugUasYva_Uh2hjLQ";
+
+    // 사용자 ID를 Thymeleaf 변수로 설정
+    const userId = /*[[${userid}]]*/ null;
+
+    // Service Worker 등록
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            .then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            }).catch(function(err) {
+                console.log('Service Worker registration failed:', err);
+            });
+    } else {
+        console.log('Service workers are not supported.');
+    }
+
+    const messaging = firebase.messaging();
+
+    // 새로운 토큰 가져오기
+    function getNewToken() {
+        messaging.getToken({ vapidKey: vapidKey }).then((currentToken) => {
+            if (currentToken) {
+                // 서버로 토큰 전송
+                sendTokenToServer(currentToken);
+            } else {
+                console.log('No registration token available. Request permission to generate one.');
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+        });
+    }
+
+    // 서버로 토큰 전송
+function sendTokenToServer(token) {
+    fetch('/fcm/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `userid=${userId}&token=${token}`
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(result => {
+        console.log(result);
+        // 페이지 새로고침하여 새 토큰 표시
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+</body>
+</html>
