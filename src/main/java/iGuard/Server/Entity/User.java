@@ -1,5 +1,6 @@
 package iGuard.Server.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import iGuard.Server.Dto.UserUpdate;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -56,6 +57,7 @@ public class User {
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<JobApplication> jobApplications;
 
     @Column(name = "fcm_token", length = 255)

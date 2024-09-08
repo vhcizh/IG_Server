@@ -1,5 +1,7 @@
 package iGuard.Server.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +21,11 @@ public class JobApplication {
 
     @ManyToOne
     @JoinColumn(name = "jobid")
+    @JsonIgnore
+    @JsonBackReference
     private Job job;
 
     @Column(name = "application_text", columnDefinition = "TEXT")
     private String applicationText;
+
 }
