@@ -34,10 +34,10 @@ public class Shelter {
     private Integer capacity;
 
     @Column(name = "has_fan")
-    private Boolean hasFan;
+    private Integer hasFan;
 
     @Column(name = "has_air_conditioner")
-    private Boolean hasAirConditioner;
+    private Integer hasAirConditioner;
 
     @Column(name = "is_open_at_night")
     private Boolean isOpenAtNight;
