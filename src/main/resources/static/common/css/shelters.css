@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.filter {
+    margin-bottom: 20px;
+}
+
+.filter label {
+    margin-right: 10px;
+}
+
+.filter select, .filter input[type="text"] {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+/* 버튼 형태의 체크박스 */
+.filter .checkbox-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-btn.active {
+    border: #007bff;
+    color: white;
+}
+
+.checkbox-btn input {
+    display: none;
+}
+
+.shelter a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.shelter:hover {
+    background-color: #efefef;
+}
+
+/* 페이징 버튼 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    color: #0056b3;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    color: white;
+    background-color: #0056b3;
+}
+
+.pagination a.active {
+    color: white;
+    background-color: #0056b3;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}

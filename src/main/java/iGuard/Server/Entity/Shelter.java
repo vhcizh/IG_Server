@@ -33,6 +33,9 @@ public class Shelter {
     @Column(name = "capacity")
     private Integer capacity;
 
+    @Column(name = "current_occupancy")
+    private Integer currentOccupancy;
+
     @Column(name = "has_fan")
     private Integer hasFan;
 
