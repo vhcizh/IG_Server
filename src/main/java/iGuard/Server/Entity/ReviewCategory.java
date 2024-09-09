@@ -16,7 +16,7 @@ public class ReviewCategory {
     private Integer reviewCategoryId;
 
     @ManyToOne
-    @JoinColumn(name = "review_id")
+    @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
     @Enumerated(EnumType.STRING)

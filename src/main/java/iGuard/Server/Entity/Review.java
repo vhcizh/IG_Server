@@ -23,7 +23,7 @@ public class Review {
     @JoinColumn(name = "shelterid")
     private Shelter shelter;
 
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating")
     private Double rating;
 
     private LocalDateTime createdAt;
