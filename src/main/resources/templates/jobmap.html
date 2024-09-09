@@ -93,19 +93,30 @@
                             image: markerImages[markerType]
                         });
 
-                        // 마커 클릭 시 팝업 창을 통해 일자리 등록 페이지로 이동
+                        // 마커 클릭 시 팝업 창을 통해 선택 옵션 제공
                         kakao.maps.event.addListener(marker, 'click', function() {
-                            const shelterId = item.shelterId; // 쉼터 ID 가져오기
-                            const popup = window.open(`/job/create/${shelterId}`, 'jobPopup', 'width=600,height=400'); // 팝업 창 열기
+                            const shelterId = item.shelterId;
+                           const choice = confirm('어떤 작업을 하시겠습니까?\n\n[확인] 일자리 등록\n[취소] 지원 현황 확인');
+                            if (choice) {
+                                // 일자리 등록 페이지로 이동
+                                window.open(`/job/create/${shelterId}`, 'jobPopup', 'width=600,height=400');
+                            } else {
+                                // 지원 현황 확인 페이지로 이동
+                                window.open(`/job/shelter/${shelterId}`, 'applicationsPopup', 'width=800,height=600');
+                            }
                         });
 
-                        // 마커 클릭 시 정보창 열기
+                        // 마커에 마우스 오버 시 정보창 열기
                         const infoWindow = new kakao.maps.InfoWindow({
                             content: `<div style="padding:5px; color:${infoColor};">${item.shelterName}</div>`
                         });
 
-                        kakao.maps.event.addListener(marker, 'click', function() {
+                        kakao.maps.event.addListener(marker, 'mouseover', function() {
                             infoWindow.open(map, marker);
+                        });
+
+                        kakao.maps.event.addListener(marker, 'mouseout', function() {
+                            infoWindow.close();
                         });
                     });
                 } else {

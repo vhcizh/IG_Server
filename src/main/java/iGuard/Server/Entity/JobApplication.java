@@ -28,4 +28,7 @@ public class JobApplication {
     @Column(name = "application_text", columnDefinition = "TEXT")
     private String applicationText;
 
+    @Column(name = "is_accepted")
+    private Boolean isAccepted;
+
 }

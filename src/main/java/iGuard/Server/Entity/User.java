@@ -63,6 +63,16 @@ public class User {
     @Column(name = "fcm_token", length = 255)
     private String fcmToken;
 
+    @Column(name = "job_id", nullable = true)
+    private Integer jobId; // 합격된 일자리 ID
+
+    public void setJob(Job job) {
+        if (job != null) {
+            this.jobId = job.getJobId();
+        } else {
+            this.jobId = null;
+        }
+    }
     public void updateInfo(UserUpdate userRequest) {
         this.setPassword(userRequest.getPassword());
         this.setAge(userRequest.getAge());
@@ -73,5 +83,8 @@ public class User {
         );
         this.setPhoneNumber(userRequest.getPhone_number());
     }
+
+
+
 
 }

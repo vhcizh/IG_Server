@@ -2,6 +2,7 @@ package iGuard.Server.Controller;
 
 
 import iGuard.Server.Entity.Job;
+import iGuard.Server.Entity.JobApplication;
 import iGuard.Server.Entity.Shelter;
 import iGuard.Server.Enum.JobType;
 import iGuard.Server.Service.JobService;
@@ -52,6 +53,28 @@ public class JobController {
         Job newJob = js.createJob(shelterId, jobType);
         model.addAttribute("job", newJob);
         return "jobCreatedPopupClose";
+    }
+
+    @GetMapping("/applications")//없어도 되긴함...
+    public String viewJobApplications(@RequestParam Integer jobId, Model model) {
+        List<JobApplication> jobApplications = js.getJobApplicationsByJobId(jobId);
+        model.addAttribute("applications", jobApplications);
+        return "jobApplications";
+    }
+
+    @GetMapping("/shelter/{shelterId}")
+    public String viewApplicationsByShelter(@PathVariable Integer shelterId, Model model) {
+        List<JobApplication> jobapplications = js.getApplicationsByShelterId(shelterId);
+        model.addAttribute("applications", jobapplications);
+        model.addAttribute("shelterId", shelterId);
+        return "jobApplications";
+    }
+
+    // 일자리 신청 합격/탈락 처리
+    @PostMapping("/shelter/{shelterId}")
+    public String updateApplicationStatus(@PathVariable Integer shelterId,@RequestParam Integer applicationId, @RequestParam boolean isAccepted, Model model) {
+        js.updateApplicationStatus(applicationId, isAccepted);
+        return "redirect:/job/shelter/"+shelterId; // 신청 목록으로 리다이렉트
     }
 
 }
