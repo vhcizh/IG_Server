@@ -3,6 +3,7 @@ package iGuard.Server.Dto;
 import iGuard.Server.Entity.User;
 import iGuard.Server.Util.AgeUtil;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,7 @@ public class UserUpdate {
     @NotBlank(message = "비밀번호는 필수입니다.")
     private String password;
 
-    @NotBlank(message = "나이는 필수입니다.")
+    @NotNull(message = "생년월일은 필수입니다.")
     private LocalDate age;
 
     @NotBlank(message = "주소는 필수입니다.")

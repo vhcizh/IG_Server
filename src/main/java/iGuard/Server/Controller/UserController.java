@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,22 +28,19 @@ public class UserController {
 
     // 회원가입 처리
     @PostMapping("/join")
-    public String join(@Valid @ModelAttribute UserRequest userRequest, RedirectAttributes redirectAttributes) {
+    public String join(@Valid @ModelAttribute UserRequest userRequest, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            // 유효성 검사 오류가 있을 경우, join 페이지로 돌아감
+            return "redirect:join"; // join.html로 돌아감
+        }
         userService.registerUser(userRequest);
-        redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다.");
-        return "redirect:home"; // 리다이렉트 경로 수정
+        return "redirect:/common/home"; // 리다이렉트 경로 수정
     }
 
     // 로그인 페이지
     @GetMapping("/login")
     public String loginPage() {
         return "common/login";
-    }
-
-    // 마이 페이지
-    @GetMapping("/mypage")
-    public String mypage() {
-        return "common/mypage";
     }
 
     // 내 정보 페이지
@@ -56,14 +54,14 @@ public class UserController {
     @PostMapping("/mypage/me")
     public String updateMyInfo(@Valid @ModelAttribute UserUpdate userRequest) {
         userService.updateUser(userRequest);
-        return "redirect:mypage/me";
+        return "redirect:/common/mypage/me";
     }
 
     // 회원 탈퇴
     @DeleteMapping("/mypage/me")
     public String deleteMe() {
         userService.deleteUser();
-        return "redirect:/home";
+        return "redirect:/common/home";
     }
 
 

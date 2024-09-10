@@ -27,7 +27,7 @@ public class CompanyUserController {
 
             if (companyUser != null) {
                 model.addAttribute("companyUser", companyUser);
-                return "company_mypage";
+                return "admin/company_mypage";
             }
         }
         return "redirect:/admin/login";
@@ -60,6 +60,6 @@ public class CompanyUserController {
     @PostMapping("/mypage/delete")
     public String deleteCompanyUser(@RequestParam int companyUserId) {
         companyUserService.deleteCompanyUser(companyUserId);
-        return "redirect:/home";
+        return "redirect:/common/home";
     }
 }

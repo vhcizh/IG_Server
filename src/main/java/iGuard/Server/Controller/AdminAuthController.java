@@ -34,12 +34,12 @@ public class AdminAuthController {
 
     @GetMapping("/register")
     public String register(){
-        return "company_register";
+        return "admin/company_register";
     }
     // 로그인 폼 표시
     @GetMapping("/login")
     public String showLoginForm() {
-        return "company_login"; // login.html 템플릿을 반환
+        return "admin/company_login"; // login.html 템플릿을 반환
     }
 
     @PostMapping("/login")
@@ -63,9 +63,9 @@ public class AdminAuthController {
             session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
             // Redirect to home page
-            return "redirect:mypage";
+            return "redirect:/admin/mypage";
         } else {
-            return "company_login";
+            return "admin/company_login";
         }
     }
 
@@ -77,7 +77,7 @@ public class AdminAuthController {
         // 사용자가 이미 존재하는지 확인
         if (companyUserService.findByCompanyEmail(email) != null) {
             model.addAttribute("message", "이미 등록된 이메일입니다.");
-            return "company_register";
+            return "admin/company_register";
         }
         // 사용자 등록
         CompanyUser user = new CompanyUser();
@@ -93,7 +93,7 @@ public class AdminAuthController {
 
         model.addAttribute("email", email);
         model.addAttribute("message", "인증메일이 보내졌습니다. 아래에 인증코드를 입력해 주세요.");
-        return "verify";
+        return "admin/verify";
     }
 
     // 사용자 등록 폼 표시
@@ -117,6 +117,6 @@ public class AdminAuthController {
             model.addAttribute("message", "유효하지 않습니다.");
         }
         model.addAttribute("email", email); // 이메일 주소를 유지
-        return "home";
+        return "common/home";
     }
 }

@@ -3,24 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <title>마이페이지</title>
-    <link rel="stylesheet" href="styles.css"> <!-- 스타일 시트 링크 -->
+    <link rel="stylesheet" th:href="@{/common/css/mypage.css}" />
+    <script th:src="@{/common/js/mypage.js}"></script>
 </head>
 <body>
-<header>
-    <h1>마이페이지</h1>
-</header>
 
-<main>
-    <h2>마이페이지</h2>
-    <p>여기에서 다양한 기능을 이용하실 수 있습니다.</p>
+    <div th:replace="common/header :: header"></div>
 
-    <!-- 내 정보로 이동하는 버튼 -->
-    <button onclick="location.href='/common/mypage/me'">내 정보</button>
-</main>
+    <main>
+        <h2>마이페이지</h2>
+        <div th:replace="common/mypage_nav :: nav"></div>
 
-<footer>
-    <p>&copy; 2024 나의 웹사이트</p>
-</footer>
+        <div>
+            <h3>방문 쉼터 지정</h3>
+            <form th:action="@{/common/mypage/shelter}" method="post">
+                <label for="userId">User ID:</label>
+                <input type="number" id="userId" name="userId" required>
+                <br>
+                <label for="shelterId">Shelter ID:</label>
+                <input type="number" id="shelterId" name="shelterId" required>
+                <br>
+                <button type="submit">등록</button>
+            </form>
+        </div>
+
+        <div>
+            <h3>이용한 쉼터 내역</h3>
+            <ul>
+                <li>쉼터명칭, 방문날짜, 리뷰작성, 쉼터로그, 민원작성</li>
+                <li th:each="visitedShelter : ${shelters}">
+                    <span th:text="${visitedShelter.shelter.shelterName}"></span>
+                    <span th:text="${visitedShelter.date}"></span>
+                    <span th:text="${visitedShelter.reviewed}"></span>
+                    <span th:if="${visitedShelter.reviewed}">작성완료</span>
+                    <button th:if="${!visitedShelter.reviewed}"
+                            th:onclick="'openModal(' + ${visitedShelter.shelter.shelterId} + ', ' + ${visitedShelter.visitedShelterId} + ')'">
+                        리뷰작성</button>
+                    <a href="">쉼터로그</a>
+                    <a href="">민원작성</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- 모달 HTML 수정 -->
+        <div id="reviewModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>리뷰 작성</h3>
+                <form id="reviewForm" th:action="@{/common/mypage/shelter/review}" method="post" th:object="${reviewDto}">
+    <!--                <input type="hidden"  name="shelterId">-->
+                    <input type="hidden" id="modal_visitedShelterId" th:field="*{visitedShelterId}" />
+                    <input type="hidden" id="modal_shelterId" th:field="*{shelterId}" />
+                    <div class="star-rating">
+                        <div class="star-value"></div>
+    <!--                    <input type="radio" name="rating" value="0.5"><i></i>-->
+                        <input type="radio" th:field="*{rating}" value="0.5"/><i></i>
+                        <input type="radio" th:field="*{rating}" value="1"><i></i>
+                        <input type="radio" th:field="*{rating}" value="1.5"><i></i>
+                        <input type="radio" th:field="*{rating}" value="2"><i></i>
+                        <input type="radio" th:field="*{rating}" value="2.5"><i></i>
+                        <input type="radio" th:field="*{rating}" value="3"><i></i>
+                        <input type="radio" th:field="*{rating}" value="3.5"><i></i>
+                        <input type="radio" th:field="*{rating}" value="4"><i></i>
+                        <input type="radio" th:field="*{rating}" value="4.5"><i></i>
+                        <input type="radio" th:field="*{rating}" value="5"><i></i>
+                    </div>
+                    <p>선택한 별점: <span id="selected-rating">0</span></p>
+
+                    <div class="category-list">
+                        <div class="category-item">
+    <!--                        <input type="checkbox" id="CLEAN" name="categories" value="CLEAN">-->
+                            <input type="checkbox" id="CLEAN" th:field="*{categories}" value="CLEAN">
+                            <label for="CLEAN">청결해요</label>
+                        </div>
+                        <div class="category-item">
+                            <input type="checkbox" id="COOL" th:field="*{categories}" value="COOL">
+                            <label for="COOL">시원해요</label>
+                        </div>
+                        <div class="category-item">
+                            <input type="checkbox" id="KIND" th:field="*{categories}" value="KIND">
+                            <label for="KIND">친절해요</label>
+                        </div>
+                        <div class="category-item">
+                            <input type="checkbox" id="FUN" th:field="*{categories}" value="FUN">
+                            <label for="FUN">즐길거리가 있어요</label>
+                        </div>
+                        <div class="category-item">
+                            <input type="checkbox" id="CROWDED" th:field="*{categories}" value="CROWDED">
+                            <label for="CROWDED">사람이 많아요</label>
+                        </div>
+                        <div class="category-item">
+                            <input type="checkbox" id="RELAXING" th:field="*{categories}" value="RELAXING">
+                            <label for="RELAXING">쉬기 좋아요</label>
+                        </div>
+                        <div class="category-item">
+                            <input type="checkbox" id="QUIET" th:field="*{categories}" value="QUIET">
+                            <label for="QUIET">조용해요</label>
+                        </div>
+                        <div class="category-item">
+                            <input type="checkbox" id="PARKING_AVAILABLE" th:field="*{categories}" value="PARKING_AVAILABLE">
+                            <label for="PARKING_AVAILABLE">주차가 가능해요</label>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="submit">제출</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <div th:replace="common/footer :: footer"></div>
+
 </body>
 </html>
-

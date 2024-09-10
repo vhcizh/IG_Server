@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 리뷰</title>
+</head>
+<body>
+
+    <div th:replace="common/header :: header"></div>
+
+    <main>
+        <h2>나의 리뷰 목록</h2>
+        <div th:replace="common/mypage_nav :: nav"></div>
+
+        <ul>
+            <li>쉼터명칭, 별점, 카테고리, 작성날짜</li>
+            <li th:each="review : ${reviews}">
+                <span th:text="${review.shelterName}"></span>
+                <span th:text="${review.rating}"></span>
+                <span th:text="${review.createdAt}"></span>
+                <span th:each="category : ${review.categories}">
+                    <span th:text="${category.description}"></span>
+                </span>
+            </li>
+        </ul>
+
+    </main>
+
+    <div th:replace="common/footer :: footer"></div>
+
+</body>
+</html>

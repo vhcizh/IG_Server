@@ -4,19 +4,39 @@
     <meta charset="UTF-8">
     <title>기관에게 쉼터 추천 페이지</title>
     <style>
+        /* 전체 컨테이너 스타일 */
+        .button-container {
+            display: flex;
+            width: 100%; /* 맵과 동일한 너비 */
+        }
+
+        /* 탭 숨김 */
         .tab {
             display: none;
         }
+
+        /* 탭 버튼 스타일 */
         .tab-button {
+            flex: 1; /* 버튼을 동일한 비율로 나누기 */
             cursor: pointer;
             padding: 10px;
             background-color: #f1f1f1;
             border: 1px solid #ccc;
-            display: inline-block;
+            margin-right: 5px; /* 버튼 간격 */
+            text-align: center; /* 텍스트 중앙 정렬 */
         }
+
+        /* 마지막 버튼의 오른쪽 여백 제거 */
+        .tab-button:last-child {
+            margin-right: 0;
+        }
+
+        /* 활성화된 탭 버튼 스타일 */
         .active {
             background-color: #ddd;
         }
+
+        /* iframe 스타일 */
         .mapFrame {
             width: 100%;
             height: 600px;
@@ -25,11 +45,9 @@
     </style>
 </head>
 <body>
-<header>
-    <h1>기관에게 쉼터 추천 페이지</h1>
-</header>
+<div th:replace="admin/header :: header"></div>
 
-<div>
+<div class="button-container">
     <div class="tab-button active" onclick="showTab('tab1')">종합 추천</div>
     <div class="tab-button" onclick="showTab('tab2')">노인 명소 개수</div>
     <div class="tab-button" onclick="showTab('tab3')">노인 승하차 인원</div>
@@ -61,9 +79,7 @@
     <iframe class="mapFrame" src="/admin/서울_전기사용량_map.html"></iframe>
 </div>
 
-<footer>
-    <p>푸터 내용</p>
-</footer>
+<div th:replace="common/footer :: footer"></div>
 
 <script>
     function showTab(tabId) {

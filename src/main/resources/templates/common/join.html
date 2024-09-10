@@ -3,6 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
+    <style>
+        .category-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .category-button.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
         function sample6_execDaumPostcode() {
@@ -42,12 +63,23 @@
             }).open();
         }
     </script>
+    <script>
+        function toggleSelection(value) {
+            const checkbox = document.querySelector(`input[value="${value}"]`);
+            checkbox.checked = !checkbox.checked;
+
+            const button = checkbox.parentElement;
+            button.classList.toggle('selected', checkbox.checked);
+        }
+    </script>
 </head>
 <body>
+<div th:replace="common/header :: header"></div>
 <h1>회원 가입</h1>
 <form action="#" th:action="@{/common/join}" th:object="${userRequest}" method="post">
     <label for="id">아이디:</label>
     <input type="text" id="id" th:field="*{id}" required /><br/>
+
 
     <label for="password">비밀번호:</label>
     <input type="password" id="password" th:field="*{password}" required /><br/>
@@ -66,17 +98,63 @@
     <input type="text" id="detailAddress" th:field="*{detailAddress}" placeholder="상세주소" required /><br/>
 
 <!--    <label for="extraAddress">참고항목:</label>-->
-
     <input type="hidden" id="extraAddress" placeholder="참고항목" readonly /><br/>
 
     <label for="phone_number">전화번호:</label>
     <input type="text" id="phone_number" th:field="*{phone_number}" placeholder="010-1234-5678" required /><br/>
+
+    <div>
+        <label class="category-button" th:for="'CLEAN'" onclick="toggleSelection('CLEAN')">
+            <input type="checkbox" th:field="*{preferences}" value="CLEAN" class="hidden" th:id="'CLEAN'" /> 청결해요
+        </label>
+        <label class="category-button" th:for="'COOL'" onclick="toggleSelection('COOL')">
+            <input type="checkbox" th:field="*{preferences}" value="COOL" class="hidden" th:id="'COOL'" /> 시원해요
+        </label>
+        <label class="category-button" th:for="'KIND'" onclick="toggleSelection('KIND')">
+            <input type="checkbox" th:field="*{preferences}" value="KIND" class="hidden" th:id="'KIND'" /> 친절해요
+        </label>
+        <label class="category-button" th:for="'FUN'" onclick="toggleSelection('FUN')">
+            <input type="checkbox" th:field="*{preferences}" value="FUN" class="hidden" th:id="'FUN'" /> 즐길거리가 있어요
+        </label>
+        <label class="category-button" th:for="'CROWDED'" onclick="toggleSelection('CROWDED')">
+            <input type="checkbox" th:field="*{preferences}" value="CROWDED" class="hidden" th:id="'CROWDED'" /> 사람이 많아요
+        </label>
+        <label class="category-button" th:for="'RELAXING'" onclick="toggleSelection('RELAXING')">
+            <input type="checkbox" th:field="*{preferences}" value="RELAXING" class="hidden" th:id="'RELAXING'" /> 쉬기 좋아요
+        </label>
+        <label class="category-button" th:for="'QUIET'" onclick="toggleSelection('QUIET')">
+            <input type="checkbox" th:field="*{preferences}" value="QUIET" class="hidden" th:id="'QUIET'" /> 조용해요
+        </label>
+        <label class="category-button" th:for="'PARKING_AVAILABLE'" onclick="toggleSelection('PARKING_AVAILABLE')">
+            <input type="checkbox" th:field="*{preferences}" value="PARKING_AVAILABLE" class="hidden" th:id="'PARKING_AVAILABLE'" /> 주차가 가능해요
+        </label>
+        <label class="category-button" th:for="'NIGHT_OPEN'" onclick="toggleSelection('NIGHT_OPEN')">
+            <input type="checkbox" th:field="*{preferences}" value="NIGHT_OPEN" class="hidden" th:id="'NIGHT_OPEN'" /> 야간개방
+        </label>
+        <label class="category-button" th:for="'HOLIDAY_OPEN'" onclick="toggleSelection('HOLIDAY_OPEN')">
+            <input type="checkbox" th:field="*{preferences}" value="HOLIDAY_OPEN" class="hidden" th:id="'HOLIDAY_OPEN'" /> 휴일개방
+        </label>
+        <label class="category-button" th:for="'ACCOMMODATION_AVAILABLE'" onclick="toggleSelection('ACCOMMODATION_AVAILABLE')">
+            <input type="checkbox" th:field="*{preferences}" value="ACCOMMODATION_AVAILABLE" class="hidden" th:id="'ACCOMMODATION_AVAILABLE'" /> 숙박가능
+        </label>
+    </div>
 
     <label>
         <input type="checkbox" th:field="*{accepted}" /> 약관 동의
     </label><br/>
 
     <button type="submit">가입하기</button>
+
+    <!-- 플래시 메시지 표시 -->
+    <div th:if="${message}" th:text="${message}"></div>
 </form>
+<div th:replace="common/footer :: footer"></div>
 </body>
 </html>
+
+
+
+
+
+
+

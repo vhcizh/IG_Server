@@ -17,13 +17,14 @@
     </style>
 </head>
 <body>
+<div th:replace="common/header :: header"></div>
 <h1>홈페이지</h1>
 <div id="map"></div>
 <div id="location-info">
     <p id="latitude">위도: </p>
     <p id="longitude">경도: </p>
 </div>
-
+<div th:replace="common/footer :: footer"></div>
 <script type="text/javascript">
     // 페이지가 로드될 때 실행될 함수
     function initMap() {
