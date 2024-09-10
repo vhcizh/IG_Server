@@ -65,7 +65,7 @@
             <ul>
                 <li>쉼터명칭, 현재 이용인원, 거리</li>
                 <li th:each="shelter : ${shelters}" class="shelter">
-                    <a th:href="@{/common/shelters/${shelter.shelterId}}">
+                    <a th:href="@{/common/shelters/{shelterId}(shelterId=${shelter.shelterId})}">
                         <span th:text="${shelter.shelterName}"></span>
                         <span th:text="${shelter.capacity}"></span>
                         <span th:text="${shelter.distance}"></span>

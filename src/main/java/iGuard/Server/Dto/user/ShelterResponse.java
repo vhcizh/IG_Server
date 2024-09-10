@@ -10,6 +10,9 @@ public class ShelterResponse {
     private String shelterName;
     private String capacity;
     private Integer distance;
+    private String address;
+    private Integer fanCount;
+    private Integer airConditionerCount;
 
     public static ShelterResponse toResponse(Shelter shelter) {
         ShelterResponse response = new ShelterResponse();
@@ -17,6 +20,9 @@ public class ShelterResponse {
         response.setShelterName(shelter.getShelterName());
         response.setCapacity(shelter.getCurrentOccupancy() + " / " + shelter.getCapacity());
 //        response.setDistance();
+        response.setAddress(shelter.getAddress());
+        response.setFanCount(shelter.getHasFan());
+        response.setAirConditionerCount(shelter.getHasAirConditioner());
         return response;
     }
 

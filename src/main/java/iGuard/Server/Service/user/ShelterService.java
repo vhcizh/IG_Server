@@ -24,4 +24,7 @@ public interface ShelterService {
 
     // 동 조회
     List<String> getDongs(String city, String gu);
+
+    // 쉼터 상세 조회
+    ShelterResponse getShelterById(Integer shelterId);
 }

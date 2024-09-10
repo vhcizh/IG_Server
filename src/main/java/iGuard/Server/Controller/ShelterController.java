@@ -74,5 +74,9 @@ public class ShelterController {
     }
 
     // 쉼터 상세 조회
-
+    @GetMapping("/{shelterId}")
+    public String getShelterDetails(@PathVariable Integer shelterId, Model model) {
+        model.addAttribute("shelter", shelterService.getShelterById(shelterId));
+        return "common/shelter_details"; // 뷰 이름
+    }
 }

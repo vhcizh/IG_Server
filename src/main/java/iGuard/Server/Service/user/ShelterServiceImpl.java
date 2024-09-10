@@ -45,4 +45,12 @@ public class ShelterServiceImpl implements ShelterService {
         return shelterRepository.findDongsByCityAndGu(addressPattern);
     }
 
+    @Override
+    public ShelterResponse getShelterById(Integer shelterId) {
+        return ShelterResponse.toResponse(
+                shelterRepository.findById(shelterId)
+                .orElseThrow(() -> new RuntimeException("Shelter not found"))
+        );
+    }
+
 }
