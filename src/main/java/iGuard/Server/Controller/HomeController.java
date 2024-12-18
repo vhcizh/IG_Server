@@ -5,9 +5,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/common")
+@RequestMapping("/")
 public class HomeController {
-    @GetMapping("/home")
+
+    @GetMapping("/")
+    public String redirectToHome() {
+        return "redirect:/common/home";
+    }
+
+    @GetMapping("/common/home")
     public String home() {
         return "common/home";
     }
