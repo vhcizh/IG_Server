@@ -54,13 +54,13 @@ public class SecurityConfig {
         http
                 .securityMatcher("/common/**")
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/static/**").permitAll() // resources/static 내의 모든 자원 허용
+                        .requestMatchers("/common/css/**").permitAll() // resources/static 내의 모든 자원 허용
                         .requestMatchers("/common/login", "/common/join", "/common/home").permitAll()
                         .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
                 .formLogin(form -> form
                         .loginPage("/common/login")
-                        .defaultSuccessUrl("/common/home", false)
+                        .defaultSuccessUrl("/common/home", true)
                         .usernameParameter("id")
                         .passwordParameter("password")
                         .failureUrl("/common/login?error=true")
@@ -82,13 +82,13 @@ public class SecurityConfig {
         http
                 .securityMatcher("/admin/**")
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/static/**").permitAll() // resources/static 내의 모든 자원 허용
+                        .requestMatchers("/common/css/**").permitAll() // resources/static 내의 모든 자원 허용
                         .requestMatchers("/admin/login", "/admin/register", "/admin/verify").permitAll()
                         .anyRequest().hasRole("ADMIN")
                 )
                 .formLogin(form -> form
                         .loginPage("/admin/login")
-                        .defaultSuccessUrl("/admin/mypage", false)
+                        .defaultSuccessUrl("/admin/mypage", true)
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .failureUrl("/admin/login?error=true")
