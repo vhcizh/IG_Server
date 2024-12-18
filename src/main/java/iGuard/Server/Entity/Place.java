@@ -9,7 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 public class Place {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer placeId;
+
     @Column(name = "name")
     private String name;
 
