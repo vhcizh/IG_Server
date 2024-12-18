@@ -1,15 +1,17 @@
 package iGuard.Server.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "shelter")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Shelter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

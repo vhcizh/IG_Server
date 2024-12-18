@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>csv-upload</title>
+</head>
+<body>
+<div th:replace="admin/header :: header"></div>
+<form th:action="@{/admin/csv-upload}" method="post" enctype="multipart/form-data">
+    <select name="fileType">
+        <option value="shelter">쉼터 데이터</option>
+        <option value="place">장소 데이터</option>
+    </select>
+    <input type="file" name="csvFiles" multiple accept=".csv">
+    <button type="submit">업로드</button>
+</form>
+
+<div th:if="${successMessage}">
+    <p th:text="${successMessage}" style="color: green;"></p>
+</div>
+<div th:if="${errorMessage}">
+    <p th:text="${errorMessage}" style="color: red;"></p>
+</div>
+</body>
+</html>

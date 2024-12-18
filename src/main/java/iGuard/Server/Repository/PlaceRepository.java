@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PlaceRepository  extends JpaRepository<Place,String> {
     List<Place> findByLatitudeBetweenAndLongitudeBetween(float latMin, float latMax, float lonMin, float lonMax);
+
+    boolean existsByNameAndAddress(String name, String address);
 }

@@ -33,4 +33,5 @@ public interface ShelterRepository extends JpaRepository<Shelter, Integer>, Shel
     List<String> findDongsByCityAndGu(String addressPattern);
 
 
+    boolean existsByShelterNameAndAddress(String shelterName, String address);
 }

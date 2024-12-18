@@ -35,38 +35,35 @@ public class IGuardServerApplication
 		SpringApplication.run(IGuardServerApplication.class, args);
 	}
 
-	/*
-	@Override
-	public void run(String... args) throws Exception {
-		csvService.importCSV("src/main/resources/shelter.csv");
-	}
-	 */
 
-	/*
-	@Override
-	public void run(String... args) throws Exception {
-		try {
-			// CSV 파일이 있는 디렉토리
-			String directoryPath = "data";
-			File folder = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(directoryPath)).getFile());
-			File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".csv"));
+//	@Override
+//	public void run(String... args) throws Exception {
+//		csvService.importCSV("src/main/resources/shelter.csv");
+//	}
 
-			if (files != null) {
-				List<PlaceDto> allPlaceDtos = new ArrayList<>();
-
-				for (File file : files) {
-					// 파일의 절대 경로를 Path 객체로 변환하여 전달
-					List<PlaceDto> placeDtos = csvReaderUtil.readCsv(file.toPath());
-					allPlaceDtos.addAll(placeDtos);
-				}
-
-				// 모든 CSV 파일의 데이터를 저장
-				placeService.savePlaces(allPlaceDtos);
-			}
-		} catch (IOException | CsvValidationException e) {
-			e.printStackTrace();
-		}
-	}
-	 */
+//	@Override
+//	public void run(String... args) throws Exception {
+//		try {
+//			// CSV 파일이 있는 디렉토리
+//			String directoryPath = "data";
+//			File folder = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(directoryPath)).getFile());
+//			File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".csv"));
+//
+//			if (files != null) {
+//				List<PlaceDto> allPlaceDtos = new ArrayList<>();
+//
+//				for (File file : files) {
+//					// 파일의 절대 경로를 Path 객체로 변환하여 전달
+//					List<PlaceDto> placeDtos = csvReaderUtil.readCsv(file.toPath());
+//					allPlaceDtos.addAll(placeDtos);
+//				}
+//
+//				// 모든 CSV 파일의 데이터를 저장
+//				placeService.savePlaces(allPlaceDtos);
+//			}
+//		} catch (IOException | CsvValidationException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 }
