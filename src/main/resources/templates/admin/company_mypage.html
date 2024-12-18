@@ -4,6 +4,7 @@
     <title>마이 페이지</title>
 </head>
 <body>
+<div th:replace="admin/header :: header"></div>
 <h1>유저 정보</h1>
 
 <div th:if="${message}" th:text="${message}" style="color: red;"></div>

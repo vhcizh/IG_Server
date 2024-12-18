@@ -4,6 +4,7 @@
     <title>Login</title>
 </head>
 <body>
+<div th:replace="admin/header :: header"></div>
 <h1>로그인</h1>
 <form th:action="@{/admin/login}" method="post">
     <!-- CSRF Token -->
