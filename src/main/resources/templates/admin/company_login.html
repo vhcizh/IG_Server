@@ -17,6 +17,7 @@
 
     <button type="submit">로그인</button>
 </form>
+<a th:href="@{/admin/register}">관리자 회원가입</a>
 <p th:if="${param.error}">로그인 실패. 다시 시도하세요.</p>
 <p th:if="${param.logout}">로그아웃되었습니다.</p>
 </body>

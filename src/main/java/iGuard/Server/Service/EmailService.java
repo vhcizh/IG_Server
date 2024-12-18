@@ -27,7 +27,7 @@ public class EmailService {
     public void sendVerificationEmail(String to, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setFrom("mcrohmh@naver.com"); // 발신자 이메일 주소
+        message.setFrom("sybz0748@gmail.com"); // 발신자 이메일 주소
         message.setSubject("이메일 인증 ");
         message.setText("당신의 인증 코드는 : " + code);
         mailSender.send(message);

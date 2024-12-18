@@ -75,9 +75,15 @@ public class AdminAuthController {
                            @RequestParam String companyName,
                            Model model) {
         // 사용자가 이미 존재하는지 확인
-        if (companyUserService.findByCompanyEmail(email) != null) {
-            model.addAttribute("message", "이미 등록된 이메일입니다.");
-            return "admin/company_register";
+        CompanyUser member = companyUserService.findByCompanyEmail(email);
+        if(member != null) {
+            if (member.isVerified()) {
+                model.addAttribute("message", "이미 등록된 이메일입니다.");
+                return "admin/company_register";
+            } else {
+                // 인증되지 않은 사용자 삭제
+                companyUserService.deleteCompanyUser(member.getCompanyUserId());
+            }
         }
         // 사용자 등록
         CompanyUser user = new CompanyUser();
@@ -92,7 +98,7 @@ public class AdminAuthController {
         emailService.sendVerificationEmail(email, code);
 
         model.addAttribute("email", email);
-        model.addAttribute("message", "인증메일이 보내졌습니다. 아래에 인증코드를 입력해 주세요.");
+        model.addAttribute("message", "인증메일이 보내졌습니다. 인증코드를 입력해 주세요.");
         return "admin/verify";
     }
 
