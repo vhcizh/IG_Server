@@ -1,6 +1,8 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Service.admin.CSVImportService;
+import iGuard.Server.Service.admin.HibernateBatchImportService;
+import iGuard.Server.Service.admin.JdbcBatchImportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,9 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class CSVController {
-    private final CSVImportService csvImportService;
+
+//    private final HibernateBatchImportService csvImportService;
+    private final JdbcBatchImportService csvImportService;
 
     @GetMapping("/admin/csv-upload")
     public String csvUploadPage() {
