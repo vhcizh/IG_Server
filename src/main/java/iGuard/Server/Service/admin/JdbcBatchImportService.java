@@ -202,7 +202,7 @@ public class JdbcBatchImportService implements CSVImportService {
                         ps.setString(1, row[3]);  // address
                         ps.setString(2, row[1]);  // latitude
                         ps.setString(3, row[2]);  // longitude
-                        ps.setBoolean(4, Boolean.parseBoolean(row[0]));  // name
+                        ps.setString(4, row[0]);  // name
                     }
 
                     @Override
