@@ -42,32 +42,32 @@ public class AdminAuthController {
         return "admin/company_login"; // login.html 템플릿을 반환
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String email,
-                        @RequestParam String password,
-                        HttpServletRequest request
-    ) {
-        CompanyUser user = companyUserService.findByCompanyEmail(email);
-
-        if (user != null && companyUserService.checkPassword(user, password)) {
-            // Create authentication token
-            UserDetails userDetails = cds.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-            // Set authentication in SecurityContext
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            securityContext.setAuthentication(authentication);
-
-            HttpSession session = request.getSession(true);
-            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-
-            // Redirect to home page
-            return "redirect:/admin/mypage";
-        } else {
-            return "admin/company_login";
-        }
-    }
+//    @PostMapping("/login")
+//    public String login(@RequestParam String email,
+//                        @RequestParam String password,
+//                        HttpServletRequest request
+//    ) {
+//        CompanyUser user = companyUserService.findByCompanyEmail(email);
+//
+//        if (user != null && companyUserService.checkPassword(user, password)) {
+//            // Create authentication token
+//            UserDetails userDetails = cds.loadUserByUsername(email);
+//            UsernamePasswordAuthenticationToken authentication =
+//                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//
+//            // Set authentication in SecurityContext
+//            SecurityContext securityContext = SecurityContextHolder.getContext();
+//            securityContext.setAuthentication(authentication);
+//
+//            HttpSession session = request.getSession(true);
+//            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+//
+//            // Redirect to home page
+//            return "redirect:/admin/mypage";
+//        } else {
+//            return "admin/company_login";
+//        }
+//    }
 
     @PostMapping("/register")
     public String register(@RequestParam String email,
