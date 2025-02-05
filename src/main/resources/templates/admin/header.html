@@ -1,19 +1,20 @@
 <meta charset="UTF-8">
 <header>
   <link rel="stylesheet" th:href="@{/common/css/header.css}" />
+  <link rel="stylesheet" th:href="@{/common/css/common.css}" />
   <div class="logo">
-    <a th:href="@{/common/home}"><img th:src="@{/logo.png}" alt="로고" /></a>
+    <a th:href="@{/common/home}"><img th:src="@{/images/logo.png}" alt="로고" /></a>
   </div>
   <nav class="header_navbar">
     <ul>
       <li><a th:href="@{/admin/shelters}">쉼터위치추천</a></li>
       <li><a th:href="@{/admin/mypage}">마이페이지</a></li>
       <li><a th:href="@{/admin/csv-upload}">csv 업로드</a></li>
-      <li th:if="${#authentication.name != 'anonymousUser'}">
+      <li th:if="${#authentication.name != null and #authentication.name != 'anonymousUser'}">
         <span th:text="${#authentication.name}+' 님'">username</span>
         <a th:href="@{/common/logout}">로그아웃</a>
       </li>
-      <li th:if="${#authentication.name == 'anonymousUser'}">
+      <li th:unless="${#authentication.name != null and #authentication.name != 'anonymousUser'}">
         <a th:href="@{/admin/login}">로그인</a>
         /
         <a th:href="@{/admin/register}">회원가입</a>

@@ -1,25 +1,36 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>Login</title>
+    <link rel="stylesheet" th:href="@{/common/css/login.css}" />
 </head>
 <body>
-<div th:replace="admin/header :: header"></div>
-<h1>로그인</h1>
-<form th:action="@{/admin/login}" method="post">
-    <!-- CSRF Token -->
-    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <div th:replace="admin/header :: header"></div>
+    <div class="main-container">
+        <h1>관리자 로그인</h1>
+        <form th:action="@{/admin/login}" method="post">
+            <!-- CSRF Token -->
+            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="email" id="email" name="email" placeholder="아이디" required>
+            <input type="password" id="password" name="password" placeholder="비밀번호" required>
 
-    <label for="email">이메일:</label>
-    <input type="email" id="email" name="email" required><br><br>
+            <button type="submit">로그인</button>
+        </form>
 
-    <label for="password">비밀번호:</label>
-    <input type="password" id="password" name="password" required><br><br>
+        <div class="button">
+            <a th:href="@{/admin/register}">관리자 회원가입</a>
+        </div>
 
-    <button type="submit">로그인</button>
-</form>
-<a th:href="@{/admin/register}">관리자 회원가입</a>
-<p th:if="${param.error}">로그인 실패. 다시 시도하세요.</p>
-<p th:if="${param.logout}">로그아웃되었습니다.</p>
+        <div class="error">
+            <p th:if="${param.error}">로그인 실패. 다시 시도하세요.</p>
+            <p th:if="${param.logout}">로그아웃되었습니다.</p>
+        </div>
+
+
+        <div class="switch">
+            <a th:href="@{/common/login}">일반 로그인</a>
+        </div>
+    </div>
+    <div th:replace="common/footer :: footer"></div>
 </body>
 </html>

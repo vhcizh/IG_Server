@@ -10,7 +10,7 @@
 <body>
 
     <div th:replace="common/header :: header"></div>
-
+    <div class="main-container">
     <main>
         <h2>나의 리뷰 목록</h2>
         <div th:replace="common/mypage_nav :: nav"></div>
@@ -38,5 +38,6 @@
 
     <div th:replace="common/footer :: footer"></div>
     <script th:src="@{/common/js/shelter_details_map.js}"></script>
+    </div>
 </body>
 </html>
