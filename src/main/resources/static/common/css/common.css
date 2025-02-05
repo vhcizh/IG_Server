@@ -1,0 +1,21 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    background-color: #f4f4f4;
+}
+
+.main-container {
+    width:60%;
+    margin: auto;
+    text-align: center;
+    background: white;
+    padding: 5%;
+    flex: 1;
+}

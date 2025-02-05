@@ -1,0 +1,26 @@
+.category-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.category-button.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+input[type='date'] {
+    color: transparent; /* 글자색을 투명하게 설정 */
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+}

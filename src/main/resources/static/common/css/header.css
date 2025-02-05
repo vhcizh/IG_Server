@@ -1,24 +1,25 @@
 header {
     display: flex;
-    align-items: center; /* 수직 정렬 */
-    justify-content: space-between; /* 양 끝 정렬 */
-    padding: 10px 20px; /* 여백 추가 */
-    background-color: #f8f9fa; /* 배경색 */
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
 }
 
 .logo img {
-    max-height: 60px; /* 로고 최대 높이 설정 */
+    max-height: 60px;
 }
 
 .header_navbar ul {
-    display: flex; /* 수평 정렬 */
-    list-style: none; /* 리스트 스타일 제거 */
-    padding: 0; /* 패딩 제거 */
-    margin: 0; /* 마진 제거 */
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .header_navbar ul li {
-    margin: 0 20px; /* 좌우 간격 설정 */
+    margin: 0 20px;
 }
 
 .header_navbar a {
@@ -28,4 +29,11 @@ header {
 
 .header_navbar a:hover {
     text-decoration: underline; /* 호버 시 밑줄 추가 */
+}
+
+footer {
+    width: 100%;
+    padding: 10px;
+    background-color: #f8f9fa; /* 배경색 */
+    text-align: center;
 }

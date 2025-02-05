@@ -1,0 +1,83 @@
+input {
+    width: 50%;
+    height: 70px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: medium;
+}
+
+input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+input::placeholder {
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    color: rgba(0, 0, 0, 0.5); /* 흐릿한 색상 */
+}
+
+input:focus::placeholder {
+    font-size: 12px; /* 포커스 시 크기 감소 */
+    transform: translateY(-10px); /* 위로 이동 */
+    color: rgba(0, 0, 0, 0.7); /* 색상 변화 */
+}
+
+button {
+    width: 50%;
+    height: 70px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: large;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.button a {
+    display: inline-block;
+    width: 50%;
+    height: 70px;
+    padding: 10px;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    box-sizing: border-box;
+    align-content: center; /* 수직 정렬 */
+    text-align: center;
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.button a:hover {
+    color:white;
+    background-color: #4CAF50;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+.switch {
+    margin-top: 10%;
+}
+
+.switch a {
+    text-align: center;
+    padding: 20px;
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.switch a:hover {
+    border: 1px solid #4CAF50;
+    border-radius: 1em;
+}
