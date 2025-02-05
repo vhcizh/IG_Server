@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div id="nearby-button-container">
+        <div id="button-container">
         </div>
     </div>
 
@@ -69,9 +69,9 @@
                 var placesButton = document.createElement('button');
                 placesButton.textContent = '주변 장소 보기';
                 placesButton.onclick = function() {
-                    window.location.href = '/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
+                    window.location.href = '/common/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
                 };
-                document.getElementById('nearby-button-container').appendChild(placesButton);
+                document.getElementById('button-container').appendChild(placesButton);
 
                 // /job 페이지로 이동하는 버튼 추가
                 var jobButton = document.createElement('button');
@@ -79,7 +79,7 @@
                 jobButton.onclick = function() {
                     window.location.href = '/job?lat=' + lat + '&lon=' + lon; // 위도, 경도 전달
                 };
-                document.getElementById('nearby-button-container').appendChild(jobButton);
+                document.getElementById('button-container').appendChild(jobButton);
 
                 // 일자리 찾기 버튼 추가
                 var jobApplyButton = document.createElement('button');
@@ -87,7 +87,7 @@
                 jobApplyButton.onclick = function() {
                     window.location.href = '/job/user/map?lat=' + lat + '&lon=' + lon; // 위도, 경도 전달
                 };
-                document.getElementById('nearby-button-container').appendChild(jobApplyButton);
+                document.getElementById('button-container').appendChild(jobApplyButton);
 
             }, function(error) {
                 alert('위치 정보를 가져올 수 없습니다. 에러 코드: ' + error.code);
