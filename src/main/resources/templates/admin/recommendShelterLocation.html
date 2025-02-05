@@ -46,37 +46,38 @@
 </head>
 <body>
 <div th:replace="admin/header :: header"></div>
+<div class="main-container">
+    <div class="button-container">
+        <div class="tab-button active" onclick="showTab('tab1')">종합 추천</div>
+        <div class="tab-button" onclick="showTab('tab2')">노인 명소 개수</div>
+        <div class="tab-button" onclick="showTab('tab3')">노인 승하차 인원</div>
+        <div class="tab-button" onclick="showTab('tab4')">독거 노인</div>
+        <div class="tab-button" onclick="showTab('tab5')">독거노인 수급권자</div>
+        <div class="tab-button" onclick="showTab('tab6')">무더위 쉼터 개수</div>
+        <div class="tab-button" onclick="showTab('tab7')">전기 사용량</div>
+    </div>
 
-<div class="button-container">
-    <div class="tab-button active" onclick="showTab('tab1')">종합 추천</div>
-    <div class="tab-button" onclick="showTab('tab2')">노인 명소 개수</div>
-    <div class="tab-button" onclick="showTab('tab3')">노인 승하차 인원</div>
-    <div class="tab-button" onclick="showTab('tab4')">독거 노인</div>
-    <div class="tab-button" onclick="showTab('tab5')">독거노인 수급권자</div>
-    <div class="tab-button" onclick="showTab('tab6')">무더위 쉼터 개수</div>
-    <div class="tab-button" onclick="showTab('tab7')">전기 사용량</div>
-</div>
-
-<div id="tab1" class="tab active">
-    <iframe class="mapFrame" src="/admin/서울_위치제안_map.html"></iframe>
-</div>
-<div id="tab2" class="tab">
-    <iframe class="mapFrame" src="/admin/서울_노인명소개수_map.html"></iframe>
-</div>
-<div id="tab3" class="tab">
-    <iframe class="mapFrame" src="/admin/서울_노인승하차인원수_map.html"></iframe>
-</div>
-<div id="tab4" class="tab">
-    <iframe class="mapFrame" src="/admin/서울_독거노인_map.html"></iframe>
-</div>
-<div id="tab5" class="tab">
-    <iframe class="mapFrame" src="/admin/서울_독거노인_국민기초생활보장수급권자_map.html"></iframe>
-</div>
-<div id="tab6" class="tab">
-    <iframe class="mapFrame" src="/admin/서울_무더위쉼터개수_map.html"></iframe>
-</div>
-<div id="tab7" class="tab">
-    <iframe class="mapFrame" src="/admin/서울_전기사용량_map.html"></iframe>
+    <div id="tab1" class="tab active">
+        <iframe class="mapFrame" src="/admin/서울_위치제안_map.html"></iframe>
+    </div>
+    <div id="tab2" class="tab">
+        <iframe class="mapFrame" src="/admin/서울_노인명소개수_map.html"></iframe>
+    </div>
+    <div id="tab3" class="tab">
+        <iframe class="mapFrame" src="/admin/서울_노인승하차인원수_map.html"></iframe>
+    </div>
+    <div id="tab4" class="tab">
+        <iframe class="mapFrame" src="/admin/서울_독거노인_map.html"></iframe>
+    </div>
+    <div id="tab5" class="tab">
+        <iframe class="mapFrame" src="/admin/서울_독거노인_국민기초생활보장수급권자_map.html"></iframe>
+    </div>
+    <div id="tab6" class="tab">
+        <iframe class="mapFrame" src="/admin/서울_무더위쉼터개수_map.html"></iframe>
+    </div>
+    <div id="tab7" class="tab">
+        <iframe class="mapFrame" src="/admin/서울_전기사용량_map.html"></iframe>
+    </div>
 </div>
 
 <div th:replace="common/footer :: footer"></div>

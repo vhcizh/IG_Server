@@ -62,6 +62,11 @@
 
         <h1>회원 가입</h1>
 
+        <div class="divider">
+            <hr />
+            <span class="divider-text">필수항목</span>
+        </div>
+
         <form action="#" th:action="@{/common/join}" th:object="${userRequest}" method="post">
             <input type="text" id="id" th:field="*{id}" placeholder="아이디" required />
 
@@ -81,7 +86,14 @@
 
             <input type="text" id="phone_number" th:field="*{phone_number}" placeholder="010-1234-5678" required />
 
-            <div>
+            <div class="divider">
+                <hr />
+                <span class="divider-text">선택항목</span>
+            </div>
+
+            <p>선호하는 쉼터 유형을 선택해주세요</p>
+
+            <div class="category-container">
                 <label class="category-button" th:for="'CLEAN'" onclick="toggleSelection('CLEAN')">
                     <input type="checkbox" th:field="*{preferences}" value="CLEAN" class="hidden" th:id="'CLEAN'" /> 청결해요
                 </label>
@@ -117,11 +129,14 @@
                 </label>
             </div>
 
-            <label>
-                <input type="checkbox" th:field="*{accepted}" /> 약관 동의
-            </label>
 
             <button type="submit">가입하기</button>
+
+            <div>
+                <label>
+                    <input type="checkbox" th:field="*{accepted}" /> 약관 동의
+                </label>
+            </div>
 
             <!-- 플래시 메시지 표시 -->
             <div th:if="${message}" th:text="${message}"></div>
