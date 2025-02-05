@@ -1,10 +1,11 @@
 package iGuard.Server.Config;
 
-import iGuard.Server.Service.admin.CustomAuthenticationFilter;
+//import iGuard.Server.Service.admin.CustomAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,27 +28,18 @@ public class SecurityConfig {
 
     private final UserDetailsService memberUserDetailsService;
     private final UserDetailsService companyUserDetailsService;
-    @Bean
-    public SpringSecurityDialect springSecurityDialect() {
-        return new SpringSecurityDialect();
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
     @Autowired
     public SecurityConfig(
             @Qualifier("memberUserDetailsService") UserDetailsService memberUserDetailsService,
-            @Qualifier("companyUserDetailsService") UserDetailsService adminUserDetailsService) {
+            @Qualifier("companyUserDetailsService") UserDetailsService companyUserDetailsService) {
         this.memberUserDetailsService = memberUserDetailsService;
-        this.companyUserDetailsService = adminUserDetailsService;
+        this.companyUserDetailsService = companyUserDetailsService;
     }
 
     @Bean
@@ -55,7 +48,7 @@ public class SecurityConfig {
                 .securityMatcher("/common/**")
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/common/css/**").permitAll() // resources/static 내의 모든 자원 허용
-                        .requestMatchers("/common/login", "/common/join", "/common/home").permitAll()
+                        .requestMatchers("/common/login", "/common/join", "/common/home", "/common/places").permitAll()
                         .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
                 .formLogin(form -> form
@@ -72,13 +65,12 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                // 기타 필요한 설정...
                 .userDetailsService(memberUserDetailsService);
 
         return http.build();
     }
     @Bean
-    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/admin/**")
                 .authorizeHttpRequests(req -> req
@@ -101,22 +93,7 @@ public class SecurityConfig {
                 )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .headers(header -> header
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .invalidSessionUrl("/login")
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false)
-                )
-                .rememberMe(rememberMe -> rememberMe
-                        .userDetailsService(this.companyUserDetailsService)
-                        .key("uniqueAndSecret")
-                        .tokenValiditySeconds(86400) // 24 hours
-                )
-                .addFilter(new CustomAuthenticationFilter(authenticationManager))
-                // 기타 필요한 설정...
+
                 .userDetailsService(companyUserDetailsService);
 
         return http.build();
