@@ -1,9 +1,11 @@
 package iGuard.Server.Service.user;
 
-import iGuard.Server.Entity.User;
 import iGuard.Server.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,12 +21,13 @@ public class MemberUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.getById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + username));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getId(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_MEMBER")));
+        return userRepository.getById(username)
+                .map(member -> new User(
+                        member.getId(),
+                        member.getPassword(),
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_MEMBER"))
+                ))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id" + username));
     }
 }
