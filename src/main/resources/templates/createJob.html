@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일자리 등록</title>
+</head>
+<body>
+<h1>일자리 등록</h1>
+
+<form action="/job/create" method="post" onsubmit="return submitJobForm();">
+    <!-- 쉼터 ID 숨김 필드 -->
+    <input type="hidden" name="shelterId" th:value="${shelterId}" />
+
+    <!-- 일자리 유형 선택 -->
+    <label for="jobType">일자리 유형:</label>
+    <select name="jobType" id="jobType">
+        <option th:each="jobType : ${jobTypes}" th:value="${jobType}" th:text="${jobType.displayName}"></option>
+    </select>
+
+    <button type="submit">일자리 등록</button>
+</form>
+
+<script>
+    function submitJobForm() {
+        // 폼이 제출된 후 팝업 창을 닫음
+        setTimeout(function() {
+            window.close();
+        }, 500);  // 폼이 서버로 전송된 후 0.5초 후 팝업을 닫음
+
+        return true; // 폼을 정상적으로 제출
+    }
+</script>
+</body>
+</html>

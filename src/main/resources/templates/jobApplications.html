@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Applications</title>
+    <script type="text/javascript">
+        function submitForm(form, applicationId, isAccepted) {
+            var xhr = new XMLHttpRequest();
+            var shelterId = [[${shelterId}]];  // Thymeleaf를 사용하여 서버에서 전달된 shelterId를 가져옵니다.
+            var actionUrl = `/job/shelter/${shelterId}?applicationId=${applicationId}&isAccepted=${isAccepted}`;
+            console.log("Action URL: ", actionUrl);
+
+            xhr.open("POST", actionUrl, true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function() {
+                console.log('XHR status:', xhr.status);
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log('Request succeeded.');
+                    window.location.reload();
+                } else {
+                    console.log('Request failed:', xhr.responseText);
+
+                }
+            };
+
+            xhr.send(new URLSearchParams(new FormData(form)).toString());
+        }
+    </script>
+</head>
+<body>
+<h1>일자리 신청 목록</h1>
+<table>
+    <thead>
+    <tr>
+        <th>신청자 ID</th>
+        <th>신청 내용</th>
+        <th>합격 여부</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="jobApplication : ${applications}">
+        <td th:text="${jobApplication.user != null ? jobApplication.user.userid : 'N/A'}"></td>
+        <td th:text="${jobApplication.applicationText}"></td>
+        <td>
+            <form th:onsubmit="event.preventDefault(); submitForm(this, [[${jobApplication.applicationId}]], true);">
+                <button type="submit">합격</button>
+            </form>
+            <form th:onsubmit="event.preventDefault(); submitForm(this, [[${jobApplication.applicationId}]], false);">
+                <button type="submit">불합격</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

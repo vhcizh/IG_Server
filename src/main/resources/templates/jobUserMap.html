@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일자리 찾기</title>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=00d1961c0cca06b3691129126dbc752c"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+        #place-info {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .apply-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>일자리 찾기</h1>
+<div id="map"></div>
+<div id="place-info">
+    <p>위도: <span id="latitude"></span></p>
+    <p>경도: <span id="longitude"></span></p>
+    <h2>쉼터 및 일자리 목록</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>쉼터 이름</th>
+            <th>위도</th>
+            <th>경도</th>
+            <th>일자리</th>
+        </tr>
+        </thead>
+        <tbody id="shelters-list">
+        </tbody>
+    </table>
+</div>
+
+<!-- 일자리 목록을 위한 모달 -->
+<div id="jobModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <div id="jobList"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var shelters = /*[[${shelters}]]*/ [];
+    var userId = /*[[${userId}]]*/ 1;
+
+    console.log("Shelters data:", shelters); // 디버깅: shelters 데이터 로깅
+
+    function initMap() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const lat = parseFloat(urlParams.get('lat'));
+        const lon = parseFloat(urlParams.get('lon'));
+
+        console.log("Map center:", lat, lon); // 디버깅: 지도 중심 좌표 로깅
+
+        if (!isNaN(lat) && !isNaN(lon)) {
+            const mapContainer = document.getElementById('map');
+            const mapOption = {
+                center: new kakao.maps.LatLng(lat, lon),
+                level: 7
+            };
+            const map = new kakao.maps.Map(mapContainer, mapOption);
+
+            const markerImages = {
+                shelters: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', new kakao.maps.Size(24, 35))
+            };
+
+            function addMarkers(data, listId, markerType, infoColor) {
+                console.log("Adding markers for:", listId, data); // 디버깅: 마커 추가 과정 로깅
+                const list = document.getElementById(listId);
+                if (list && Array.isArray(data) && data.length > 0) {
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.shelterName}</td>
+                            <td>${item.latitude}</td>
+                            <td>${item.longitude}</td>
+                            <td><button onclick="loadJobs(${item.shelterId}, '${item.shelterName}')">일자리 보기</button></td>
+                        `;
+                        list.appendChild(row);
+
+                        const position = new kakao.maps.LatLng(item.latitude, item.longitude);
+                        const marker = new kakao.maps.Marker({
+                            position: position,
+                            map: map,
+                            image: markerImages[markerType]
+                        });
+
+                        const infoWindow = new kakao.maps.InfoWindow({
+                            content: `<div style="padding:5px; color:${infoColor};">${item.shelterName}</div>`
+                        });
+
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            infoWindow.open(map, marker);
+                            loadJobs(item.shelterId, item.shelterName);
+                        });
+                    });
+                } else {
+                    console.log(`${listId} 데이터가 없거나 올바르지 않습니다.`);
+                }
+            }
+
+            addMarkers(shelters, 'shelters-list', 'shelters', 'black');
+
+            document.getElementById('latitude').innerText = lat;
+            document.getElementById('longitude').innerText = lon;
+
+        } else {
+            console.error('위도, 경도 값이 올바르지 않습니다:', lat, lon);
+            alert('위도, 경도 값을 확인하세요.');
+        }
+    }
+
+    function loadJobs(shelterId, shelterName) {
+        console.log("Loading jobs for shelter:", shelterId); // 디버깅: 일자리 로딩 과정 로깅
+        fetch(`/job/user/jobs/${shelterId}`)
+            .then(response => response.json())
+            .then(jobs => {
+                console.log("Jobs loaded:", jobs); // 디버깅: 로드된 일자리 데이터 로깅
+                const jobList = document.getElementById('jobList');
+                jobList.innerHTML = ''; // Clear previous job list
+                if (jobs.length === 0) {
+                    jobList.innerHTML = '<p>현재 이용 가능한 일자리가 없습니다.</p>';
+                } else {
+                    const ul = document.createElement('ul');
+                    jobs.forEach(job => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            ${job.jobType}
+                            <button onclick="applyForJob(${job.jobId})">지원하기</button>
+                        `;
+                        ul.appendChild(li);
+                    });
+                    jobList.appendChild(ul);
+                }
+                document.getElementById('modalTitle').textContent = `${shelterName}의 일자리 목록`;
+                document.getElementById('jobModal').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error loading jobs:', error);
+                alert('일자리 정보를 불러오는 중 오류가 발생했습니다.');
+            });
+    }
+
+    function applyForJob(jobId) {
+        console.log("Applying for job:", jobId); // 디버깅: 일자리 지원 과정 로깅
+        const applicationText = prompt("지원 내용을 입력하세요:");
+        if (applicationText) {
+            const formData = new FormData();
+            formData.append('userId', userId);
+            formData.append('applicationText', applicationText);
+
+            fetch(`/job/user/apply/${jobId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log("Application result:", result); // 디버깅: 지원 결과 로깅
+                alert('지원이 완료되었습니다.');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('지원 중 오류가 발생했습니다.');
+            });
+        }
+    }
+
+    // 모달 닫기 기능
+    var modal = document.getElementById('jobModal');
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    window.onload = function() {
+        console.log("Window loaded"); // 디버깅: 페이지 로드 완료 로깅
+        initMap();
+    };
+</script>
+</body>
+</html>

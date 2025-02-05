@@ -1,9 +1,13 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Entity.Place;
+import iGuard.Server.Entity.Shade;
 import iGuard.Server.Entity.Shelter;
+import iGuard.Server.Entity.Toilet;
 import iGuard.Server.Service.PlaceService;
+import iGuard.Server.Service.ShadeService;
 import iGuard.Server.Service.ShelterService;
+import iGuard.Server.Service.ToiletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +25,10 @@ public class PlaceController {
     private PlaceService ps;
     @Autowired
     private ShelterService ss;
+    @Autowired
+    private ToiletService ts;
+    @Autowired
+    private ShadeService sh;
 
     @GetMapping("")
     public String getPlaceNear(
@@ -31,9 +39,14 @@ public class PlaceController {
     ) {
         List<Place> places = ps.getPlacesNear(lat, lon, range);
         List<Shelter> shelters = ss.getNearestShelters(lat,lon);
+        List<Toilet> nearbyToilets = ts.getNearestToilets(lat, lon);
+        List<Shade> nearbyShades = sh.getNearestShades(lat, lon);
+
 
         model.addAttribute("places", places);
         model.addAttribute("shelters",shelters);
+        model.addAttribute("toilets", nearbyToilets);
+        model.addAttribute("shades", nearbyShades);
 
         return "common/places";
     }

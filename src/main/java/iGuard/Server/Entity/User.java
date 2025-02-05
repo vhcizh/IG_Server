@@ -1,5 +1,6 @@
 package iGuard.Server.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import iGuard.Server.Dto.UserUpdate;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -32,7 +33,7 @@ public class User {
     private String address;
 
     @Column(name = "phone_number", length = 14, unique = true, nullable = false)
-    private String phone_number;
+    private String phoneNumber;
 
     @Column(name = "id", length = 50, unique = true, nullable = false)
     private String id;
@@ -56,11 +57,22 @@ public class User {
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<JobApplication> jobApplications;
 
     @Column(name = "fcm_token", length = 255)
     private String fcmToken;
 
+    @Column(name = "job_id", nullable = true)
+    private Integer jobId; // 합격된 일자리 ID
+
+    public void setJob(Job job) {
+        if (job != null) {
+            this.jobId = job.getJobId();
+        } else {
+            this.jobId = null;
+        }
+    }
     public void updateInfo(UserUpdate userRequest) {
         this.setPassword(userRequest.getPassword());
         this.setAge(userRequest.getAge());
@@ -69,7 +81,10 @@ public class User {
                         ? userRequest.getAddress() + ", " + userRequest.getDetailAddress()
                         : userRequest.getAddress()
         );
-        this.setPhone_number(userRequest.getPhone_number());
+        this.setPhoneNumber(userRequest.getPhone_number());
     }
+
+
+
 
 }

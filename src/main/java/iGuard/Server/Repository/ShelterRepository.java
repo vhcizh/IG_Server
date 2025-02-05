@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ShelterRepository extends JpaRepository<Shelter, Integer>, ShelterRepositoryCustom {
@@ -34,4 +35,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, Integer>, Shel
 
 
     boolean existsByShelterNameAndAddress(String shelterName, String address);
+
+    Optional<Shelter> findByShelterId(int shelterid);
+
 }

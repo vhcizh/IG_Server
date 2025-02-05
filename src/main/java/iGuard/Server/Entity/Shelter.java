@@ -1,5 +1,7 @@
 package iGuard.Server.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +33,9 @@ public class Shelter {
 
     @Column(name = "area")
     private Double area;
+
+    @Column(name="current_person")
+    private Integer current;
 
     @Column(name = "capacity")
     private Integer capacity;
@@ -84,5 +89,7 @@ public class Shelter {
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "shelter")
+    @JsonIgnore
+    @JsonManagedReference
     private List<Job> jobs;
 }

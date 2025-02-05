@@ -65,13 +65,29 @@
                 document.getElementById('latitude').textContent = lat;
                 document.getElementById('longitude').textContent = lon;
 
-                // 위치 정보를 `/places` 페이지에 전달할 수 있는 버튼
-                var button = document.createElement('button');
-                button.textContent = '주변 장소 보기';
-                button.onclick = function() {
-                    window.location.href = '/common/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
+                // 주변 장소 보기 버튼
+                var placesButton = document.createElement('button');
+                placesButton.textContent = '주변 장소 보기';
+                placesButton.onclick = function() {
+                    window.location.href = '/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
                 };
-                document.getElementById('nearby-button-container').appendChild(button);
+                document.getElementById('nearby-button-container').appendChild(placesButton);
+
+                // /job 페이지로 이동하는 버튼 추가
+                var jobButton = document.createElement('button');
+                jobButton.textContent = '일자리 등록하기';
+                jobButton.onclick = function() {
+                    window.location.href = '/job?lat=' + lat + '&lon=' + lon; // 위도, 경도 전달
+                };
+                document.getElementById('nearby-button-container').appendChild(jobButton);
+
+                // 일자리 찾기 버튼 추가
+                var jobApplyButton = document.createElement('button');
+                jobApplyButton.textContent = '일자리 찾기';
+                jobApplyButton.onclick = function() {
+                    window.location.href = '/job/user/map?lat=' + lat + '&lon=' + lon; // 위도, 경도 전달
+                };
+                document.getElementById('nearby-button-container').appendChild(jobApplyButton);
 
             }, function(error) {
                 alert('위치 정보를 가져올 수 없습니다. 에러 코드: ' + error.code);
@@ -84,4 +100,5 @@
     // 페이지 로드 후 지도 초기화
     window.onload = initMap;
 </script>
+</body>
 </html>

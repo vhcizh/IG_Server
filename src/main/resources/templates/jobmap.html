@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Places</title>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=00d1961c0cca06b3691129126dbc752c"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+        #place-info {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>일자리 찾기</h1>
+<div id="map"></div>
+<div id="place-info">
+    <p>위도: <span id="latitude"></span></p>
+    <p>경도: <span id="longitude"></span></p>
+    <!-- 쉼터 목록 -->
+    <h2>쉼터</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>위도</th>
+            <th>경도</th>
+        </tr>
+        </thead>
+        <tbody id="shelters-list">
+        </tbody>
+    </table>
+</div>
+
+<script th:inline="javascript">
+    var shelters = /*[[${shelters}]]*/ [];
+
+    function initMap() {
+        // URL에서 lat와 lon 값을 가져옴
+        const urlParams = new URLSearchParams(window.location.search);
+        const lat = parseFloat(urlParams.get('lat'));
+        const lon = parseFloat(urlParams.get('lon'));
+
+        // lat와 lon이 제대로 전달되었는지 확인
+        if (!isNaN(lat) && !isNaN(lon)) {
+            const mapContainer = document.getElementById('map');
+            const mapOption = {
+                center: new kakao.maps.LatLng(lat, lon), // 위도와 경도를 지도 중심으로 설정
+                level: 7
+            };
+            const map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 마커 이미지 설정
+            const markerImages = {
+                shelters: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', new kakao.maps.Size(24, 35))
+            };
+
+            // 쉼터 데이터를 지도에 마커로 표시
+            function addMarkers(data, listId, markerType, infoColor) {
+                const list = document.getElementById(listId);
+                if (list && Array.isArray(data) && data.length > 0) {
+                    data.forEach(item => {
+                        // 테이블에 쉼터 정보 추가
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.shelterName}</td>
+                            <td>${item.latitude}</td>
+                            <td>${item.longitude}</td>
+                        `;
+                        list.appendChild(row);
+
+                        // 지도에 마커 추가
+                        const position = new kakao.maps.LatLng(item.latitude, item.longitude);
+                        const marker = new kakao.maps.Marker({
+                            position: position,
+                            map: map,
+                            image: markerImages[markerType]
+                        });
+
+                        // 마커 클릭 시 팝업 창을 통해 선택 옵션 제공
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            const shelterId = item.shelterId;
+                           const choice = confirm('어떤 작업을 하시겠습니까?\n\n[확인] 일자리 등록\n[취소] 지원 현황 확인');
+                            if (choice) {
+                                // 일자리 등록 페이지로 이동
+                                window.open(`/job/create/${shelterId}`, 'jobPopup', 'width=600,height=400');
+                            } else {
+                                // 지원 현황 확인 페이지로 이동
+                                window.open(`/job/shelter/${shelterId}`, 'applicationsPopup', 'width=800,height=600');
+                            }
+                        });
+
+                        // 마커에 마우스 오버 시 정보창 열기
+                        const infoWindow = new kakao.maps.InfoWindow({
+                            content: `<div style="padding:5px; color:${infoColor};">${item.shelterName}</div>`
+                        });
+
+                        kakao.maps.event.addListener(marker, 'mouseover', function() {
+                            infoWindow.open(map, marker);
+                        });
+
+                        kakao.maps.event.addListener(marker, 'mouseout', function() {
+                            infoWindow.close();
+                        });
+                    });
+                } else {
+                    console.log(`${listId} 데이터가 없습니다.`);
+                }
+            }
+
+            // 쉼터 목록과 마커 추가
+            addMarkers(shelters, 'shelters-list', 'shelters', 'black');
+
+            // 위도, 경도 값을 화면에 표시
+            document.getElementById('latitude').innerText = lat;
+            document.getElementById('longitude').innerText = lon;
+
+        } else {
+            // lat, lon이 없을 경우 경고 메시지 표시
+            alert('위도, 경도 값을 확인하세요.');
+        }
+    }
+
+    // 지도 초기화
+    window.onload = initMap;
+</script>
+</body>
+</html>
