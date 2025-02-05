@@ -29,43 +29,52 @@
     </style>
 </head>
 <body>
-<h1>Nearby Places</h1>
-<div id="map"></div>
-<div id="place-info">
-    <p>위도: <span id="latitude"></span></p>
-    <p>경도: <span id="longitude"></span></p>
 
-    <!-- 명소 목록 -->
-    <h2>명소</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>이름</th>
-            <th>위도</th>
-            <th>경도</th>
-        </tr>
-        </thead>
-        <tbody id="places-list">
-        <!-- 명소 데이터가 여기에 표시됩니다 -->
-        </tbody>
-    </table>
+    <div th:replace="common/header :: header"></div>
+    <div class="main-container">
+        <h1>주변 쉼터 및 명소</h1>
+        <div id="map"></div>
 
-    <!-- 쉼터 목록 -->
-    <h2>쉼터</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>이름</th>
-            <th>위도</th>
-            <th>경도</th>
-        </tr>
-        </thead>
-        <tbody id="shelters-list">
-        <!-- 쉼터 데이터가 여기에 표시됩니다 -->
-        </tbody>
-    </table>
-</div>
+        <div id="place-info">
+            <p>위도: <span id="latitude"></span></p>
+            <p>경도: <span id="longitude"></span></p>
 
+            <!-- 명소 목록 -->
+            <h2>명소</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>위도</th>
+                    <th>경도</th>
+                </tr>
+                </thead>
+                <tbody id="places-list">
+                <!-- 명소 데이터가 여기에 표시됩니다 -->
+                </tbody>
+            </table>
+
+            <!-- 쉼터 목록 -->
+            <h2>쉼터</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>위도</th>
+                    <th>경도</th>
+                </tr>
+                </thead>
+                <tbody id="shelters-list">
+                <!-- 쉼터 데이터가 여기에 표시됩니다 -->
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div th:replace="common/footer :: footer"></div>
+
+</body>
 <script th:inline="javascript">
     var places = /*[[${places}]]*/ [];
     var shelters = /*[[${shelters}]]*/ [];
@@ -80,7 +89,7 @@
             const mapContainer = document.getElementById('map');
             const mapOption = {
                 center: new kakao.maps.LatLng(lat, lon),
-                level: 7
+                level: 5
             };
             const map = new kakao.maps.Map(mapContainer, mapOption);
 
@@ -163,5 +172,5 @@
 
     kakao.maps.load(initMap);
 </script>
-</body>
+
 </html>
