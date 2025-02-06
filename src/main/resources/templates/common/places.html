@@ -26,6 +26,9 @@
             padding: 10px;
             text-align: left;
         }
+        .col-first {
+            width: 40%;
+        }
     </style>
 </head>
 <body>
@@ -36,17 +39,14 @@
         <div id="map"></div>
 
         <div id="place-info">
-            <p>위도: <span id="latitude"></span></p>
-            <p>경도: <span id="longitude"></span></p>
 
             <!-- 명소 목록 -->
             <h2>명소</h2>
             <table>
                 <thead>
                 <tr>
-                    <th>이름</th>
-                    <th>위도</th>
-                    <th>경도</th>
+                    <th class="col-first">이름</th>
+                    <th>주소</th>
                 </tr>
                 </thead>
                 <tbody id="places-list">
@@ -59,9 +59,8 @@
             <table>
                 <thead>
                 <tr>
-                    <th>이름</th>
-                    <th>위도</th>
-                    <th>경도</th>
+                    <th class="col-first">이름</th>
+                    <th>주소</th>
                 </tr>
                 </thead>
                 <tbody id="shelters-list">
@@ -74,9 +73,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th>이름</th>
-                    <th>위도</th>
-                    <th>경도</th>
+                    <th class="col-first">위치</th>
                 </tr>
                 </thead>
                 <tbody id="toilets-list">
@@ -88,9 +85,8 @@
             <table>
                 <thead>
                 <tr>
-                    <th>이름</th>
-                    <th>위도</th>
-                    <th>경도</th>
+                    <th class="col-first">위치</th>
+                    <th>종류</th>
                 </tr>
                 </thead>
                 <tbody id="shades-list">
@@ -137,8 +133,7 @@
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${item.name || item.shelterName || item.toiletName || item.shadeName}</td>
-                            <td>${item.latitude}</td>
-                            <td>${item.longitude}</td>
+                            <td>${item.address || item.type}</td>
                         `;
                         list.appendChild(row);
 
@@ -153,8 +148,16 @@
                             content: `<div style="padding:5px; color:${infoColor};">${item.name || item.shelterName || item.toiletName || item.shadeName}</div>`
                         });
 
+                        let isOpen = false; // infoWindow의 열림 상태를 추적하는 변수
+
                         kakao.maps.event.addListener(marker, 'click', function() {
-                            infoWindow.open(map, marker);
+                            if (isOpen) {
+                                infoWindow.close();
+                                isOpen = false;
+                            } else {
+                                infoWindow.open(map, marker);
+                                isOpen = true;
+                            }
                         });
                     });
                 } else {
