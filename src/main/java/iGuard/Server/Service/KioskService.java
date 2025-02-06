@@ -10,6 +10,7 @@ import iGuard.Server.Repository.VisitedShelterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -36,13 +37,13 @@ public class KioskService {
         VisitedShelter visitedShelter = new VisitedShelter();
         visitedShelter.setShelter(s);
         visitedShelter.setUser(user);
-        visitedShelter.setDate(new Date());
+        visitedShelter.setDate(LocalDateTime.now());
 
 
-        if (s.getCurrent() == null) {
-            s.setCurrent(1);
+        if (s.getCurrentOccupancy() == null) {
+            s.setCurrentOccupancy(1);
         } else {
-            s.setCurrent(s.getCurrent() + 1);
+            s.setCurrentOccupancy(s.getCurrentOccupancy() + 1);
         }
 
         vr.save(visitedShelter);
@@ -56,10 +57,10 @@ public class KioskService {
         User user = ur.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if(s.getCurrent()==0){
+        if(s.getCurrentOccupancy()==0){
             return;
         }else{
-            s.setCurrent(s.getCurrent()-1);
+            s.setCurrentOccupancy(s.getCurrentOccupancy()-1);
         }
         sr.save(s);
     }
