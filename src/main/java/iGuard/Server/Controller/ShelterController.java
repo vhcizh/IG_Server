@@ -28,11 +28,6 @@ public class ShelterController {
                            Model model,
                            HttpServletRequest request) {
 
-        // 정렬 조건이 지정되지 않았다면 기본값 설정
-        if (searchDto.getSortBy() == null) {
-            searchDto.setSortBy("name");  // 기본 정렬 조건
-        }
-
         // 사용자가 요청한 페이지 번호를 0으로 변환
         int pageNumber = pageable.getPageNumber(); // 0부터 시작하는 페이지 번호
         if (pageNumber > 0) {

@@ -48,6 +48,7 @@ function loadGus() {
 //         });
 // }
 
+// 시설유형 데이터 불러오기
 function loadFacilityTypes() {
     fetch('/common/shelters/facilities')
         .then(response => response.json())
@@ -62,15 +63,71 @@ function loadFacilityTypes() {
         });
 }
 
-// 페이지 로드 시 시 데이터와 쉼터유형 데이터를 불러옵니다.
-window.onload = function() {
+// 페이지 로드 시 시 데이터와 쉼터유형 데이터를 불러오기
+window.onload = function () {
     loadCities();
     loadFacilityTypes();
 };
 
 // 체크박스 버튼 클릭 시 색상 변화
-document.querySelectorAll('.checkbox-btn').forEach(function(button) {
-    button.addEventListener('click', function() {
-        this.classList.toggle('active');
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.checkbox-btn').forEach(function (label) {
+        const checkbox = label.querySelector('input[type="checkbox"]');
+
+        // 초기 상태 설정
+        if (checkbox.checked) {
+            label.classList.add('active');
+        }
+
+        // 라벨 클릭 이벤트 (체크박스 클릭 제외)
+        label.addEventListener('click', function (e) {
+            checkbox.checked = !checkbox.checked;
+            label.classList.toggle('active');
+        });
     });
 });
+
+// 상세 페이지 데이터 로드
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".shelter-details").forEach(link => {
+        link.addEventListener("click", function () {
+            const shelterId = this.getAttribute("data-shelter-id");
+            const latitude = this.getAttribute("data-shelter-lat");
+            const longitude = this.getAttribute("data-shelter-lon");
+            loadShelterDetails(shelterId, latitude, longitude);
+        });
+    });
+});
+
+// 사이드 패널
+function loadShelterDetails(shelterId, latitude, longitude) {
+    fetch(`/common/shelters/${shelterId}`)
+        .then(response => response.text())  // HTML 전체 받아오기
+        .then(html => {
+            document.getElementById("shelterDetails").innerHTML = html;
+            // 카카오 지도 초기화 (HTML 삽입 후 실행)
+            initKakaoMap(latitude, longitude);
+            document.getElementById("sidePanel").style.right = "0"; // 패널 열기
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function closeSidePanel() {
+    document.getElementById("sidePanel").style.right = "-40%"; // 패널 닫기
+}
+
+function initKakaoMap(lat, lng) {
+    const mapContainer = document.getElementById('map');
+    const position = new kakao.maps.LatLng(lat, lng);
+    const mapOption = {
+        center: position,
+        level: 1
+    };
+    const map = new kakao.maps.Map(mapContainer, mapOption);
+
+    // 마커 생성
+    const marker = new kakao.maps.Marker({
+        position: position
+    });
+    marker.setMap(map);
+}

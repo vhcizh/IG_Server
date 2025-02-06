@@ -117,7 +117,7 @@ public class JdbcBatchImportService implements CSVImportService {
                         ps.setString(1, row[0]);  // facility_type
                         ps.setString(2, row[1]);  // shelter_name
                         ps.setString(3, row[2]);  // address
-                        ps.setBoolean(4, Boolean.parseBoolean(row[3]));  // is_available
+                        ps.setBoolean(4, "y".equalsIgnoreCase(row[3]));  // is_available
                         ps.setDouble(5, Double.parseDouble(row[4]));  // area
                         ps.setInt(6, Integer.parseInt(row[5]));  // capacity
                         ps.setInt(7, Integer.parseInt(row[6]));  // has_fan

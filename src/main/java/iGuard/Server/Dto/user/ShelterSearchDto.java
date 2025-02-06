@@ -9,11 +9,11 @@ public class ShelterSearchDto {
     private String gu;
     private String shelterName;
     private String facilityType;
-    private Boolean isOpenAtNight;
-    private Boolean allowsAccommodation;
-    private Boolean isOpenOnHolidays;
+    private Boolean isOpenAtNight = true;
+    private Boolean allowsAccommodation = true;
+    private Boolean isOpenOnHolidays = true;
     private int page;
     private int size;
-    private String sortBy;
+    private String sortBy = "name";
 
 }

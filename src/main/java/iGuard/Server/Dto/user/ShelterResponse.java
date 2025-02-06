@@ -13,6 +13,8 @@ public class ShelterResponse {
     private String address;
     private Integer fanCount;
     private Integer airConditionerCount;
+    private Float latitude;
+    private Float longitude;
 
     public static ShelterResponse toResponse(Shelter shelter) {
         ShelterResponse response = new ShelterResponse();
@@ -23,6 +25,8 @@ public class ShelterResponse {
         response.setAddress(shelter.getAddress());
         response.setFanCount(shelter.getHasFan());
         response.setAirConditionerCount(shelter.getHasAirConditioner());
+        response.setLatitude(shelter.getLatitude());
+        response.setLongitude(shelter.getLongitude());
         return response;
     }
 

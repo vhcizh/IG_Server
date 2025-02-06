@@ -34,13 +34,10 @@ public class Shelter {
     @Column(name = "area")
     private Double area;
 
-    @Column(name="current_person")
-    private Integer current;
-
     @Column(name = "capacity")
     private Integer capacity;
 
-    @Column(name = "current_occupancy")
+    @Column(name = "current_occupancy", columnDefinition = "int default 0")
     private Integer currentOccupancy;
 
     @Column(name = "has_fan")

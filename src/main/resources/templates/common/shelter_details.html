@@ -4,40 +4,45 @@
     <meta charset="UTF-8">
     <title>나의 리뷰</title>
     <!-- 카카오 지도 API를 불러오는 스크립트 -->
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=00d1961c0cca06b3691129126dbc752c"></script>
     <link rel="stylesheet" th:href="@{/common/css/shelter_details.css}" />
+    <style>
+        #map {
+            width: 100%;
+            height: 350px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-
-    <div th:replace="common/header :: header"></div>
-    <div class="main-container">
     <main>
-        <h2>나의 리뷰 목록</h2>
-        <div th:replace="common/mypage_nav :: nav"></div>
-
         <div class="details">
-            <h3 th:text="${shelter.shelterName}">쉼터이름</h3>
+            <h1 th:text="${shelter.shelterName}">쉼터이름</h1>
 <!--            <span th:text="${shelter.categoryStats}">카테고리 통계</span>-->
-            <span th:text="${shelter.capacity}">현재인원/수용인원</span>
-            <span th:text="${shelter.address}">도로명주소</span>
-            <span th:text="${shelter.fanCount}">선풍기</span>
-            <span th:text="${shelter.airConditionerCount}">에어컨</span>
+            <div id="map"></div>
+
+            <table>
+                <colgroup>
+                    <col class="col-first">
+                    <col> <!-- 기본 너비를 가진 두 번째 열 -->
+                </colgroup>
+                <tr>
+                    <th class="list-title">도로명주소</th>
+                    <td th:text="${shelter.address}"></td>
+                </tr>
+                <tr>
+                    <th class="list-title">현재인원/수용인원</th>
+                    <td th:text="${shelter.capacity}"></td>
+                </tr>
+                <tr>
+                    <th class="list-title">선풍기</th>
+                    <td th:text="${shelter.fanCount}"></td>
+                </tr>
+                <tr>
+                    <th class="list-title">에어컨</th>
+                    <td th:text="${shelter.airConditionerCount}"></td>
+                </tr>
+            </table>
         </div>
-
-        <div id="map"></div>
-
-        <div class="logs">
-            <h3>쉼터로그</h3>
-            <ul>
-                <li>제목 작성일자 좋아요수</li>
-                <li></li>
-            </ul>
-        </div>
-
     </main>
-
-    <div th:replace="common/footer :: footer"></div>
-    <script th:src="@{/common/js/shelter_details_map.js}"></script>
-    </div>
 </body>
 </html>
