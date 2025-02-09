@@ -47,7 +47,7 @@ public class SecurityConfig {
         http
                 .securityMatcher("/common/**")
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/common/css/**").permitAll() // resources/static 내의 모든 자원 허용
+                        .requestMatchers("/common/css/**", "/common/js/**").permitAll() // resources/static 내의 자원 허용
                         .requestMatchers("/common/login", "/common/join", "/common/home", "/common/places").permitAll()
                         .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )

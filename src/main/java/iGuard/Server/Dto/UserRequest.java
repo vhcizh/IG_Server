@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -26,15 +27,13 @@ public class UserRequest {
     @NotBlank(message = "비밀번호는 필수입니다.")
     private String password;
 
-    @NotNull(message = "생년월일은 필수입니다.")
-    private LocalDate age;
+    @Pattern(regexp = "\\d{8}", message = "생년월일 형식이 올바르지 않습니다.")
+    private String birthday;
 
-    @NotBlank(message = "주소는 필수입니다.")
     private String address;
 
     private String detailAddress;
 
-    @NotBlank(message = "전화번호는 필수입니다.")
     @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 올바르지 않습니다.") // 예: 010-1234-5678
     private String phone_number;
 
@@ -47,7 +46,7 @@ public class UserRequest {
         User user = new User();
         user.setId(id);
         user.setPassword(password);
-        user.setAge(age);
+        user.setAge(LocalDate.parse(birthday, DateTimeFormatter.ofPattern("yyyyMMdd")));
         user.setAddress(
                 detailAddress!=null
                         ?address + ", " + detailAddress

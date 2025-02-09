@@ -3,57 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:src="@{/common/js/join.js}"></script>
     <link rel="stylesheet" th:href="@{/common/css/login.css}" />
     <link rel="stylesheet" th:href="@{/common/css/join.css}" />
-
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script>
-        function sample6_execDaumPostcode() {
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    var addr = ''; // 주소 변수
-                    var extraAddr = ''; // 참고항목 변수
-
-                    // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                    if (data.userSelectedType === 'R') {
-                        addr = data.roadAddress;
-                    } else {
-                        addr = data.jibunAddress;
-                    }
-
-                    // 도로명 주소일 경우 추가 정보 처리
-                    if (data.userSelectedType === 'R') {
-                        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                            extraAddr += data.bname;
-                        }
-                        if (data.buildingName !== '' && data.apartment === 'Y') {
-                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                        }
-                        if (extraAddr !== '') {
-                            extraAddr = ' (' + extraAddr + ')';
-                        }
-                    } else {
-                        extraAddr = '';
-                    }
-
-                    // 우편번호와 주소 정보를 필드에 넣는다.
-                    document.getElementById('postcode').value = data.zonecode;
-                    document.getElementById('address').value = addr;
-                    document.getElementById('extraAddress').value = extraAddr;
-                    document.getElementById("detailAddress").focus();
-                }
-            }).open();
-        }
-    </script>
-    <script>
-        function toggleSelection(value) {
-            const checkbox = document.querySelector(`input[value="${value}"]`);
-            checkbox.checked = !checkbox.checked;
-
-            const button = checkbox.parentElement;
-            button.classList.toggle('selected', checkbox.checked);
-        }
-    </script>
 </head>
 <body>
     <div th:replace="common/header :: header"></div>
@@ -64,35 +17,103 @@
 
         <div class="divider">
             <hr />
-            <span class="divider-text">필수항목</span>
+<!--            <span class="divider-text">필수항목</span>-->
         </div>
 
-        <form action="#" th:action="@{/common/join}" th:object="${userRequest}" method="post">
+        <!-- 플래시 메시지 표시 -->
+        <div th:if="${errors}">
+            <ul style="list-style: none; color:red;">
+                <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+            </ul>
+        </div>
+
+        <div th:if="${error}">
+            <span th:text="${error}" style="color:red;"></span>
+        </div>
+
+        <form id="signupForm" th:action="@{/common/join}" th:object="${userRequest}" method="post">
+            <div class="label-container">
+                <label for="id">
+                    <span class="label-name">아이디</span>
+                    <span class="label-required-mark">*</span>
+                </label>
+            </div>
             <input type="text" id="id" th:field="*{id}" placeholder="아이디" required />
 
 
-            <input type="password" id="password" th:field="*{password}" placeholder="비밀번호" required />
+            <div class="label-container">
+                <label for="password">
+                    <span class="label-name">비밀번호</span>
+                    <span class="label-required-mark">*</span>
+                </label>
+            </div>
+            <input type="password"
+                   id="password"
+                   th:field="*{password}"
+                   placeholder="비밀번호"
+                   required />
 
-            <input type="date" id="age" th:field="*{age}" required />
+            <div class="label-container">
+                <label for="confirmPassword">
+                    <span class="label-name">비밀번호 확인</span>
+                    <span class="label-required-mark">*</span>
+                    <span id="passwordMessage"></span>
+                </label>
+            </div>
+            <input type="password"
+                   id="confirmPassword"
+                   placeholder="비밀번호 확인"
+                   required />
+
+            <div class="label-container">
+                <label for="date">
+                    <span class="label-name">생년월일</span>
+                    <span class="label-required-mark">*</span>
+                </label>
+            </div>
+            <input type="text"
+                   id="date"
+                   pattern="^\d{8}$"
+                   inputmode="numeric"
+                   maxlength="8"
+                   th:field="*{birthday}"
+                   placeholder="ex) 19980319"
+                   required/>
+<!--            <input type="date" id="age" th:field="*{age}" required />-->
+
+            <div class="label-container">
+                <label for="phone_number">
+                    <span class="label-name">핸드폰</span>
+                    <span class="label-required-mark">*</span>
+                </label>
+            </div>
+            <input type="text"
+                   id="phone_number"
+                   th:field="*{phone_number}"
+                   pattern="^\d{3}-\d{3,4}-\d{4}$"
+                   inputmode="numeric"
+                   maxlength="13"
+                   placeholder="ex) 010-1234-5678"
+                   required/>
 
             <input type="hidden" id="postcode" placeholder="우편번호" readonly />
-            <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
 
-            <input type="text" id="address" th:field="*{address}" placeholder="주소" required readonly />
-
-            <input type="text" id="detailAddress" th:field="*{detailAddress}" placeholder="상세주소" required />
-
-            <input type="hidden" id="extraAddress" placeholder="참고항목" readonly />
-
-            <input type="text" id="phone_number" th:field="*{phone_number}" placeholder="010-1234-5678" required />
-
-            <div class="divider">
-                <hr />
-                <span class="divider-text">선택항목</span>
+            <div class="label-container">
+                <label for="address">
+                    <span class="label-name">주소</span>
+                </label>
             </div>
+            <div class="address-button">
+                <input type="button" onclick="daumPostcode()" value="우편번호 찾기">
+                <input type="text" id="address" th:field="*{address}" placeholder="주소" readonly />
+            </div>
+            <input type="text" id="detailAddress" th:field="*{detailAddress}" placeholder="상세주소" />
 
-            <p>선호하는 쉼터 유형을 선택해주세요</p>
-
+            <div class="label-container">
+                <label for="id">
+                    <span class="label-name">선호하는 쉼터 유형을 선택해주세요</span>
+                </label>
+            </div>
             <div class="category-container">
                 <label class="category-button" th:for="'CLEAN'" onclick="toggleSelection('CLEAN')">
                     <input type="checkbox" th:field="*{preferences}" value="CLEAN" class="hidden" th:id="'CLEAN'" /> 청결해요
@@ -130,16 +151,16 @@
             </div>
 
 
-            <button type="submit">가입하기</button>
-
             <div>
-                <label>
-                    <input type="checkbox" th:field="*{accepted}" /> 약관 동의
-                </label>
+                <h3>이용약관</h3>
+                <div class="terms-container" th:utext="${terms}"></div>
             </div>
 
-            <!-- 플래시 메시지 표시 -->
-            <div th:if="${message}" th:text="${message}"></div>
+            <div>
+                <input id="agree" type="checkbox" th:field="*{accepted}" required /> 약관 동의
+            </div>
+
+            <button type="submit">가입하기</button>
         </form>
     </div>
 

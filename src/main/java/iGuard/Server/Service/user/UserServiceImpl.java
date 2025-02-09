@@ -52,7 +52,11 @@ public class UserServiceImpl implements UserService {
     private void validateDuplicateUser(UserRequest user) {
         userRepository.getById(user.getId())
                 .ifPresent(existingUser -> {
-                    throw new RuntimeException("already existing user");
+                    throw new RuntimeException("중복 아이디입니다.");
+                });
+        userRepository.findByPhoneNumber(user.getPhone_number())
+                .ifPresent((e) -> {
+                    throw new RuntimeException("이미 가입된 핸드폰 번호입니다.");
                 });
     }
 

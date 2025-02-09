@@ -12,6 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/common")
@@ -21,19 +25,32 @@ public class UserController {
 
     // 회원가입 페이지
     @GetMapping("/join")
-    public String joinPage(Model model) {
+    public String joinPage(Model model) throws IOException {
+
+        // 이용약관
+        String terms = new String(Files.readAllBytes((Paths.get("src/main/resources/terms.txt"))));
+        terms = terms.replace("\n", "<br>");
+
         model.addAttribute("userRequest", new UserRequest());
+        model.addAttribute("terms", terms);
+
         return "common/join"; // join.html로 이동
     }
 
     // 회원가입 처리
     @PostMapping("/join")
-    public String join(@Valid @ModelAttribute UserRequest userRequest, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+    public String join(@Valid @ModelAttribute UserRequest userRequest, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
             // 유효성 검사 오류가 있을 경우, join 페이지로 돌아감
+            redirectAttributes.addFlashAttribute("errors", result.getAllErrors());
             return "redirect:join"; // join.html로 돌아감
         }
-        userService.registerUser(userRequest);
+        try {
+            userService.registerUser(userRequest);
+        } catch(RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:join";
+        }
         return "redirect:/common/home"; // 리다이렉트 경로 수정
     }
 

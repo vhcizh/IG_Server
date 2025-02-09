@@ -22,7 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userid;
 
-    @Column(name = "age")
+    @Column(name = "age", nullable = false)
     @Temporal(TemporalType.DATE)
     private LocalDate age;
 
@@ -38,7 +38,7 @@ public class User {
     @Column(name = "id", length = 50, unique = true, nullable = false)
     private String id;
 
-    @Column(name = "password", length = 60)
+    @Column(name = "password", length = 60, nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "user")
