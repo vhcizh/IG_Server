@@ -108,6 +108,10 @@
     text-decoration: none;
 }
 
+.shelter:hover {
+    background-color: #f8f8f8;
+}
+
 .shelter-details {
     display: flex;
     justify-content: space-between;
@@ -146,12 +150,12 @@
     background-color: #4CAF50;
 }
 
-ul {
+.shelter_list ul {
     list-style-type: none;
     padding: 0;
 }
 
-li {
+.shelter_list li {
     margin-bottom: 10px;
 }
 
