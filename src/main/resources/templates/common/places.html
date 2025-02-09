@@ -29,6 +29,37 @@
         .col-first {
             width: 40%;
         }
+
+        .marker {
+            padding: 15px;
+            width: 300px; /* 너비 조정 */
+        }
+
+        .marker img {
+            width: 30px; /* 아이콘 크기 조정 */
+            height: 30px;
+            margin-left: 5px; /* 아이콘과 텍스트 간격 */
+            vertical-align: middle;
+        }
+
+        .marker-name {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .direction {
+            padding: 5px 10px 10px 5px;
+            border: 1px solid #ccc;
+            border-radius: 1em;
+            text-decoration: none; /* 링크의 기본 밑줄 제거 */
+            color:#333;
+            font-weight: bold; /* 글자 두껍게 */
+        }
+
+        .direction:hover {
+            background-color: #ffdd71;
+        }
+
     </style>
 </head>
 <body>
@@ -68,31 +99,6 @@
                 </tbody>
             </table>
 
-            <!-- 화장실 목록 -->
-            <h2>화장실</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th class="col-first">위치</th>
-                </tr>
-                </thead>
-                <tbody id="toilets-list">
-                </tbody>
-            </table>
-
-            <!-- 그늘막 목록 -->
-            <h2>그늘막</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th class="col-first">위치</th>
-                    <th>종류</th>
-                </tr>
-                </thead>
-                <tbody id="shades-list">
-                </tbody>
-            </table>
-
         </div>
     </div>
 
@@ -120,8 +126,8 @@
             const map = new kakao.maps.Map(mapContainer, mapOption);
 
             const markerImages = {
-                places: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', new kakao.maps.Size(24, 35)),
-                shelters: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', new kakao.maps.Size(24, 35)),
+                places: new kakao.maps.MarkerImage('/images/marker_red.png', new kakao.maps.Size(30, 32)),
+                shelters: new kakao.maps.MarkerImage('/images/marker_skyblue.png', new kakao.maps.Size(40, 40)),
                 toilets: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', new kakao.maps.Size(10, 15)),
                 shades: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', new kakao.maps.Size(10, 15))
             };
@@ -131,8 +137,9 @@
                 if (list && Array.isArray(data) && data.length > 0) {
                     data.forEach(item => {
                         const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${item.name || item.shelterName || item.toiletName || item.shadeName}</td>
+                        const name = `${item.name || item.shelterName || item.toiletName || item.shadeName}`;
+                        row.innerHTML =`
+                            <td>${name}</td>
                             <td>${item.address || item.type}</td>
                         `;
                         list.appendChild(row);
@@ -144,21 +151,38 @@
                             image: markerImages[markerType]
                         });
 
+                        const address = encodeURIComponent(item.address); // 주소 인코딩
+                        const url = `https://map.kakao.com/link/to/${address},${item.latitude},${item.longitude}`; // 카카오 길찾기 URL
+
                         const infoWindow = new kakao.maps.InfoWindow({
-                            content: `<div style="padding:5px; color:${infoColor};">${item.name || item.shelterName || item.toiletName || item.shadeName}</div>`
+                            content: `<div class="marker">
+                                        <span class="marker-name">${name}</span>
+                                        <a class="direction" href="${url}" target="_blank">
+                                            <img src="/images/direction.png" alt="길찾기" />
+                                            <span class="direction-text">길찾기</span>
+                                        </a>
+                                    </div>`,
+                            disableAutoPan: false // 마커 클릭 시 자동으로 중앙으로 이동
                         });
 
-                        let isOpen = false; // infoWindow의 열림 상태를 추적하는 변수
+                        var isOpen = false;
 
-                        kakao.maps.event.addListener(marker, 'click', function() {
-                            if (isOpen) {
+                        // 마커 클릭 이벤트 추가
+                        kakao.maps.event.addListener(marker, 'click', function () {
+                            if(isOpen) {
                                 infoWindow.close();
-                                isOpen = false;
                             } else {
                                 infoWindow.open(map, marker);
-                                isOpen = true;
                             }
+                            isOpen = !isOpen;
                         });
+
+
+                        // 마커 외부 클릭 시 InfoWindow 닫기
+                        kakao.maps.event.addListener(map, 'click', function () {
+                            infoWindow.close(); // InfoWindow 닫기
+                        });
+
                     });
                 } else {
                     console.log(`${listId} 데이터가 없습니다.`);
@@ -166,12 +190,15 @@
             }
 
             addMarkers(places, 'places-list', 'places', 'black');
-            addMarkers(shelters, 'shelters-list', 'shelters', 'red');
+            addMarkers(shelters, 'shelters-list', 'shelters', 'green');
             addMarkers(toilets, 'toilets-list', 'toilets', 'blue');
-            addMarkers(shades, 'shades-list', 'shades', 'yello');
+            addMarkers(shades, 'shades-list', 'shades', 'yellow');
 
             document.getElementById('latitude').innerText = lat;
             document.getElementById('longitude').innerText = lon;
+
+
+
         } else {
             alert('위도, 경도, 거리 값을 확인하세요.');
         }
