@@ -1,14 +1,23 @@
+html {
+    min-width: 556px;
+}
+
 header {
     display: flex;
     width: 100%;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
+    padding: 10px;
     background-color: #f8f9fa;
 }
 
 .logo img {
+    margin: 0 10px;
     max-height: 60px;
+}
+
+.header_navbar {
+    margin: 0 10px;
 }
 
 .header_navbar ul {
@@ -28,7 +37,7 @@ header {
 }
 
 .header_navbar a:hover {
-    text-decoration: underline; /* 호버 시 밑줄 추가 */
+    color: #4CAF50;
 }
 
 footer {
