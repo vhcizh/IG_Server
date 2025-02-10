@@ -4,8 +4,13 @@ import iGuard.Server.Dto.UserRequest;
 import iGuard.Server.Dto.UserUpdate;
 import iGuard.Server.Service.user.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,10 +80,16 @@ public class UserController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/mypage/me")
-    public String deleteMe() {
+    @PostMapping("/mypage/me/delete")
+    public String deleteMe(HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         userService.deleteUser();
-        return "redirect:/common/home";
+        // 로그아웃 처리
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+        redirectAttributes.addFlashAttribute("message", "회원탈퇴 되었습니다.");
+        return "redirect:/common/login";
     }
 
 
