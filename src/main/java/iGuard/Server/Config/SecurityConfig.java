@@ -1,6 +1,7 @@
 package iGuard.Server.Config;
 
 //import iGuard.Server.Service.admin.CustomAuthenticationFilter;
+import iGuard.Server.Component.CustomAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -49,6 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/common/css/**", "/common/js/**").permitAll() // resources/static 내의 자원 허용
                         .requestMatchers("/common/login", "/common/join", "/common/home", "/common/places").permitAll()
+                        .requestMatchers("/common/mypage/**").hasRole("MEMBER")
                         .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
                 .formLogin(form -> form
@@ -64,6 +66,9 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/common/login?logout") // 로그아웃 성공 후 이동할 페이지
                         .permitAll()
                 )
+                .exceptionHandling((ex)->{
+                    ex.accessDeniedHandler(new CustomAccessDeniedHandler()); // 403 에러 커스텀 핸들러
+                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .userDetailsService(memberUserDetailsService);
 

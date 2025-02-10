@@ -33,7 +33,7 @@ public class NotificationController {
             return "sendNotification"; // sendNotification.html 뷰를 반환
         } else {
             model.addAttribute("error", "Invalid user Id");
-            return "error/notification_error"; // notification_error.html 뷰를 반환 또는 적절한 오류 처리
+            return "notification_error"; // notification_error.html 뷰를 반환 또는 적절한 오류 처리
         }
     }
 
