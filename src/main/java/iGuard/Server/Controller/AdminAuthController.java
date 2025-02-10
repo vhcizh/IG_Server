@@ -29,9 +29,6 @@ public class AdminAuthController {
     @Autowired
     private CompanyUserRepository cr;
 
-    @Autowired
-    private CompanyUserDetailsService cds;
-
     @GetMapping("/register")
     public String register(){
         return "admin/company_register";
@@ -41,33 +38,6 @@ public class AdminAuthController {
     public String showLoginForm() {
         return "admin/company_login"; // login.html 템플릿을 반환
     }
-
-//    @PostMapping("/login")
-//    public String login(@RequestParam String email,
-//                        @RequestParam String password,
-//                        HttpServletRequest request
-//    ) {
-//        CompanyUser user = companyUserService.findByCompanyEmail(email);
-//
-//        if (user != null && companyUserService.checkPassword(user, password)) {
-//            // Create authentication token
-//            UserDetails userDetails = cds.loadUserByUsername(email);
-//            UsernamePasswordAuthenticationToken authentication =
-//                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//
-//            // Set authentication in SecurityContext
-//            SecurityContext securityContext = SecurityContextHolder.getContext();
-//            securityContext.setAuthentication(authentication);
-//
-//            HttpSession session = request.getSession(true);
-//            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-//
-//            // Redirect to home page
-//            return "redirect:/admin/mypage";
-//        } else {
-//            return "admin/company_login";
-//        }
-//    }
 
     @PostMapping("/register")
     public String register(@RequestParam String email,
@@ -120,7 +90,8 @@ public class AdminAuthController {
                 model.addAttribute("message", "사용자를 찾을 수 없습니다.");
             }
         } else {
-            model.addAttribute("message", "유효하지 않습니다.");
+            model.addAttribute("message", "유효하지 않은 인증 코드입니다. 다시 시도해주세요");
+            return "admin/company_register";
         }
         model.addAttribute("email", email); // 이메일 주소를 유지
         return "common/home";
