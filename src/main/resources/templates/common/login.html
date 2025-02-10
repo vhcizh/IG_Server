@@ -21,8 +21,10 @@
             </div>
 
             <div class="error">
-                <p th:if="${param.error}">로그인 실패. 다시 시도하세요.</p>
+                <p th:if="${param.error}">아이디와 비밀번호를 정확히 입력해 주세요.</p>
                 <p th:if="${param.logout}">로그아웃되었습니다.</p>
+                <p th:if="${param.message}" th:text="${param.message}"></p>
+                <p th:if="${message}" th:text="${message}"></p>
             </div>
 
             <div class="switch">

@@ -3,26 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>내 정보</title>
-    <script>
-        function deleteMe() {
-            if (confirm('정말로 계정을 삭제하시겠습니까?')) {
-                fetch('/mypage/me', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url; // 리디렉션 URL로 이동
-                    } else {
-                        alert('계정 삭제에 실패했습니다.');
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-        }
-    </script>
 </head>
 <body>
 <div th:replace="common/header :: header"></div>
@@ -53,7 +33,10 @@
 
         <button type="submit">정보 수정</button>
     </form>
-    <button onclick="deleteMe()">회원 탈퇴</button>
+    <form action="/admin/mypage/delete" method="post" onsubmit="return confirm('탈퇴 후 계정을 복구할 수 없습니다. 정말 탈퇴하시겠습니까?');">
+        <input type="hidden" name="companyUserId" th:value="${user.userId}"/>
+        <button type="submit">회원 탈퇴</button>
+    </form>
 </main>
 <div th:replace="common/footer :: footer"></div>
 </div>
