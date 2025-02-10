@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin")
@@ -76,6 +77,7 @@ public class AdminAuthController {
     @PostMapping("/verify")
     public String verify(@RequestParam String email,
                          @RequestParam String code,
+                         RedirectAttributes redirectAttributes,
                          Model model) {
         boolean isValid = emailService.verifyCode(email, code);
 
@@ -85,15 +87,14 @@ public class AdminAuthController {
             if (user != null) {
                 user.setVerified(true);
                 cr.save(user);
-                model.addAttribute("message", "성공적으로 인증되었습니다. 회원가입이 완료되었습니다.");
+                redirectAttributes.addFlashAttribute("message", "성공적으로 인증되었습니다. 회원가입이 완료되었습니다.");
             } else {
-                model.addAttribute("message", "사용자를 찾을 수 없습니다.");
+                redirectAttributes.addFlashAttribute("message", "사용자를 찾을 수 없습니다.");
             }
         } else {
             model.addAttribute("message", "유효하지 않은 인증 코드입니다. 다시 시도해주세요");
             return "admin/company_register";
         }
-        model.addAttribute("email", email); // 이메일 주소를 유지
-        return "common/home";
+        return "redirect:/admin/login";
     }
 }
