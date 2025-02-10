@@ -12,7 +12,7 @@
       <li><a th:href="@{/admin/csv-upload}">csv 업로드</a></li>
       <li th:if="${#authentication.name != null and #authentication.name != 'anonymousUser'}">
         <span th:text="${#authentication.name}+' 님'">username</span>
-        <a th:href="@{/common/logout}">로그아웃</a>
+        <a th:href="@{/admin/logout}">로그아웃</a>
       </li>
       <li th:unless="${#authentication.name != null and #authentication.name != 'anonymousUser'}">
         <a th:href="@{/admin/login}">로그인</a>
