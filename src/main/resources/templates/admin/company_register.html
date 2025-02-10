@@ -8,7 +8,7 @@
     <div th:replace="admin/header :: header"></div>
     <div class="main-container">
         <h1>회원가입</h1>
-        <form action="/admin/register" method="post">
+        <form action="/admin/register" method="post" onsubmit="showSpinner()">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="text" id="companyName" name="companyName" placeholder="회사명" required>
 
@@ -25,7 +25,18 @@
 
         <div class="error" th:if="${message}" th:text="${message}"></div>
 
+        <div class="spinner" id="spinner">
+            <img src="/images/loading.gif" alt="loading-img">
+        </div>
+
     </div>
     <div th:replace="common/footer :: footer"></div>
+
+    <script>
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'block'; // 스피너 표시
+        }
+    </script>
+
 </body>
 </html>
