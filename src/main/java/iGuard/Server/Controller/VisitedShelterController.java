@@ -1,6 +1,7 @@
 package iGuard.Server.Controller;
 
 import iGuard.Server.Dto.user.ReviewDto;
+import iGuard.Server.Service.user.UserService;
 import iGuard.Server.Service.user.VisitedShelterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 public class VisitedShelterController {
 
     private final VisitedShelterService visitedShelterService;
+    private final UserService userService;
 
     // 마이페이지 (방문한 쉼터 리스트 조회)
     @GetMapping("")
     public String getShelter(Model model) {
         model.addAttribute("shelters", visitedShelterService.getVisitedShelter());
         model.addAttribute("reviewDto", new ReviewDto());
+        model.addAttribute("userId", userService.getUser().getUserId());
         return "common/mypage";
     }
 

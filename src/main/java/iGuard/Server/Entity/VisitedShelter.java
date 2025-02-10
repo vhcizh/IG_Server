@@ -33,6 +33,7 @@ public class VisitedShelter {
     @PrePersist
     protected void onCreate() {
         this.date = LocalDateTime.now();
+        this.reviewed = false;
     }
 
 }
