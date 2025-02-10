@@ -56,7 +56,8 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:join";
         }
-        return "redirect:/common/home"; // 리다이렉트 경로 수정
+        redirectAttributes.addFlashAttribute("message", "회원가입 완료되었습니다.");
+        return "redirect:/common/login";
     }
 
     // 로그인 페이지

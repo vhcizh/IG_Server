@@ -67,9 +67,9 @@ public class User {
         this.setPassword(userRequest.getPassword());
         this.setAge(userRequest.getAge());
         this.setAddress(
-                userRequest.getDetailAddress()!=null
-                        ? userRequest.getAddress() + ", " + userRequest.getDetailAddress()
-                        : userRequest.getAddress()
+                userRequest.getDetailAddress().isBlank()
+                        ? userRequest.getAddress()
+                        : userRequest.getAddress() + ", " + userRequest.getDetailAddress()
         );
         this.setPhoneNumber(userRequest.getPhone_number());
     }
