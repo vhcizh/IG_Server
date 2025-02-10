@@ -18,7 +18,7 @@
             <h3>방문 쉼터 지정</h3>
             <form th:action="@{/common/mypage/shelter}" method="post">
                 <label for="userId">User ID:</label>
-                <input type="number" id="userId" name="userId" required>
+                <input type="number" id="userId" name="userId" th:value="${userId}" required>
                 <br>
                 <label for="shelterId">Shelter ID:</label>
                 <input type="number" id="shelterId" name="shelterId" required>

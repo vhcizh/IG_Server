@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserResponse {
 
+    private Integer userId;
     private String id;
     private Integer age;
     private LocalDate birthDate;
@@ -23,6 +24,7 @@ public class UserResponse {
 
     public static UserResponse getFrom(User user) {
         return UserResponse.builder()
+                .userId(user.getUserid())
                 .id(user.getId())
                 .age(AgeUtil.calculateAge(user.getAge()))
                 .birthDate(user.getAge())
