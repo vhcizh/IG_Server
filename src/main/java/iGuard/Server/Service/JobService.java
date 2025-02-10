@@ -23,13 +23,10 @@ public class JobService {
 
     private final JobApplicationRepository jar;
 
-    private final UserRepository ur;
-
     @Autowired
-    public JobService(JobRepository jr,UserRepository ur, ShelterRepository sr, JobApplicationRepository jar) {
+    public JobService(JobRepository jr,ShelterRepository sr, JobApplicationRepository jar) {
         this.jr = jr;
         this.sr = sr;
-        this.ur = ur;
         this.jar = jar;
     }
     // 일자리 등록 로직
@@ -55,15 +52,6 @@ public class JobService {
                 .orElseThrow(() -> new RuntimeException("Application not found"));
 
         application.setIsAccepted(isAccepted);
-        jar.save(application);
-
-        if (isAccepted) {
-            User user = application.getUser();
-            Job job = application.getJob();
-            user.setJob(job);
-            ur.save(user);
-        }
-
         jar.save(application);
     }
 
