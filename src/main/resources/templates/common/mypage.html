@@ -27,20 +27,18 @@
             </form>
         </div>
 
-        <div>
+        <div class="visited-shelters">
             <h3>이용한 쉼터 내역</h3>
             <ul>
-                <li>쉼터명칭, 방문날짜, 리뷰작성, 쉼터로그, 민원작성</li>
                 <li th:each="visitedShelter : ${shelters}">
                     <span th:text="${visitedShelter.shelter.shelterName}"></span>
                     <span th:text="${visitedShelter.date}"></span>
-                    <span th:text="${visitedShelter.reviewed}"></span>
-                    <span th:if="${visitedShelter.reviewed}">작성완료</span>
+                    <button th:if="${visitedShelter.reviewed}">작성완료</button>
                     <button th:if="${!visitedShelter.reviewed}"
                             th:onclick="'openModal(' + ${visitedShelter.shelter.shelterId} + ', ' + ${visitedShelter.visitedShelterId} + ')'">
                         리뷰작성</button>
-                    <a href="">쉼터로그</a>
-                    <a href="">민원작성</a>
+                    <a href="#" class="disabled-button" onclick="showModal2()">쉼터로그</a>
+                    <a href="#" class="disabled-button" onclick="showModal2()">민원작성</a>
                 </li>
             </ul>
         </div>
@@ -116,7 +114,15 @@
 
     </main>
 
-    <div th:replace="common/footer :: footer"></div>
+    <!-- 모달 구조 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal2()">&times;</span>
+            <p>준비 중입니다. 조금만 기다려 주세요!</p>
+        </div>
+    </div>
 </div>
+
+<div th:replace="common/footer :: footer"></div>
 </body>
 </html>

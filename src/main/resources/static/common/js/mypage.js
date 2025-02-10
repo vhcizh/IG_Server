@@ -92,3 +92,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// 준비중 모달
+function showModal2() {
+    document.getElementById('modal').style.display = 'block'; // 모달 보이기
+}
+
+function closeModal2() {
+    document.getElementById('modal').style.display = 'none'; // 모달 숨기기
+}
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+    const modal = document.getElementById('modal');
+    if (event.target === modal) {
+        closeModal2();
+    }
+}
