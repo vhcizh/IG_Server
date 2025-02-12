@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
         // 유저 선호도 저장
         if (preferences != null && !preferences.isEmpty()) {
             List<UserPreference> userPreferences = preferences.stream()
-                    .filter(ShelterPreference::isAvailableForSignup)
                     .map(preference -> {
                         UserPreference userPreference = new UserPreference();
                         userPreference.setUser(user);
@@ -71,22 +70,50 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(UserUpdate user) {
+    public void updateUser(UserUpdate userUpdate) {
+        User user = findAndValidatePassword(userUpdate);
+        validateDuplicatePhoneNumber(userUpdate, user);
+        updatePassword(userUpdate);
+        user.updateInfo(userUpdate);
+    }
+
+    private User findAndValidatePassword(UserUpdate userUpdate) {
         String id = userContextProvider.getLoginUserId();
-        userRepository.getById(id).ifPresent(
-                u -> {
-                    user.setPassword(passwordEncoder.encode(user.getPassword()));
-                    u.updateInfo(user);
-                }
-        );
+        User user = userRepository.getById(id)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        validatePassword(user, userUpdate.getOldPassword());
+        return user;
+    }
+
+    private void validatePassword(User user, String oldPassword) {
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다");
+        }
+    }
+
+    private void validateDuplicatePhoneNumber(UserUpdate userUpdate, User currentUser) {
+        userRepository.findByPhoneNumber(userUpdate.getPhone_number())
+                .ifPresent(existingUser -> {
+                    if (!existingUser.getUserid().equals(currentUser.getUserid()))
+                        throw new RuntimeException("이미 가입된 핸드폰 번호입니다.");
+                });
+    }
+
+    private void updatePassword(UserUpdate userUpdate) {
+        if (userUpdate.haveNewPassword()) {
+            userUpdate.setNewPassword(passwordEncoder.encode(userUpdate.getNewPassword()));
+        }
     }
 
     @Override
     @Transactional
     public void deleteUser() {
         String id = userContextProvider.getLoginUserId();
-        userRepository.getById(id).ifPresent(
-                userRepository::delete
+        userRepository.getById(id).ifPresentOrElse(
+                userRepository::delete,
+                () -> {throw new RuntimeException("사용자를 찾을 수 없습니다.");}
         );
     }
+
+
 }

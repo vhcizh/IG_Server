@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -60,12 +61,15 @@ public class User {
     @JsonIgnore
     private List<JobApplication> jobApplications;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserPreference> userPreferences;
+
     @Column(name = "fcm_token", length = 255)
     private String fcmToken;
 
     public void updateInfo(UserUpdate userRequest) {
-        this.setPassword(userRequest.getPassword());
-        this.setAge(userRequest.getAge());
+        if (userRequest.haveNewPassword()) this.setPassword(userRequest.getNewPassword());
+        this.setAge(LocalDate.parse(userRequest.getBirthDate(), DateTimeFormatter.ofPattern("yyyyMMdd")));
         this.setAddress(
                 userRequest.getDetailAddress()==null || userRequest.getDetailAddress().isBlank()
                         ? userRequest.getAddress()

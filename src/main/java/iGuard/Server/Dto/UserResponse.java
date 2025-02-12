@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Builder
@@ -18,7 +19,7 @@ public class UserResponse {
     private Integer userId;
     private String id;
     private Integer age;
-    private LocalDate birthDate;
+    private String birthDate;
     private String address;
     private String phone_number;
 
@@ -27,7 +28,7 @@ public class UserResponse {
                 .userId(user.getUserid())
                 .id(user.getId())
                 .age(AgeUtil.calculateAge(user.getAge()))
-                .birthDate(user.getAge())
+                .birthDate(user.getAge().format(DateTimeFormatter.BASIC_ISO_DATE)) // 19980319
                 .address(user.getAddress())
                 .phone_number(user.getPhoneNumber())
                 .build();

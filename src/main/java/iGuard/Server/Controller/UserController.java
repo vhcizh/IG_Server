@@ -75,8 +75,13 @@ public class UserController {
 
     // 내 정보 수정
     @PostMapping("/mypage/me")
-    public String updateMyInfo(@Valid @ModelAttribute UserUpdate userRequest) {
-        userService.updateUser(userRequest);
+    public String updateMyInfo(@Valid @ModelAttribute UserUpdate userRequest, RedirectAttributes redirectAttributes) {
+        try {
+            userService.updateUser(userRequest);
+            redirectAttributes.addFlashAttribute("message", "회원정보가 성공적으로 수정되었습니다.");
+        } catch(Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/common/mypage/me";
     }
 
