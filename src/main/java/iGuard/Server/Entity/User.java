@@ -67,7 +67,7 @@ public class User {
         this.setPassword(userRequest.getPassword());
         this.setAge(userRequest.getAge());
         this.setAddress(
-                userRequest.getDetailAddress().isBlank()
+                userRequest.getDetailAddress()==null || userRequest.getDetailAddress().isBlank()
                         ? userRequest.getAddress()
                         : userRequest.getAddress() + ", " + userRequest.getDetailAddress()
         );

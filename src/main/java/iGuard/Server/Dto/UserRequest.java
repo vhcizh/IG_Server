@@ -48,9 +48,9 @@ public class UserRequest {
         user.setPassword(password);
         user.setAge(LocalDate.parse(birthday, DateTimeFormatter.ofPattern("yyyyMMdd")));
         user.setAddress(
-                detailAddress!=null
-                        ?address + ", " + detailAddress
-                        :address
+                detailAddress==null || detailAddress.isBlank()
+                        ?address
+                        :address + ", " + detailAddress
         );
         user.setPhoneNumber(phone_number);
         user.setAccepted(accepted);
