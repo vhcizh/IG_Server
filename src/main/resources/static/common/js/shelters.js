@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 상세 페이지 데이터 로드
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".shelter-details").forEach(link => {
+    document.querySelectorAll(".shelter").forEach(link => {
         link.addEventListener("click", function () {
             const shelterId = this.getAttribute("data-shelter-id");
             const latitude = this.getAttribute("data-shelter-lat");

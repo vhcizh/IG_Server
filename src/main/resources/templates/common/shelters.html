@@ -77,16 +77,13 @@
                     <span class="shelter-capacity">이용인원</span>
                     <span class="shelter-distance">거리</span>
                 </li>
-                <li th:each="shelter : ${shelters}" class="shelter">
-                    <a href="javascript:void(0);"
-                       th:data-shelter-id="${shelter.shelterId}"
-                       th:data-shelter-lat="${shelter.latitude}"
-                       th:data-shelter-lon="${shelter.longitude}"
-                       class="shelter-details">
+                <li th:each="shelter : ${shelters}" class="shelter"
+                   th:data-shelter-id="${shelter.shelterId}"
+                   th:data-shelter-lat="${shelter.latitude}"
+                   th:data-shelter-lon="${shelter.longitude}">
                         <span class="shelter-name" th:text="${shelter.shelterName}"></span>
                         <span class="shelter-capacity" th:text="${shelter.capacity}"></span>
                         <span class="shelter-distance" th:text="${shelter.distance}"></span>
-                    </a>
                 </li>
             </ul>
         </div>
