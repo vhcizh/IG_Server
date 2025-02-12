@@ -12,7 +12,7 @@ public class ReviewDto {
 
     private Integer visitedShelterId;
     private Integer shelterId;
-    private Double  rating;
+    private Double  rating = 0.5;
     private List<ShelterPreference> categories;
 
 }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>내 정보</title>
+    <link rel="stylesheet" th:href="@{/common/css/mypage.css}" />
 </head>
 <body>
 <div th:replace="common/header :: header"></div>
@@ -10,7 +11,7 @@
 
 <main>
     <h2>사용자 정보</h2>
-    <div th:replace="common/mypage_nav :: nav"></div>
+    <div th:replace="common/mypage_nav"></div>
 
     <form th:action="@{/common/mypage/me}" method="post">
 
@@ -38,8 +39,8 @@
         <button type="submit">회원 탈퇴</button>
     </form>
 </main>
-<div th:replace="common/footer :: footer"></div>
 </div>
+<div th:replace="common/footer :: footer"></div>
 </body>
 </html>
 

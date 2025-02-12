@@ -1,7 +1,23 @@
 <meta charset="UTF-8">
-<nav class="mypage_navbar">
-    <button onclick="location.href='/common/mypage'">마이페이지</button>
-    <button onclick="location.href='/common/mypage/me'">개인정보 확인/변경</button>
-    <button onclick="location.href='/common/mypage/shelter/reviews'">작성한 리뷰/쉼터로그/민원</button>
-    <button onclick="location.href='/common/mypage/me'">일자리 신청 내역</button>
+<style>
+    .white_button {
+        padding: 8px 12px; /* 버튼 패딩 */
+        background-color: #fefefe; /* 버튼 배경색 */
+        color: black;
+        border: 1px solid #888; /* 버튼 테두리 제거 */
+        border-radius: 5px; /* 버튼 모서리 둥글게 */
+        cursor: pointer; /* 포인터 커서 */
+        margin-right: 15px; /* 버튼과 다음 요소 간의 여백 */
+        transition: background-color 0.3s; /* 배경색 전환 효과 */
+    }
+
+    .white_button:hover {
+        background-color: #eeeeee;
+    }
+</style>
+<nav>
+    <button class="white_button" onclick="location.href='/common/mypage'">마이페이지</button>
+    <button class="white_button" onclick="location.href='/common/mypage/me'">개인정보 확인/변경</button>
+    <button class="white_button" onclick="location.href='/common/mypage/shelter/reviews'">작성한 리뷰</button>
+<!--    <button onclick="location.href='/common/mypage/me'">일자리 신청 내역</button>-->
 </nav>

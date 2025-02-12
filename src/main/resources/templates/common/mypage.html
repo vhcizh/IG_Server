@@ -12,33 +12,27 @@
 
     <main>
         <h2>마이페이지</h2>
-        <div th:replace="common/mypage_nav :: nav"></div>
+        <div th:replace="common/mypage_nav"></div>
 
-        <div>
-            <h3>방문 쉼터 지정</h3>
-            <form th:action="@{/common/mypage/shelter}" method="post">
-                <label for="userId">User ID:</label>
-                <input type="number" id="userId" name="userId" th:value="${userId}" required>
-                <br>
-                <label for="shelterId">Shelter ID:</label>
-                <input type="number" id="shelterId" name="shelterId" required>
-                <br>
-                <button type="submit">등록</button>
-            </form>
-        </div>
-
-        <div class="visited-shelters">
+        <div class="mypage-container">
             <h3>이용한 쉼터 내역</h3>
             <ul>
+                <li>
+                    <span class="flex2 bold">쉼터명</span>
+                    <span class="flex2 bold">방문날짜</span>
+                    <span class="flex1 bold">리뷰작성</span>
+                </li>
                 <li th:each="visitedShelter : ${shelters}">
-                    <span th:text="${visitedShelter.shelter.shelterName}"></span>
-                    <span th:text="${visitedShelter.date}"></span>
-                    <button th:if="${visitedShelter.reviewed}">작성완료</button>
-                    <button th:if="${!visitedShelter.reviewed}"
-                            th:onclick="'openModal(' + ${visitedShelter.shelter.shelterId} + ', ' + ${visitedShelter.visitedShelterId} + ')'">
-                        리뷰작성</button>
-                    <a href="#" class="disabled-button" onclick="showModal2()">쉼터로그</a>
-                    <a href="#" class="disabled-button" onclick="showModal2()">민원작성</a>
+                    <span class="flex2" th:text="${visitedShelter.shelter.shelterName}"></span>
+                    <span class="flex2" th:text="${visitedShelter.date}"></span>
+                    <span class="flex1">
+                        <span th:if="${visitedShelter.reviewed}">작성완료</span>
+                        <button th:if="${!visitedShelter.reviewed}"
+                                th:onclick="'openModal(' + ${visitedShelter.shelter.shelterId} + ', ' + ${visitedShelter.visitedShelterId} + ')'">
+                            리뷰작성</button>
+                    </span>
+<!--                    <a href="#" class="disabled-button" onclick="showModal2()">쉼터로그</a>-->
+<!--                    <a href="#" class="disabled-button" onclick="showModal2()">민원작성</a>-->
                 </li>
             </ul>
         </div>
@@ -50,12 +44,10 @@
                 <span class="close" onclick="closeModal()">&times;</span>
                 <h3>리뷰 작성</h3>
                 <form id="reviewForm" th:action="@{/common/mypage/shelter/review}" method="post" th:object="${reviewDto}">
-    <!--                <input type="hidden"  name="shelterId">-->
                     <input type="hidden" id="modal_visitedShelterId" th:field="*{visitedShelterId}" />
                     <input type="hidden" id="modal_shelterId" th:field="*{shelterId}" />
                     <div class="star-rating">
                         <div class="star-value"></div>
-    <!--                    <input type="radio" name="rating" value="0.5"><i></i>-->
                         <input type="radio" th:field="*{rating}" value="0.5"/><i></i>
                         <input type="radio" th:field="*{rating}" value="1"><i></i>
                         <input type="radio" th:field="*{rating}" value="1.5"><i></i>
@@ -106,7 +98,7 @@
                     </div>
 
                     <div class="form-footer">
-                        <button type="submit">제출</button>
+                        <button type="submit" class="white_button">제출</button>
                     </div>
                 </form>
             </div>

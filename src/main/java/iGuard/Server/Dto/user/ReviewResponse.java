@@ -21,7 +21,7 @@ public class ReviewResponse {
         this.reviewId = reviewId;
         this.shelterName = shelterName;
         this.rating = rating;
-        this.createdAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.createdAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
 }

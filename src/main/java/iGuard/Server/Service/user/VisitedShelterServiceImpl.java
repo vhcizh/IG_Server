@@ -44,7 +44,7 @@ public class VisitedShelterServiceImpl implements VisitedShelterService {
     @Override
     public List<VisitedShelterResponse> getVisitedShelter() {
         String id = userContextProvider.getLoginUserId();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return visitedShelterRepository
                 .findAllByUser_id(id)
                 .stream()

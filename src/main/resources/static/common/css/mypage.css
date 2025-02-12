@@ -117,66 +117,82 @@
 }
 
 /* 이용한 쉼터 내역 */
-.visited-shelters {
+.mypage-container {
     margin: 20px; /* 여백 추가 */
     padding: 20px; /* 내부 여백 추가 */
     background-color: #f9f9f9; /* 배경색 */
     border-radius: 8px; /* 모서리 둥글게 */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 효과 */
+    min-height: 500px;
 }
 
-.visited-shelters h3 {
+.mypage-container h3 {
     margin-bottom: 15px; /* 제목과 아래 요소 간의 여백 */
     font-size: 24px; /* 제목 크기 */
     color: #333; /* 제목 색상 */
 }
 
-.visited-shelters ul {
+.mypage-container ul {
     list-style-type: none; /* 기본 리스트 스타일 제거 */
     padding: 0; /* 패딩 제거 */
     margin: 0; /* 마진 제거 */
 }
 
-.visited-shelters li {
+.mypage-container li {
     display: flex; /* 플렉스 박스를 사용하여 요소 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
     padding: 10px; /* 각 리스트 항목의 패딩 */
     border-bottom: 1px solid #ddd; /* 아래에 선 추가 */
 }
 
-.visited-shelters li:last-child {
+.mypage-container li:last-child {
     border-bottom: none; /* 마지막 항목의 아래 선 제거 */
 }
 
-.visited-shelters span {
-    margin-right: 15px; /* 스팬 간의 여백 */
-    flex: 1; /* 공간을 균등하게 분배 */
+.flex1 {
+    flex:1;
 }
 
-.visited-shelters button {
+.flex2 {
+    flex:2;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.mypage-container button {
     padding: 8px 12px; /* 버튼 패딩 */
     background-color: #4CAF50; /* 버튼 배경색 */
     color: white; /* 버튼 텍스트 색상 */
     border: none; /* 버튼 테두리 제거 */
     border-radius: 5px; /* 버튼 모서리 둥글게 */
     cursor: pointer; /* 포인터 커서 */
-    margin-right: 15px; /* 버튼과 다음 요소 간의 여백 */
     transition: background-color 0.3s; /* 배경색 전환 효과 */
 }
 
-.visited-shelters button:hover {
+.mypage-container button:hover {
     background-color: #45a049; /* 호버 시 배경색 변경 */
 }
 
-.visited-shelters a {
+.mypage-container a {
     color: #007BFF; /* 링크 색상 */
     text-decoration: none; /* 링크 밑줄 제거 */
     margin-right: 15px; /* 링크와 다음 요소 간의 여백 */
     transition: color 0.3s; /* 색상 전환 효과 */
 }
 
-.visited-shelters a:hover {
+.mypage-container a:hover {
     color: #0056b3; /* 호버 시 링크 색상 변경 */
+}
+
+.reviewed-category {
+    display: inline-block;
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px;
+    margin:1px;
+    border-radius: 1em;
 }
 
 /* ============== 모달창 ========== */
@@ -213,20 +229,4 @@
     color: black; /* 호버 시 색상 변경 */
     text-decoration: none; /* 밑줄 제거 */
     cursor: pointer; /* 포인터 커서 */
-}
-
-/* 마이페이지 nav */
-.mypage_navbar button {
-    padding: 8px 12px; /* 버튼 패딩 */
-    background-color: #fefefe; /* 버튼 배경색 */
-    color: black;
-    border: 1px solid #888; /* 버튼 테두리 제거 */
-    border-radius: 5px; /* 버튼 모서리 둥글게 */
-    cursor: pointer; /* 포인터 커서 */
-    margin-right: 15px; /* 버튼과 다음 요소 간의 여백 */
-    transition: background-color 0.3s; /* 배경색 전환 효과 */
-}
-
-.mypage_navbar button:hover {
-    background-color: #eeeeee;
 }

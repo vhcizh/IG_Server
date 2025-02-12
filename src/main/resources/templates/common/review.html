@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>나의 리뷰</title>
+    <link rel="stylesheet" th:href="@{/common/css/mypage.css}" />
 </head>
 <body>
 <div th:replace="common/header :: header"></div>
@@ -10,23 +11,33 @@
 
     <main>
         <h2>나의 리뷰 목록</h2>
-        <div th:replace="common/mypage_nav :: nav"></div>
+        <div th:replace="common/mypage_nav"></div>
 
-        <ul>
-            <li>쉼터명칭, 별점, 카테고리, 작성날짜</li>
-            <li th:each="review : ${reviews}">
-                <span th:text="${review.shelterName}"></span>
-                <span th:text="${review.rating}"></span>
-                <span th:text="${review.createdAt}"></span>
-                <span th:each="category : ${review.categories}">
-                    <span th:text="${category.description}"></span>
-                </span>
-            </li>
-        </ul>
+        <div class="mypage-container">
+            <ul>
+                <li>
+                    <span class="flex1 bold">쉼터명</span>
+                    <span class="flex1 bold">별점</span>
+                    <span class="flex1 bold">리뷰</span>
+                    <span class="flex1 bold">작성날짜</span>
+                </li>
+                <li th:each="review : ${reviews}">
+                    <div class="flex1" th:text="${review.shelterName}"></div>
+                    <div class="flex1" th:text="${review.rating}"></div>
+                    <div class="flex1">
+                        <span class="reviewed-category"
+                              th:each="category : ${review.categories}"
+                              th:text="${category.description}">
+                        </span>
+                    </div>
+                    <div class="flex1" th:text="${review.createdAt}"></div>
+                </li>
+            </ul>
+        </div>
 
     </main>
 
-    <div th:replace="common/footer :: footer"></div>
 </div>
+<div th:replace="common/footer :: footer"></div>
 </body>
 </html>
