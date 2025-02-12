@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .exceptionHandling((ex)->{
                     ex.accessDeniedHandler(new CustomAccessDeniedHandler()); // 403 에러 커스텀 핸들러
                 })
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(Customizer.withDefaults())
                 .userDetailsService(memberUserDetailsService);
 
         return http.build();
@@ -94,6 +94,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout") // 회원 로그아웃 URL
                         .logoutSuccessUrl("/admin/login?logout") // 로그아웃 성공 후 이동할 페이지
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
                 .csrf(csrf -> csrf
