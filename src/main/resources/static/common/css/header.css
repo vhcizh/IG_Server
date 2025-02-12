@@ -43,7 +43,11 @@ header {
 
 .logout {
     background: none;
+    border:none;
     color:black;
+    padding-block: 0;
+    padding-inline: 0;
+    font-size:16px;
 }
 
 .logout:hover {
