@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>내 정보</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:src="@{/common/js/join.js}"></script>
     <link rel="stylesheet" th:href="@{/common/css/mypage.css}" />
 </head>
 <body>
@@ -13,7 +15,7 @@
     <h2>사용자 정보</h2>
     <div th:replace="common/mypage_nav"></div>
 
-    <form id="signupForm" th:action="@{/common/mypage/me}" method="post">
+    <form id="updateForm" th:action="@{/common/mypage/me}" method="post">
         <input type="hidden" name="id" th:value="user.id">
 
         <div class="label-container">
@@ -79,10 +81,19 @@
         </div>
         <div class="address-button">
             <input type="button" onclick="daumPostcode()" value="우편번호 찾기">
-            <input type="text" id="address" name="address" placeholder="주소" readonly />
+            <input type="text"
+                   id="address"
+                   name="address"
+                   placeholder="주소"
+                   th:value="${user.address}"
+                   readonly />
         </div>
-        <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소" />
-
+        <input type="text"
+               id="detailAddress"
+               name="detailAddress"
+               placeholder="상세주소"
+               th:value="${user.detailAddress}"
+               />
         <button type="submit">수정하기</button>
     </form>
 
