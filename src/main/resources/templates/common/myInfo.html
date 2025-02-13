@@ -6,6 +6,7 @@
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script th:src="@{/common/js/join.js}"></script>
     <link rel="stylesheet" th:href="@{/common/css/mypage.css}" />
+    <link rel="stylesheet" th:href="@{/common/css/myinfo.css}" />
 </head>
 <body>
 <div th:replace="common/header :: header"></div>
@@ -21,6 +22,7 @@
         <div class="label-container">
             <label for="oldPassword">
                 <span class="label-name">기존 비밀번호</span>
+                <span class="label-required-mark">*</span>
             </label>
         </div>
         <input type="password"
@@ -69,6 +71,7 @@
                inputmode="numeric"
                maxlength="13"
                placeholder="ex) 010-1234-5678"
+               oninput="formatPhoneNumber(this)"
                th:value="${user.phone_number}"
         />
 
@@ -79,21 +82,22 @@
                 <span class="label-name">주소</span>
             </label>
         </div>
-        <div class="address-button">
-            <input type="button" onclick="daumPostcode()" value="우편번호 찾기">
-            <input type="text"
-                   id="address"
-                   name="address"
-                   placeholder="주소"
-                   th:value="${user.address}"
-                   readonly />
-        </div>
         <input type="text"
-               id="detailAddress"
-               name="detailAddress"
-               placeholder="상세주소"
-               th:value="${user.detailAddress}"
-               />
+               id="address"
+               name="address"
+               placeholder="주소"
+               th:value="${user.address}"
+               readonly />
+        <div class="address-button">
+            <input type="text"
+                   id="detailAddress"
+                   name="detailAddress"
+                   placeholder="상세주소"
+                   th:value="${user.detailAddress}"
+                   />
+            <input type="button" onclick="daumPostcode()" value="우편번호 찾기">
+        </div>
+
         <button type="submit">수정하기</button>
     </form>
 
