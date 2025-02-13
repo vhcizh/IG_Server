@@ -1,0 +1,63 @@
+input {
+    width: 30%;
+    height: 50px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: medium;
+}
+
+input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+input::placeholder {
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    color: rgba(0, 0, 0, 0.5); /* 흐릿한 색상 */
+}
+
+input:focus::placeholder {
+    font-size: 12px; /* 포커스 시 크기 감소 */
+    transform: translateY(-10px); /* 위로 이동 */
+    color: rgba(0, 0, 0, 0.7); /* 색상 변화 */
+}
+
+.label-container {
+    text-align: left;
+    width: 30%;
+    margin: 5px auto;
+}
+
+.label-required-mark {
+    color: red;
+}
+
+.address-button {
+    width: 30%;
+    display:flex;
+    margin: 0 auto;
+}
+
+.address-button input[type="button"] {
+    flex: 2; /* 2 비율 */
+    margin-left: 10px; /* 버튼과 입력창 간의 간격 */
+    padding:0;
+}
+
+#detailAddress {
+    flex: 8; /* 8 비율 */
+}
+
+.myinfo-button {
+    width: 30%;
+    height: 50px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: medium;
+    cursor: pointer;
+}
