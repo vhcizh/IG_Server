@@ -11,17 +11,17 @@
 <div class="main-container">
 
     <main>
-        <h2>마이페이지</h2>
+        <h2>이용한 쉼터 내역</h2>
         <div th:replace="common/mypage_nav"></div>
 
         <div class="mypage-container">
-            <h3>이용한 쉼터 내역</h3>
             <ul>
                 <li>
                     <span class="flex2 bold">쉼터명</span>
                     <span class="flex2 bold">방문날짜</span>
                     <span class="flex1 bold">리뷰작성</span>
                 </li>
+                <li th:if="${shelters == null}">방문 내역이 없습니다.</li>
                 <li th:each="visitedShelter : ${shelters}">
                     <span class="flex2" th:text="${visitedShelter.shelter.shelterName}"></span>
                     <span class="flex2" th:text="${visitedShelter.date}"></span>
@@ -33,6 +33,9 @@
                     </span>
 <!--                    <a href="#" class="disabled-button" onclick="showModal2()">쉼터로그</a>-->
 <!--                    <a href="#" class="disabled-button" onclick="showModal2()">민원작성</a>-->
+                </li>
+                <li class="none-list" th:if="${#lists.isEmpty(shelters)}">
+                    방문 내역이 없습니다.
                 </li>
             </ul>
         </div>

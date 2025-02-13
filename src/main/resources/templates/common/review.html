@@ -32,6 +32,9 @@
                     </div>
                     <div class="flex1" th:text="${review.createdAt}"></div>
                 </li>
+                <li class="none-list" th:if="${#lists.isEmpty(reviews)}">
+                    작성한 리뷰가 없습니다.
+                </li>
             </ul>
         </div>
 

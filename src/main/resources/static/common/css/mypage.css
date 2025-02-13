@@ -161,6 +161,11 @@
     font-weight: bold;
 }
 
+
+.none-list {
+    justify-content: center;
+}
+
 .mypage-container button {
     padding: 8px 12px; /* 버튼 패딩 */
     background-color: #4CAF50; /* 버튼 배경색 */
