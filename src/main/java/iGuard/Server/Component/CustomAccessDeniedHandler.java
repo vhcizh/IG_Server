@@ -18,6 +18,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
             response.sendRedirect("/admin/mypage");
         }
         // 기본 403 에러 발생
-        response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
+        else {
+            response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
+        }
     }
 }
