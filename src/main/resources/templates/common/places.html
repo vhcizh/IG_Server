@@ -6,99 +6,18 @@
     <title>Nearby Places</title>
     <!-- 카카오 지도 API를 불러오는 스크립트 -->
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=00d1961c0cca06b3691129126dbc752c"></script>
-    <style>
-        #map {
-            width: 100%;
-            height: 500px;
-        }
-        #place-info {
-            margin-top: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        .col-first {
-            width: 40%;
-        }
-
-        .marker {
-            padding: 15px;
-            width: 300px; /* 너비 조정 */
-        }
-
-        .marker img {
-            width: 30px; /* 아이콘 크기 조정 */
-            height: 30px;
-            margin-left: 5px; /* 아이콘과 텍스트 간격 */
-            vertical-align: middle;
-        }
-
-        .marker-name {
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .direction {
-            padding: 5px 10px 10px 5px;
-            border: 1px solid #ccc;
-            border-radius: 1em;
-            text-decoration: none; /* 링크의 기본 밑줄 제거 */
-            color:#333;
-            font-weight: bold; /* 글자 두껍게 */
-        }
-
-        .direction:hover {
-            background-color: #ffdd71;
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/common/css/home.css}"/>
 </head>
 <body>
 
     <div th:replace="common/header :: header"></div>
     <div class="main-container">
         <h1>주변 시설</h1>
-        <div id="map"></div>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
 
-        <div id="place-info">
-
-            <!-- 명소 목록 -->
-            <h2>명소</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th class="col-first">이름</th>
-                    <th>주소</th>
-                </tr>
-                </thead>
-                <tbody id="places-list">
-                <!-- 명소 데이터가 여기에 표시됩니다 -->
-                </tbody>
-            </table>
-
-            <!-- 쉼터 목록 -->
-            <h2>쉼터</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th class="col-first">이름</th>
-                    <th>주소</th>
-                </tr>
-                </thead>
-                <tbody id="shelters-list">
-                <!-- 쉼터 데이터가 여기에 표시됩니다 -->
-                </tbody>
-            </table>
-
+        <div id="button-container">
         </div>
     </div>
 
@@ -108,8 +27,6 @@
 <script th:inline="javascript">
     var places = /*[[${places}]]*/ [];
     var shelters = /*[[${shelters}]]*/ [];
-    var toilets = /*[[${toilets}]]*/ [];
-    var shades = /*[[${shades}]]*/ [];
 
     function initMap() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -127,22 +44,18 @@
 
             const markerImages = {
                 places: new kakao.maps.MarkerImage('/images/marker_red.png', new kakao.maps.Size(30, 32)),
-                shelters: new kakao.maps.MarkerImage('/images/marker_skyblue.png', new kakao.maps.Size(40, 40)),
-                toilets: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', new kakao.maps.Size(10, 15)),
-                shades: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', new kakao.maps.Size(10, 15))
+                shelters: new kakao.maps.MarkerImage('/images/marker_skyblue.png', new kakao.maps.Size(40, 40))
             };
 
-            function addMarkers(data, listId, markerType, infoColor) {
-                const list = document.getElementById(listId);
-                if (list && Array.isArray(data) && data.length > 0) {
+            function addMarkers(data, markerType, infoColor) {
+                if (Array.isArray(data) && data.length > 0) {
                     data.forEach(item => {
                         const row = document.createElement('tr');
-                        const name = `${item.name || item.shelterName || item.toiletName || item.shadeName}`;
+                        const name = `${item.name || item.shelterName}`;
                         row.innerHTML =`
                             <td>${name}</td>
                             <td>${item.address || item.type}</td>
                         `;
-                        list.appendChild(row);
 
                         const position = new kakao.maps.LatLng(item.latitude, item.longitude);
                         const marker = new kakao.maps.Marker({
@@ -189,15 +102,16 @@
                 }
             }
 
-            addMarkers(places, 'places-list', 'places', 'black');
-            addMarkers(shelters, 'shelters-list', 'shelters', 'green');
-            addMarkers(toilets, 'toilets-list', 'toilets', 'blue');
-            addMarkers(shades, 'shades-list', 'shades', 'yellow');
+            addMarkers(places, 'places', 'black');
+            addMarkers(shelters, 'shelters', 'green');
 
-            document.getElementById('latitude').innerText = lat;
-            document.getElementById('longitude').innerText = lon;
-
-
+            // 무더위 쉼터
+            var sheltersButton = document.createElement('button');
+            sheltersButton.textContent = '전국 쉼터 찾기';
+            sheltersButton.onclick = function() {
+                window.location.href = '/common/shelters'; // 원하는 범위 설정
+            };
+            document.getElementById('button-container').appendChild(sheltersButton);
 
         } else {
             alert('위도, 경도, 거리 값을 확인하세요.');
@@ -206,7 +120,6 @@
 
     // 지도 초기화
     window.onload = initMap;
-    // kakao.maps.load(initMap);
 </script>
 
 </html>

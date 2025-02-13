@@ -103,7 +103,7 @@
 
     <form th:action="@{/common/mypage/me/delete}" method="post" onsubmit="return confirm('탈퇴 후 계정을 복구할 수 없습니다. 정말 탈퇴하시겠습니까?');">
         <input type="hidden" name="userId" th:value="${user.userId}"/>
-        <button type="submit" class="myinfo-button">회원 탈퇴</button>
+        <button type="submit" class="myinfo-button delete-button">회원 탈퇴</button>
     </form>
 
     <div th:if="${error}">
