@@ -1,0 +1,84 @@
+.company-name {
+    color: #888888;
+}
+
+input {
+    width: 30%;
+    height: 50px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: medium;
+}
+
+input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+input::placeholder {
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    color: rgba(0, 0, 0, 0.5); /* 흐릿한 색상 */
+}
+
+input:focus::placeholder {
+    font-size: 12px; /* 포커스 시 크기 감소 */
+    transform: translateY(-10px); /* 위로 이동 */
+    color: rgba(0, 0, 0, 0.7); /* 색상 변화 */
+}
+
+.label-container {
+    text-align: left;
+    width: 30%;
+    margin: 5px auto;
+}
+
+.label-required-mark {
+    color: red;
+}
+
+.mypage-botton {
+    width: 30%;
+    height: 50px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: medium;
+    cursor: pointer;
+}
+
+.divider {
+    width: 80%;
+    position: relative;
+    text-align: center;
+    margin: 40px auto; /* 위아래 여백 */
+}
+
+.divider hr {
+    border: none;
+    border-top: 1px solid #ccc; /* 줄 색상 */
+    margin: 0; /* 줄과 텍스트 간격 제거 */
+}
+
+.spinner {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+}
+
+input[type="file"] {
+    width: 30%;
+    height: 50px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: medium;
+    box-sizing: border-box;
+}
