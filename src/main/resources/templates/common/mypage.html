@@ -116,6 +116,21 @@
             <p>준비 중입니다. 조금만 기다려 주세요!</p>
         </div>
     </div>
+
+    <div>
+        <h3>방문 쉼터 지정</h3>
+        <form th:action="@{/common/mypage/shelter}" method="post">
+            <label for="userId">User ID:</label>
+            <input type="number" id="userId" name="userId" th:value="${userId}" readonly>
+            <br>
+            <label for="shelterId">Shelter ID:</label>
+            <input type="number" id="shelterId" name="shelterId" required>
+            <br>
+            <button type="submit">등록</button>
+        </form>
+
+        <div th:if="${error}" th:text="${error}" style="color: red"></div>
+    </div>
 </div>
 
 <div th:replace="common/footer :: footer"></div>

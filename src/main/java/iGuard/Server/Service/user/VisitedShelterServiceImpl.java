@@ -30,9 +30,9 @@ public class VisitedShelterServiceImpl implements VisitedShelterService {
     @Override
     public void createVisitedShelter(Integer userId, Integer shelterId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
         Shelter shelter = shelterRepository.findById(shelterId)
-                .orElseThrow(() -> new RuntimeException("Shelter not found"));
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 쉼터입니다."));
 
         VisitedShelter visitedShelter = new VisitedShelter();
         visitedShelter.setShelter(shelter);

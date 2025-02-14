@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/common/mypage")
@@ -27,8 +28,12 @@ public class VisitedShelterController {
 
     // 방문한 쉼터 등록
     @PostMapping("/shelter")
-    public String visitShelter(@RequestParam("userId") Integer userId, @RequestParam("shelterId") Integer shelterId) {
-        visitedShelterService.createVisitedShelter(userId, shelterId);
+    public String visitShelter(@RequestParam("userId") Integer userId, @RequestParam("shelterId") Integer shelterId, RedirectAttributes redirectAttributes) {
+        try {
+            visitedShelterService.createVisitedShelter(userId, shelterId);
+        } catch(Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/common/mypage";
     }
 
