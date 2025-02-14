@@ -41,8 +41,24 @@
                     <th class="list-title">에어컨</th>
                     <td th:text="${shelter.airConditionerCount}"></td>
                 </tr>
+                <tr>
+                    <th class="list-title">평점</th>
+                    <td th:if="${ratingAvg}" th:text="${ratingAvg}"></td>
+                    <td th:unless="${ratingAvg}">아직 리뷰가 없습니다.</td>
+                </tr>
             </table>
+
+            <div class="review-container">
+                <ul class="review-list" id="reviewList">
+                    <li class="review" th:each="category : ${categoryCounts}">
+                        <span class="description" th:text="${category.shelterPreference.description}"></span>
+                        <span class="count" th:text="${category.count}"></span>
+                    </li>
+                </ul>
+            </div>
+
         </div>
+
     </main>
 </body>
 </html>

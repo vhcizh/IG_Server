@@ -1,7 +1,10 @@
 package iGuard.Server.Service.user;
 
+import iGuard.Server.Dto.ReviewCategoryCount;
 import iGuard.Server.Dto.user.ShelterResponse;
 import iGuard.Server.Dto.user.ShelterSearchDto;
+import iGuard.Server.Repository.ReviewCategoryRepository;
+import iGuard.Server.Repository.ReviewRepository;
 import iGuard.Server.Repository.ShelterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,8 @@ import java.util.List;
 public class ShelterServiceImpl implements ShelterService {
 
     private final ShelterRepository shelterRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewCategoryRepository reviewCategoryRepository;
 
     @Override
     public Page<ShelterResponse> getShelters(ShelterSearchDto dto, Pageable pageable) {
@@ -51,6 +56,16 @@ public class ShelterServiceImpl implements ShelterService {
                 shelterRepository.findById(shelterId)
                 .orElseThrow(() -> new RuntimeException("Shelter not found"))
         );
+    }
+
+    @Override
+    public Double getShelterReviewRatingAvg(Integer shelterId) {
+        return reviewRepository.getReviewRatingAvg(shelterId);
+    }
+
+    @Override
+    public List<ReviewCategoryCount> getShelterReviewCategoryCount(Integer shelterId) {
+        return reviewCategoryRepository.countReviewCategoriesByShelterId(shelterId);
     }
 
 }

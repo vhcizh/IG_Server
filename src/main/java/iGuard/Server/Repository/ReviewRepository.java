@@ -17,4 +17,9 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
             "WHERE r.user.userid = :userId")
     List<ReviewResponse> findReviewListByUserId(@Param("userId") Integer userId);
 
+    @Query("SELECT avg(r.rating) " +
+            "FROM Review r " +
+            "WHERE r.shelter.shelterId = :shelterId")
+    Double getReviewRatingAvg(@Param("shelterId") Integer shelterId);
+
 }

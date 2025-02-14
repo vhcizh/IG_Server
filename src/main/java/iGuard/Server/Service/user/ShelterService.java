@@ -1,5 +1,6 @@
 package iGuard.Server.Service.user;
 
+import iGuard.Server.Dto.ReviewCategoryCount;
 import iGuard.Server.Dto.user.ShelterResponse;
 import iGuard.Server.Dto.user.ShelterSearchDto;
 import org.springframework.data.domain.Page;
@@ -27,4 +28,11 @@ public interface ShelterService {
 
     // 쉼터 상세 조회
     ShelterResponse getShelterById(Integer shelterId);
+
+    // 쉼터 리뷰 점수 평균
+    Double getShelterReviewRatingAvg(Integer shelterId);
+
+    // 쉼터 리뷰 카테고리별 총합
+    List<ReviewCategoryCount> getShelterReviewCategoryCount(Integer shelterId);
+
 }
