@@ -41,6 +41,10 @@ public class ShelterController {
         model.addAttribute("searchDto", searchDto);  // 현재 검색 조건을 뷰에 전달
         model.addAttribute("request", request);
 
+        // 시설 유형과 시/도 목록을 미리 가져와서 모델에 추가
+        model.addAttribute("cities", shelterService.getAllCities());
+        model.addAttribute("facilityTypes", shelterService.getFacilityType());
+
         return "/common/shelters";
     }
 

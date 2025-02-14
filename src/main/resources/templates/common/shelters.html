@@ -19,15 +19,22 @@
 
                 <div class="filter-row">
                     <select id="city" th:field="*{city}" onchange="loadGus()">
-                        <option value="">시 선택</option>
+                        <option value="">시/도 선택</option>
+                        <option th:each="city : ${cities}"
+                                th:value="${city}"
+                                th:text="${city}"></option>
                     </select>
 
                     <select id="gu" th:field="*{gu}">
-                        <option value="">구 선택</option>
+                        <option value="">시/군/구 선택</option>
                     </select>
+                    <input type="hidden" id="selectedGu" th:value="${searchDto.gu}">
 
                     <select id="facilityType" name="facilityType" th:field="*{facilityType}">
                         <option value="">시설 유형 선택</option>
+                        <option th:each="type : ${facilityTypes}"
+                                th:value="${type}"
+                                th:text="${type}"></option>
                     </select>
 
                     <input type="text" name="shelterName" th:field="*{shelterName}" placeholder="시설명">
