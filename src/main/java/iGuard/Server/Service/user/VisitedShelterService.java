@@ -1,6 +1,6 @@
 package iGuard.Server.Service.user;
 
-import iGuard.Server.Dto.user.ReviewDto;
+import iGuard.Server.Dto.user.ReviewRequest;
 import iGuard.Server.Dto.user.ReviewResponse;
 import iGuard.Server.Dto.user.VisitedShelterResponse;
 
@@ -15,7 +15,7 @@ public interface VisitedShelterService {
     List<VisitedShelterResponse> getVisitedShelter();
 
     // 쉼터 리뷰 작성
-    void createReview(ReviewDto reviewDto);
+    void createReview(ReviewRequest reviewRequest);
 
     // 쉼터 리뷰 리스트
     List<ReviewResponse> getMyReviews();

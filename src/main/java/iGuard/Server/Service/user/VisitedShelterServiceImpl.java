@@ -1,6 +1,6 @@
 package iGuard.Server.Service.user;
 
-import iGuard.Server.Dto.user.ReviewDto;
+import iGuard.Server.Dto.user.ReviewRequest;
 import iGuard.Server.Dto.user.ReviewResponse;
 import iGuard.Server.Dto.user.VisitedShelterResponse;
 import iGuard.Server.Entity.*;
@@ -58,7 +58,7 @@ public class VisitedShelterServiceImpl implements VisitedShelterService {
     }
 
     @Override
-    public void createReview(ReviewDto dto) {
+    public void createReview(ReviewRequest dto) {
 
         String id = userContextProvider.getLoginUserId();
         User user = userRepository.getById(id)
@@ -115,7 +115,7 @@ public class VisitedShelterServiceImpl implements VisitedShelterService {
         List<ReviewResponse> reviewList = reviewRepository.findReviewListByUserId(user.getUserid());
 
         for (ReviewResponse review : reviewList) {
-            List<ShelterPreference> categories = reviewRepository.findCategoriesByReviewId(review.getReviewId());
+            List<ShelterPreference> categories = reviewCategoryRepository.findCategoriesByReviewId(review.getReviewId());
             review.setCategories(categories);
         }
 

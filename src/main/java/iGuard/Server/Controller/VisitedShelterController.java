@@ -1,6 +1,6 @@
 package iGuard.Server.Controller;
 
-import iGuard.Server.Dto.user.ReviewDto;
+import iGuard.Server.Dto.user.ReviewRequest;
 import iGuard.Server.Service.user.UserService;
 import iGuard.Server.Service.user.VisitedShelterService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class VisitedShelterController {
     @GetMapping("")
     public String getShelter(Model model) {
         model.addAttribute("shelters", visitedShelterService.getVisitedShelter());
-        model.addAttribute("reviewDto", new ReviewDto());
+        model.addAttribute("reviewRequest", new ReviewRequest());
         model.addAttribute("userId", userService.getUser().getUserId());
         return "common/mypage";
     }
@@ -39,8 +39,8 @@ public class VisitedShelterController {
 
     // 쉼터 리뷰 작성
     @PostMapping("/shelter/review")
-    public String writeReview(@ModelAttribute ReviewDto reviewDto) {
-        visitedShelterService.createReview(reviewDto);
+    public String writeReview(@ModelAttribute ReviewRequest reviewRequest) {
+        visitedShelterService.createReview(reviewRequest);
         return "redirect:/common/mypage";
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ReviewDto {
+public class ReviewRequest {
 
     private Integer visitedShelterId;
     private Integer shelterId;
