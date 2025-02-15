@@ -8,13 +8,16 @@ import iGuard.Server.Entity.UserPreference;
 import iGuard.Server.Enum.ShelterPreference;
 import iGuard.Server.Repository.UserPreferenceRepository;
 import iGuard.Server.Repository.UserRepository;
+import iGuard.Server.Service.EmailService;
 import iGuard.Server.Util.SecurityUserContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final SecurityUserContextProvider userContextProvider;
     private final UserPreferenceRepository userPreferenceRepository;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -115,5 +119,53 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    @Transactional
+    public void resetPassword(String userId, String email) {
+        User user = userRepository.findByIdAndEmail(userId, email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        // 임시 비밀번호 생성 (영문 대소문자, 숫자, 특수문자 포함 12자리)
+        String tempPassword = generateTempPassword();
+
+        // 임시 비밀번호로 업데이트
+        user.setPassword(passwordEncoder.encode(tempPassword));
+
+        // 이메일 발송
+        emailService.sendTempPasswordEmail(email, tempPassword);
+    }
+
+    private String generateTempPassword() {
+        StringBuilder password = new StringBuilder();
+        Random random = new SecureRandom(); // 보안적으로 안전한 난수 생성기
+
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String special = "!@#$%^&*";
+
+        // 각 문자 종류별로 최소 1개씩 포함
+        password.append(upper.charAt(random.nextInt(upper.length())));
+        password.append(lower.charAt(random.nextInt(lower.length())));
+        password.append(digits.charAt(random.nextInt(digits.length())));
+        password.append(special.charAt(random.nextInt(special.length())));
+
+        // 나머지 8자리는 모든 문자들 중에서 랜덤 선택
+        String allChars = upper + lower + digits + special;
+        for (int i = 0; i < 8; i++) {
+            password.append(allChars.charAt(random.nextInt(allChars.length())));
+        }
+
+        // 생성된 비밀번호를 섞어서 패턴 방지
+        char[] tempPass = password.toString().toCharArray();
+        for (int i = tempPass.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            char temp = tempPass[i];
+            tempPass[i] = tempPass[j];
+            tempPass[j] = temp;
+        }
+
+        return new String(tempPass);
+    }
 
 }

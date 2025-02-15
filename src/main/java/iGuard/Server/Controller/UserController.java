@@ -98,5 +98,24 @@ public class UserController {
         return "redirect:/common/login";
     }
 
+    // 비밀번호 찾기 페이지
+    @GetMapping("/findPassword")
+    public String findPasswordPage() {
+        return "common/findPassword";
+    }
+
+    // 비밀번호 재설정
+    @PostMapping("/resetPassword")
+    public String resetPassword(@RequestParam("id") String userId,
+                                @RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+        try {
+            userService.resetPassword(userId, email);
+            redirectAttributes.addFlashAttribute("message","임시 비밀번호가 발급되었습니다. 로그인 후 새 비밀번호로 변경하세요.");
+        } catch(Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/common/login";
+    }
+
 
 }

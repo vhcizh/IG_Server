@@ -27,7 +27,7 @@ public class User {
     @Temporal(TemporalType.DATE)
     private LocalDate age;
 
-    @Column(name ="accepted", nullable = false) //동의 여부
+    @Column(name ="accepted", nullable = false) // 약관 동의 여부
     private boolean accepted;
 
     @Column(name = "address", length = 100)
@@ -41,6 +41,12 @@ public class User {
 
     @Column(name = "password", length = 60, nullable = false)
     private String password;
+
+    @Column(name = "email", length = 50, unique = true)
+    private String email;
+
+    @Column(name = "verified")
+    private boolean verified; // 메일 인증 여부
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VisitedShelter> visitedShelters;

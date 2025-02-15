@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .securityMatcher("/common/**")
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/common/css/**", "/common/js/**").permitAll() // resources/static 내의 자원 허용
-                        .requestMatchers("/common/login", "/common/join", "/common/home", "/common/places").permitAll()
+                        .requestMatchers("/common/login", "/common/join", "/common/home", "/common/places", "common/findPassword", "common/resetPassword").permitAll()
                         .requestMatchers("/common/mypage/**").hasRole("MEMBER")
                         .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
@@ -64,6 +64,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/common/logout") // 회원 로그아웃 URL
                         .logoutSuccessUrl("/common/login?logout") // 로그아웃 성공 후 이동할 페이지
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
                 .exceptionHandling((ex)->{

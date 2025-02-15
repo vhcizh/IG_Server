@@ -18,4 +18,6 @@ public interface UserService {
     // 회원탈퇴
     void deleteUser();
 
+    // 비밀번호 변경하기
+    void resetPassword(String userId, String email);
 }
