@@ -1,6 +1,5 @@
 package iGuard.Server.Controller;
 
-import iGuard.Server.Dto.EmailResponse;
 import iGuard.Server.Dto.UserRequest;
 import iGuard.Server.Dto.UserUpdate;
 import iGuard.Server.Service.EmailService;
