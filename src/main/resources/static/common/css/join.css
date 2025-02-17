@@ -63,12 +63,12 @@ input[readonly]:focus::placeholder {
 }
 
 .address-button input[type="button"] {
-    flex: 2; /* 2 비율 */
+    flex:1;
     margin-right: 10px; /* 버튼과 입력창 간의 간격 */
 }
 
-#address {
-    flex: 8; /* 8 비율 */
+.address-button input[type="text"] {
+    flex: 8;
 }
 
 .category-container {

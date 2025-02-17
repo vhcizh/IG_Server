@@ -1,7 +1,9 @@
 package iGuard.Server.Controller;
 
+import iGuard.Server.Dto.EmailResponse;
 import iGuard.Server.Dto.UserRequest;
 import iGuard.Server.Dto.UserUpdate;
+import iGuard.Server.Service.EmailService;
 import iGuard.Server.Service.user.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +29,7 @@ import java.nio.file.Paths;
 public class UserController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
     // 회원가입 페이지
     @GetMapping("/join")
@@ -99,13 +102,13 @@ public class UserController {
     }
 
     // 비밀번호 찾기 페이지
-    @GetMapping("/findPassword")
+    @GetMapping("/password")
     public String findPasswordPage() {
-        return "common/findPassword";
+        return "common/password";
     }
 
     // 비밀번호 재설정
-    @PostMapping("/resetPassword")
+    @PostMapping("/password")
     public String resetPassword(@RequestParam("id") String userId,
                                 @RequestParam("email") String email, RedirectAttributes redirectAttributes) {
         try {
@@ -117,5 +120,47 @@ public class UserController {
         return "redirect:/common/login";
     }
 
+    // 이메일 인증코드 보내기
+    @PostMapping("/email")
+    public String sendEmail(@RequestParam String email,
+                            RedirectAttributes redirectAttributes) {
+        try {
+            if(userService.isVerified()) {
+                redirectAttributes.addFlashAttribute("error", "이미 인증이 완료되었습니다.");
+                return "redirect:/common/mypage/me";
+            }
+
+            String code = emailService.generateVerificationCode();
+            emailService.sendVerificationEmail(email, code);
+
+            redirectAttributes.addFlashAttribute("message", "이메일이 성공적으로 발송되었습니다.");
+            redirectAttributes.addFlashAttribute("showVerificationForm", true);
+        } catch(Exception e) {
+            redirectAttributes.addFlashAttribute("error", "이메일 발송에 실패했습니다.");
+        }
+        return "redirect:/common/mypage/me";
+    }
+
+    // 인증코드 검사
+    @PostMapping("/email/verify")
+    public String verify(@RequestParam String email,
+                         @RequestParam String code,
+                         RedirectAttributes redirectAttributes) {
+        try {
+            boolean isValid = emailService.verifyCode(email, code);
+            if(!isValid) {
+                redirectAttributes.addFlashAttribute("error", "코드가 일치하지 않습니다.");
+                redirectAttributes.addFlashAttribute("showVerificationForm", true);
+                return "redirect:/common/mypage/me";
+            }
+
+            userService.verifyEmail(email);
+            redirectAttributes.addFlashAttribute("message", "인증이 완료되었습니다.");
+        } catch(Exception e) {
+            redirectAttributes.addFlashAttribute("error", "인증 처리 중 오류가 발생했습니다.");
+            redirectAttributes.addFlashAttribute("showVerificationForm", true);
+        }
+        return "redirect:/common/mypage/me";
+    }
 
 }

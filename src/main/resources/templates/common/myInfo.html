@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>내 정보</title>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script th:src="@{/common/js/join.js}"></script>
+    <script th:src="@{/common/js/myinfo.js}"></script>
     <link rel="stylesheet" th:href="@{/common/css/mypage.css}" />
     <link rel="stylesheet" th:href="@{/common/css/myinfo.css}" />
 </head>
@@ -15,6 +15,43 @@
 <main>
     <h2>사용자 정보</h2>
     <div th:replace="common/mypage_nav"></div>
+
+    <div th:if="${error}">
+        <span th:text="${error}" style="color:red;"></span>
+    </div>
+    <div th:if="${message}">
+        <span th:text="${message}" style="color:green;"></span>
+    </div>
+
+    <form th:action="@{/common/email}" method="post">
+        <div class="label-container">
+            <label for="email">
+                <span class="label-name">이메일</span>
+                <span class="label-required-mark"
+                      th:unless="${user.verified}">
+                비밀번호 분실 시 계정 복구를 위해 인증해주세요.</span>
+            </label>
+        </div>
+        <div class="flex-container">
+            <input id="email" name="email" class="flex8" th:value="${user.email}" readonly/>
+            <button th:unless="${user.verified}"
+                    type="submit"
+                    class="button">이메일 인증</button>
+        </div>
+    </form>
+
+    <form th:if="${showVerificationForm}" th:action="@{/common/email/verify}" method="post">
+        <input type="hidden" name="email" th:value="${user.email}">
+        <div class="label-container">
+            <label for="code">
+                <span class="label-name">이메일로 발송한 인증 코드를 입력해주세요.</span>
+            </label>
+        </div>
+        <div class="flex-container">
+            <input type="text" name="code" id="code" class="flex8" placeholder="인증코드"/>
+            <button type="submit" class="button">확인</button>
+        </div>
+    </form>
 
     <form id="updateForm" th:action="@{/common/mypage/me}" method="post">
         <input type="hidden" name="id" th:value="user.id">
@@ -88,14 +125,15 @@
                placeholder="주소"
                th:value="${user.address}"
                readonly />
-        <div class="address-button">
+        <div class="flex-container">
             <input type="text"
+                   class="flex8"
                    id="detailAddress"
                    name="detailAddress"
                    placeholder="상세주소"
                    th:value="${user.detailAddress}"
                    />
-            <input type="button" onclick="daumPostcode()" value="우편번호 찾기">
+            <input type="button" onclick="daumPostcode()" value="우편번호 찾기" class="button">
         </div>
 
         <button type="submit" class="myinfo-button">수정하기</button>
@@ -106,12 +144,6 @@
         <button type="submit" class="myinfo-button delete-button">회원 탈퇴</button>
     </form>
 
-    <div th:if="${error}">
-        <span th:text="${error}" style="color:red;"></span>
-    </div>
-    <div th:if="${message}">
-        <span th:text="${message}" style="color:green;"></span>
-    </div>
 </main>
 </div>
 <div th:replace="common/footer :: footer"></div>

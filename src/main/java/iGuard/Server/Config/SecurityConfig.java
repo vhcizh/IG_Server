@@ -49,8 +49,8 @@ public class SecurityConfig {
                 .securityMatcher("/common/**")
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/common/css/**", "/common/js/**").permitAll() // resources/static 내의 자원 허용
-                        .requestMatchers("/common/login", "/common/join", "/common/home", "/common/places", "common/findPassword", "common/resetPassword").permitAll()
-                        .requestMatchers("/common/mypage/**").hasRole("MEMBER")
+                        .requestMatchers("/common/login", "/common/join", "/common/home", "/common/places", "common/password").permitAll()
+                        .requestMatchers("/common/mypage/**", "common/email/**").hasRole("MEMBER")
                         .anyRequest().hasAnyRole("MEMBER", "ADMIN")
                 )
                 .formLogin(form -> form

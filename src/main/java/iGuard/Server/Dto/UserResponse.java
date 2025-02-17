@@ -23,6 +23,8 @@ public class UserResponse {
     private String address;
     private String detailAddress;
     private String phone_number;
+    private String email;
+    private boolean verified;
 
     public static UserResponse getFrom(User user) {
         return UserResponse.builder()
@@ -36,6 +38,8 @@ public class UserResponse {
                         ? user.getAddress().split(",")[1].trim()
                         : null)
                 .phone_number(user.getPhoneNumber())
+                .email(user.getEmail())
+                .verified(user.isVerified())
                 .build();
     }
 

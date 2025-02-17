@@ -97,6 +97,17 @@
                    oninput="formatPhoneNumber(this)"
                    required/>
 
+            <div class="label-container">
+                <label for="email">
+                    <span class="label-name">이메일</span>
+                    <span class="label-required-mark">*</span>
+                </label>
+            </div>
+            <input type="email"
+                   id="email"
+                   th:field="*{email}"
+                   placeholder="ex) shimturo@gmail.com"/>
+
             <input type="hidden" id="postcode" placeholder="우편번호" readonly />
 
             <div class="label-container">

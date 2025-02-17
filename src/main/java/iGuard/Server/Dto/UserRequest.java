@@ -37,6 +37,9 @@ public class UserRequest {
     @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 올바르지 않습니다.") // 예: 010-1234-5678
     private String phone_number;
 
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "이메일 형식이 올바르지 않습니다.")
+    private String email;
+
     private List<ShelterPreference> preferences; // 카테고리 리스트 추가
 
     @AssertTrue(message = "약관에 동의해야 합니다.")
@@ -53,7 +56,9 @@ public class UserRequest {
                         :address + ", " + detailAddress
         );
         user.setPhoneNumber(phone_number);
+        user.setEmail(email);
         user.setAccepted(accepted);
+        user.setVerified(false);
         return user;
     }
 

@@ -20,4 +20,10 @@ public interface UserService {
 
     // 비밀번호 변경하기
     void resetPassword(String userId, String email);
+
+    // 이메일 인증 상태
+    boolean isVerified();
+
+    // 이메일 인증
+    void verifyEmail(String email);
 }

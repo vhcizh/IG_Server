@@ -42,7 +42,7 @@ public class User {
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
-    @Column(name = "email", length = 50, unique = true)
+    @Column(name = "email", length = 50, unique = true, nullable = false)
     private String email;
 
     @Column(name = "verified")

@@ -61,6 +61,10 @@ public class UserServiceImpl implements UserService {
                 .ifPresent((e) -> {
                     throw new RuntimeException("이미 가입된 핸드폰 번호입니다.");
                 });
+        userRepository.findByEmail(user.getEmail())
+                .ifPresent((e) -> {
+                    throw new RuntimeException(("이미 가입된 이메일입니다."));
+                });
     }
 
     @Override
@@ -166,6 +170,26 @@ public class UserServiceImpl implements UserService {
         }
 
         return new String(tempPass);
+    }
+
+    @Override
+    @Transactional
+    public boolean isVerified() {
+        String id = userContextProvider.getLoginUserId();
+        User user = userRepository.getById(id)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        return user.isVerified();
+    };
+
+    @Override
+    @Transactional
+    public void verifyEmail(String email) {
+        String id = userContextProvider.getLoginUserId();
+        userRepository.findByIdAndEmail(id, email)
+                .ifPresentOrElse(
+                        user->user.setVerified(true),
+                        () -> {throw new RuntimeException("사용자를 찾을 수 없습니다.");}
+                );
     }
 
 }
