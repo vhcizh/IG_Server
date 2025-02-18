@@ -28,6 +28,10 @@ jobs:
 #            ~/.gradle/wrapper
 #          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
+      # 3. gradlew에 실행 권한 추가
+      - name: Add execute permission to gradlew
+        run: chmod +x ./gradlew
+
       # 4. Gradle로 프로젝트 빌드 (환경 변수 설정 후 빌드 수행)
       - name: Build with Gradle
         run: ./gradlew build
