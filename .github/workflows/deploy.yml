@@ -1,0 +1,68 @@
+name: Deploy to EC2 with Docker Hub  # 워크플로우 이름
+
+on:
+  push:
+    branches: [ main ]  # main 브랜치에 push가 발생하면 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # GitHub Actions가 실행될 환경
+    steps:
+      # 1. 코드 체크아웃 (GitHub 저장소에서 코드 가져오기)
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. JDK 설정
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      # 3. Gradle 캐시 설정 (빌드 속도 향상)
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      # 4. Gradle로 프로젝트 빌드 (환경 변수 설정 후 빌드 수행)
+      - name: Build with Gradle
+        run: ./gradlew build
+        env:
+          SPRING_PROFILES_ACTIVE: prod  # application-prod.properties 활성화
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+
+      # 5. Docker Hub 로그인
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      # 6. EC2에 배포 (기존 컨테이너 정리 및 새로운 컨테이너 실행)
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          script: |
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest  # 최신 Docker 이미지 가져오기
+            docker stop shimturo || true  # 실행 중인 컨테이너 중지 (없어도 에러 방지)
+            docker rm shimturo || true  # 기존 컨테이너 삭제 (없어도 에러 방지)
+            docker run -d \
+              --name shimturo \
+              -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              -e DB_URL=${{ secrets.DB_URL }} \
+              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              --restart unless-stopped \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest  # 새 컨테이너 실행
