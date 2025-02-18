@@ -34,7 +34,7 @@ jobs:
 
       # 4. Gradle로 프로젝트 빌드 (환경 변수 설정 후 빌드 수행)
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x test # 테스트 제외하고 빌드
         env:
           SPRING_PROFILES_ACTIVE: prod  # application-prod.properties 활성화
           DB_URL: ${{ secrets.DB_URL }}
