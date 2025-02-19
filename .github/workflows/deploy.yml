@@ -9,6 +9,19 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest  # GitHub Actions가 실행될 환경
+
+    env: # 전역 환경변수 설정
+      SPRING_PROFILES_ACTIVE: prod  # application-prod.properties 활성화
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      MAIL_HOST: ${{ secrets.MAIL_HOST }}
+      MAIL_PORT: ${{ secrets.MAIL_PORT }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
     steps:
       # 1. 코드 체크아웃 (GitHub 저장소에서 코드 가져오기)
       - name: Checkout code
@@ -28,28 +41,19 @@ jobs:
       # 4. Gradle로 프로젝트 빌드 (환경 변수 설정 후 빌드 수행)
       - name: Build with Gradle
         run: ./gradlew build -x test # 테스트 제외하고 빌드
-        env:
-          SPRING_PROFILES_ACTIVE: prod  # application-prod.properties 활성화
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MAIL_HOST: ${{ secrets.MAIL_HOST }}
-          MAIL_PORT: ${{ secrets.MAIL_PORT }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
 
       # 5. Docker Hub 로그인
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          username: ${{ env.DOCKER_HUB_USERNAME }}
+          password: ${{ env.DOCKER_HUB_PASSWORD }}
 
       # 6. Docker 이미지 빌드 및 푸시
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
+          docker build -t $DOCKER_HUB_USERNAME/shimturo:latest .
+          docker push $DOCKER_HUB_USERNAME/shimturo:latest
 
       # 7. EC2에 배포
       - name: Deploy on EC2
@@ -60,9 +64,19 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT }}
           script: |
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
+            docker pull $DOCKER_HUB_USERNAME/shimturo:latest
             docker stop shimturo || true
             docker rm shimturo || true
-            docker run -d --name shimturo -p 8080:8080 \
+            docker run -d \
+              --name shimturo \
+              -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              -e DB_URL=$DB_URL \
+              -e DB_USERNAME=$DB_USERNAME \
+              -e DB_PASSWORD=$DB_PASSWORD \
+              -e MAIL_HOST=$MAIL_HOST \
+              -e MAIL_PORT=$MAIL_PORT \
+              -e MAIL_USERNAME=$MAIL_USERNAME \
+              -e MAIL_PASSWORD=$MAIL_PASSWORD \
               --restart unless-stopped \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
+              $DOCKER_HUB_USERNAME/shimturo:latest
