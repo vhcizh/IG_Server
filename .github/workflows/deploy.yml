@@ -59,6 +59,7 @@ jobs:
                  --build-arg MAIL_PORT="${{ env.MAIL_PORT }}" \
                  --build-arg MAIL_USERNAME="${{ env.MAIL_USERNAME }}" \
                  --build-arg MAIL_PASSWORD="${{ env.MAIL_PASSWORD }}" \
+                 --build-arg DOCKER_HUB_USERNAME="${{ env.DOCKER_HUB_USERNAME }}" \
                  -t ${{ env.DOCKER_HUB_USERNAME }}/shimturo:latest .
           docker push ${{ env.DOCKER_HUB_USERNAME }}/shimturo:latest
 
