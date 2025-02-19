@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nearby Places</title>
     <!-- 카카오 지도 API를 불러오는 스크립트 -->
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=00d1961c0cca06b3691129126dbc752c"></script>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9df70d710c18198fb4886dcf36d7f3c5"></script>
     <link rel="stylesheet" th:href="@{/common/css/home.css}"/>
 </head>
 <body>
@@ -47,7 +47,7 @@
                 shelters: new kakao.maps.MarkerImage('/images/marker_skyblue.png', new kakao.maps.Size(40, 40))
             };
 
-            function addMarkers(data, markerType, infoColor) {
+            function addMarkers(data, markerType) {
                 if (Array.isArray(data) && data.length > 0) {
                     data.forEach(item => {
                         const row = document.createElement('tr');
@@ -102,8 +102,8 @@
                 }
             }
 
-            addMarkers(places, 'places', 'black');
-            addMarkers(shelters, 'shelters', 'green');
+            addMarkers(places, 'places');
+            addMarkers(shelters, 'shelters');
 
             // 무더위 쉼터
             var sheltersButton = document.createElement('button');
