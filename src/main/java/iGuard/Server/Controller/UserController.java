@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -18,9 +19,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,14 +33,19 @@ public class UserController {
 
     // 회원가입 페이지
     @GetMapping("/join")
-    public String joinPage(Model model) throws IOException {
+    public String joinPage(Model model) {
 
-        // 이용약관
-        String terms = new String(Files.readAllBytes((Paths.get("src/main/resources/terms.txt"))));
-        terms = terms.replace("\n", "<br>");
+        ClassPathResource resource = new ClassPathResource("terms.txt");
+        try (InputStream inputStream = resource.getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-        model.addAttribute("userRequest", new UserRequest());
-        model.addAttribute("terms", terms);
+            String terms = reader.lines().collect(Collectors.joining("<br>"));
+            model.addAttribute("userRequest", new UserRequest());
+            model.addAttribute("terms", terms);
+        } catch (IOException e) {
+            // 예외 처리 (파일을 못 찾았을 경우 등)
+            model.addAttribute("error", "이용약관 파일을 찾을 수 없습니다.");
+        }
 
         return "common/join"; // join.html로 이동
     }
