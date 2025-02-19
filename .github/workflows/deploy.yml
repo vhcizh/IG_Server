@@ -72,9 +72,12 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT }}
           script: |
+            echo "Pulling Docker image..."
             docker pull $DOCKER_HUB_USERNAME/shimturo:latest
+            echo "Stopping existing container (if any)..."
             docker stop shimturo || true
             docker rm shimturo || true
+            echo "Running the container..."
             docker run -d --name shimturo -p 8080:8080 \
               --restart unless-stopped \
               $DOCKER_HUB_USERNAME/shimturo:latest
