@@ -63,16 +63,6 @@ jobs:
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
             docker stop shimturo || true
             docker rm shimturo || true
-            docker run -d \
-              --name shimturo \
-              -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              -e DB_URL=${{ secrets.DB_URL }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e MAIL_HOST=${{ secrets.MAIL_HOST }} \
-              -e MAIL_PORT=${{ secrets.MAIL_PORT }} \
-              -e MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
-              -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
+            docker run -d --name shimturo -p 8080:8080 \
               --restart unless-stopped \
               ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
