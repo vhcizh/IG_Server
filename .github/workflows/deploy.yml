@@ -51,16 +51,16 @@ jobs:
       # 6. Docker 이미지 빌드 및 푸시
       - name: Build and push Docker image
         run: |
-          docker build --build-arg SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
-                       --build-arg DB_URL=$DB_URL \
-                       --build-arg DB_USERNAME=$DB_USERNAME \
-                       --build-arg DB_PASSWORD=$DB_PASSWORD \
-                       --build-arg MAIL_HOST=$MAIL_HOST \
-                       --build-arg MAIL_PORT=$MAIL_PORT \
-                       --build-arg MAIL_USERNAME=$MAIL_USERNAME \
-                       --build-arg MAIL_PASSWORD=$MAIL_PASSWORD \
-          -t $DOCKER_HUB_USERNAME/shimturo:latest .
-          docker push $DOCKER_HUB_USERNAME/shimturo:latest
+          docker build --build-arg SPRING_PROFILES_ACTIVE=${{ env.SPRING_PROFILES_ACTIVE }} \
+                 --build-arg DB_URL=${{ env.DB_URL }} \
+                 --build-arg DB_USERNAME=${{ env.DB_USERNAME }} \
+                 --build-arg DB_PASSWORD=${{ env.DB_PASSWORD }} \
+                 --build-arg MAIL_HOST=${{ env.MAIL_HOST }} \
+                 --build-arg MAIL_PORT=${{ env.MAIL_PORT }} \
+                 --build-arg MAIL_USERNAME=${{ env.MAIL_USERNAME }} \
+                 --build-arg MAIL_PASSWORD=${{ env.MAIL_PASSWORD }} \
+                 -t ${{ env.DOCKER_HUB_USERNAME }}/shimturo:latest .
+          docker push ${{ env.DOCKER_HUB_USERNAME }}/shimturo:latest
 
       # 7. EC2에 배포
       - name: Deploy on EC2
