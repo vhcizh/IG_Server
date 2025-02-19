@@ -51,7 +51,7 @@ jobs:
       # 6. Docker 이미지 빌드 및 푸시
       - name: Build and push Docker image
         run: |
-          docker build --build-arg SPRING_PROFILES_ACTIVE=SPRING_PROFILES_ACTIVE \
+          docker build --build-arg SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
                        --build-arg DB_URL=$DB_URL \
                        --build-arg DB_USERNAME=$DB_USERNAME \
                        --build-arg DB_PASSWORD=$DB_PASSWORD \
