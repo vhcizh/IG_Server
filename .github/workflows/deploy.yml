@@ -1,5 +1,4 @@
 # 워크플로우 이름
-
 name: Deploy to EC2 with Docker Hub
 
 on:
@@ -52,7 +51,15 @@ jobs:
       # 6. Docker 이미지 빌드 및 푸시
       - name: Build and push Docker image
         run: |
-          docker build -t $DOCKER_HUB_USERNAME/shimturo:latest .
+          docker build --build-arg SPRING_PROFILES_ACTIVE=SPRING_PROFILES_ACTIVE \
+                       --build-arg DB_URL=$DB_URL \
+                       --build-arg DB_USERNAME=$DB_USERNAME \
+                       --build-arg DB_PASSWORD=$DB_PASSWORD \
+                       --build-arg MAIL_HOST=$MAIL_HOST \
+                       --build-arg MAIL_PORT=$MAIL_PORT \
+                       --build-arg MAIL_USERNAME=$MAIL_USERNAME \
+                       --build-arg MAIL_PASSWORD=$MAIL_PASSWORD \
+          -t $DOCKER_HUB_USERNAME/shimturo:latest .
           docker push $DOCKER_HUB_USERNAME/shimturo:latest
 
       # 7. EC2에 배포
@@ -67,16 +74,6 @@ jobs:
             docker pull $DOCKER_HUB_USERNAME/shimturo:latest
             docker stop shimturo || true
             docker rm shimturo || true
-            docker run -d \
-              --name shimturo \
-              -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              -e DB_URL=$DB_URL \
-              -e DB_USERNAME=$DB_USERNAME \
-              -e DB_PASSWORD=$DB_PASSWORD \
-              -e MAIL_HOST=$MAIL_HOST \
-              -e MAIL_PORT=$MAIL_PORT \
-              -e MAIL_USERNAME=$MAIL_USERNAME \
-              -e MAIL_PASSWORD=$MAIL_PASSWORD \
+            docker run -d --name shimturo -p 8080:8080 \
               --restart unless-stopped \
               $DOCKER_HUB_USERNAME/shimturo:latest
