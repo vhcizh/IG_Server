@@ -79,5 +79,6 @@ jobs:
             docker rm shimturo || true
             echo "Running the container..."
             docker run -d --name shimturo -p 8080:8080 \
+              --network host \
               --restart unless-stopped \
               ganadi/shimturo:latest
