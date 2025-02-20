@@ -84,14 +84,18 @@
                     <span class="shelter-capacity">이용인원</span>
                     <span class="shelter-distance">거리</span>
                 </li>
-                <li th:each="shelter : ${shelters}" class="shelter"
-                   th:data-shelter-id="${shelter.shelterId}"
-                   th:data-shelter-lat="${shelter.latitude}"
-                   th:data-shelter-lon="${shelter.longitude}">
+                <li th:each="shelter : ${shelters}"
+                    class="shelter"
+                    th:if="${#lists.isEmpty(shelters) == false}"
+                    th:data-shelter-id="${shelter.shelterId}"
+                    th:data-shelter-lat="${shelter.latitude}"
+                    th:data-shelter-lon="${shelter.longitude}">
                         <span class="shelter-name" th:text="${shelter.shelterName}"></span>
                         <span class="shelter-capacity" th:text="${shelter.capacity}"></span>
                         <span class="shelter-distance" th:text="${shelter.distance}"></span>
                 </li>
+                <!-- 쉼터가 없을 때 메시지 표시 -->
+                <li th:if="${shelters == null or #lists.isEmpty(shelters)}">쉼터 정보가 없습니다.</li>
             </ul>
         </div>
 
