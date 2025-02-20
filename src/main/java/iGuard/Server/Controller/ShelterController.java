@@ -24,7 +24,7 @@ public class ShelterController {
 
     @GetMapping("")
     public String shelters(@ModelAttribute ShelterSearchDto searchDto,
-                           @PageableDefault(size = 10, sort = "shelterName") Pageable pageable,
+                           @PageableDefault(sort = "shelterName") Pageable pageable,
                            Model model,
                            HttpServletRequest request) {
 
@@ -45,7 +45,7 @@ public class ShelterController {
         model.addAttribute("cities", shelterService.getAllCities());
         model.addAttribute("facilityTypes", shelterService.getFacilityType());
 
-        return "/common/shelters";
+        return "common/shelters";
     }
 
     @GetMapping("/facilities")
