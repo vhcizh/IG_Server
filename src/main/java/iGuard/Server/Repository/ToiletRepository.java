@@ -14,7 +14,7 @@ public interface ToiletRepository extends JpaRepository<Toilet, Integer> {
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(t.latitude)) * " +
             "cos(radians(t.longitude) - radians(:longitude)) + " +
             "sin(radians(:latitude)) * sin(radians(t.latitude)))) AS distance " +
-            "FROM Toilet t " +
+            "FROM toilet t " +
             "ORDER BY distance ASC " +
             "LIMIT 7", nativeQuery = true)
     List<Toilet> findNearestToilets(@Param("latitude") double latitude, @Param("longitude") double longitude);

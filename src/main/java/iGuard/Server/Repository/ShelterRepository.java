@@ -16,7 +16,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, Integer>, Shel
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(s.latitude)) * " +
             "cos(radians(s.longitude) - radians(:longitude)) + " +
             "sin(radians(:latitude)) * sin(radians(s.latitude)))) AS distance " +
-            "FROM Shelter s " +
+            "FROM shelter s " +
             "ORDER BY distance ASC " +
             "LIMIT 5", nativeQuery = true)
     List<Shelter> findNearestShelters(@Param("latitude") double latitude, @Param("longitude") double longitude);

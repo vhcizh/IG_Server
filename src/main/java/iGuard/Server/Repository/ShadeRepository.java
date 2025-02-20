@@ -14,7 +14,7 @@ public interface ShadeRepository extends JpaRepository<Shade, Integer> {
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(s.latitude)) * " +
             "cos(radians(s.longitude) - radians(:longitude)) + " +
             "sin(radians(:latitude)) * sin(radians(s.latitude)))) AS distance " +
-            "FROM Shade s " +
+            "FROM shade s " +
             "ORDER BY distance ASC " +
             "LIMIT 7", nativeQuery = true)
     List<Shade> findNearestShades(@Param("latitude") double latitude, @Param("longitude") double longitude);
