@@ -99,8 +99,11 @@
 
 .shelter_list li {
     display: flex;
-    justify-content: space-between;
     padding: 10px 0;
+}
+
+.none-list {
+    justify-content: center;
 }
 
 .shelter:hover {

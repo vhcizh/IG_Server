@@ -9,9 +9,9 @@ public class ShelterSearchDto {
     private String gu;
     private String shelterName;
     private String facilityType;
-    private Boolean isOpenAtNight = true;
-    private Boolean allowsAccommodation = true;
-    private Boolean isOpenOnHolidays = true;
+    private Boolean isOpenAtNight;
+    private Boolean allowsAccommodation;
+    private Boolean isOpenOnHolidays;
     private int page;
     private int size;
     private String sortBy = "name";
