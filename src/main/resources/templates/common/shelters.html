@@ -55,8 +55,8 @@
                     </label>
 
                     <select name="sortBy" th:field="*{sortBy}">
-                        <option value="distance" th:selected="${searchDto.sortBy == 'distance'}">가까운순</option>
                         <option value="name" th:selected="${searchDto.sortBy == 'name'}">이름순</option>
+                        <option value="distance" th:selected="${searchDto.sortBy == 'distance'}">가까운순</option>
                         <option value="currentUsage" th:selected="${searchDto.sortBy == 'currentUsage'}">현재 이용 인원 적은 순</option>
                     </select>
 
@@ -66,14 +66,11 @@
                     </div>
 
                 </div>
-
-                <input type="hidden" name="page" value="1" th:field="*{page}">
-                <input type="hidden" name="size" value="10" th:field="*{size}">
-
-
             </div>
 
         </form>
+
+        <input type="hidden" th:value="${searchDto}">
 
 
         <!-- 쉼터 리스트 -->
@@ -102,40 +99,41 @@
         <div class="pagination" th:if="${page.totalPages > 0}">
             <!-- 첫 페이지로 이동 -->
             <span>
-                <a th:href="@{${request.requestURI}(page=1, size=${page.size})}"
-                   th:class="${page.number == 0} ? 'disabled' : ''">
+                <a th:href="@{${request.requestURI} + ${searchParams}(page=0, size=${page.size})}"
+                   th:classappend="${page.first}? 'disabled' : ''">
                     &lt;&lt;
                 </a>
             </span>
 
             <!-- 이전 10페이지 -->
             <span>
-                <a th:href="@{${request.requestURI}(page=${(page.number / 10) * 10}, size=${page.size})}"
-                   th:class="${page.number < 10} ? 'disabled' : ''">
+                <a th:href="@{${request.requestURI} + ${searchParams}(page=${((page.number / 10)) - 1 * 10}, size=${page.size})}"
+                   th:classappend="${page.number < 10} ? 'disabled' : ''">
                     &lt;
                 </a>
             </span>
 
             <!-- 페이지 번호 -->
-            <span th:each="pageNum : ${#numbers.sequence((page.number / 10) * 10 + 1, T(java.lang.Math).min((page.number / 10) * 10 + 10, page.totalPages))}">
-                <a th:href="@{${request.requestURI}(page=${pageNum}, size=${page.size})}"
-                   th:text="${pageNum}"
-                   th:class="${pageNum == page.number + 1} ? 'active' : ''">
+            <span th:each="pageNum : ${#numbers.sequence((page.number / 10) * 10, T(java.lang.Math).min((page.number / 10) * 10 + 9, page.totalPages))}">
+                <!-- 내부적으로 0부터 사용 -->
+                <a th:href="@{${request.requestURI} + ${searchParams}(page=${pageNum}, size=${page.size})}"
+                   th:text="${pageNum + 1}"
+                   th:classappend="${page.number == pageNum}? 'active' : ''">
                 </a>
             </span>
 
             <!-- 다음 10페이지 -->
             <span>
-                <a th:href="@{${request.requestURI}(page=${((page.number / 10) * 10) + 11}, size=${page.size})}"
-                   th:class="${((page.number / 10) * 10) + 11 > page.totalPages} ? 'disabled' : ''">
+                <a th:href="@{${request.requestURI} + ${searchParams}(page=${(page.number / 10) + 1 * 10}, size=${page.size})}"
+                   th:classappend="${((page.number / 10) + 1) * 10 > page.totalPages} ? 'disabled' : ''">
                     &gt;
                 </a>
             </span>
 
             <!-- 마지막 페이지로 이동 -->
             <span>
-                <a th:href="@{${request.requestURI}(page=${page.totalPages}, size=${page.size})}"
-                   th:class="${page.number + 1 == page.totalPages} ? 'disabled' : ''">
+                <a th:href="@{${request.requestURI} + ${searchParams}(page=${page.totalPages - 1}, size=${page.size})}"
+                   th:classappend="${page.last} ? 'disabled' : ''">
                     &gt;&gt;
                 </a>
             </span>

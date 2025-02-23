@@ -6,14 +6,15 @@ import iGuard.Server.Service.user.ShelterService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/common/shelters")
@@ -28,12 +29,6 @@ public class ShelterController {
                            Model model,
                            HttpServletRequest request) {
 
-        // 사용자가 요청한 페이지 번호를 0으로 변환
-        int pageNumber = pageable.getPageNumber(); // 0부터 시작하는 페이지 번호
-        if (pageNumber > 0) {
-            pageable = PageRequest.of(pageNumber - 1, pageable.getPageSize(), pageable.getSort());
-        }
-
         Page<ShelterResponse> shelterPage = shelterService.getShelters(searchDto, pageable);
 
         model.addAttribute("shelters", shelterPage.getContent());
@@ -44,6 +39,21 @@ public class ShelterController {
         // 시설 유형과 시/도 목록을 미리 가져와서 모델에 추가
         model.addAttribute("cities", shelterService.getAllCities());
         model.addAttribute("facilityTypes", shelterService.getFacilityType());
+
+        // 페이지 버튼 클릭 시 서치 조건 유지
+        // URL에 필요한 필터 값만 포함 (null 값 자동 제외)
+        String searchParams = UriComponentsBuilder.fromPath("")
+                .queryParamIfPresent("city", Optional.ofNullable(searchDto.getCity()))
+                .queryParamIfPresent("gu", Optional.ofNullable(searchDto.getGu()))
+                .queryParamIfPresent("facilityType", Optional.ofNullable(searchDto.getFacilityType()))
+                .queryParamIfPresent("shelterName", Optional.ofNullable(searchDto.getShelterName()))
+                .queryParamIfPresent("isOpenAtNight", Optional.ofNullable(searchDto.getIsOpenAtNight()))
+                .queryParamIfPresent("allowsAccommodation", Optional.ofNullable(searchDto.getAllowsAccommodation()))
+                .queryParamIfPresent("isOpenOnHolidays", Optional.ofNullable(searchDto.getIsOpenOnHolidays()))
+                .queryParamIfPresent("sortBy", Optional.ofNullable(searchDto.getSortBy()))
+                .toUriString();
+
+        model.addAttribute("searchParams", searchParams);
 
         return "common/shelters";
     }
