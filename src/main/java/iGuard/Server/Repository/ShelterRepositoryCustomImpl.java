@@ -1,6 +1,7 @@
 package iGuard.Server.Repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import iGuard.Server.Dto.user.ShelterSearchDto;
@@ -25,31 +26,29 @@ public class ShelterRepositoryCustomImpl implements ShelterRepositoryCustom {
     @Override
     public Page<Shelter> search(ShelterSearchDto dto, Pageable pageable) {
 
+        // 필터 및 정렬 적용
         BooleanBuilder builder = applyFilters(dto);
+        OrderSpecifier<?> orderSpecifier = applySorting(dto);
+
         JPQLQuery<Shelter> query = queryFactory
                 .selectFrom(shelter)
-                .where(builder);
-
-        // 정렬 적용
-        if (dto.getSortBy() != null) {
-            switch (dto.getSortBy()) {
-                case "name":
-                    query.orderBy(shelter.shelterName.asc());
-                    break;
-                case "currentUsage":
-                    query.orderBy(shelter.currentOccupancy.asc());
-                    break;
-                // case "distance" : break;
-            }
-        }
+                .where(builder)
+                .orderBy(orderSpecifier);
 
         // 페이징 적용
-        query.offset(pageable.getOffset());
-        query.limit(pageable.getPageSize());
+        List<Shelter> content = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
-        // 결과와 전체 카운트 조회
-        List<Shelter> content = query.fetch();
-        long total = query.fetchCount();
+        // 전체 개수 조회
+        Long total = queryFactory
+                .select(shelter.count())
+                .from(shelter)
+                .where(builder)
+                .fetchOne();
+
+        total = (total != null) ? total : 0;
 
         return new PageImpl<>(content, pageable, total);
     }
@@ -86,6 +85,14 @@ public class ShelterRepositoryCustomImpl implements ShelterRepositoryCustom {
         }
 
         return builder;
+    }
+
+    private OrderSpecifier<?> applySorting(ShelterSearchDto dto) {
+        return switch (dto.getSortBy() != null ? dto.getSortBy() : "name") {
+            case "name" -> shelter.shelterName.asc();
+            case "currentUsage" -> shelter.currentOccupancy.asc();
+            default -> shelter.shelterName.asc();
+        };
     }
 
 }

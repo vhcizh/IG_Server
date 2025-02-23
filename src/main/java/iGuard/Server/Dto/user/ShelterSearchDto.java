@@ -14,6 +14,6 @@ public class ShelterSearchDto {
     private Boolean isOpenOnHolidays;
     private int page;
     private int size;
-    private String sortBy = "name";
+    private String sortBy;
 
 }
