@@ -127,7 +127,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void resetPassword(String userId, String email) {
         User user = userRepository.findByIdAndEmail(userId, email)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("일치하는 계정을 찾을 수 없습니다"));
+
+        if(!user.isVerified()) {
+            throw new RuntimeException("인증되지 않은 이메일은 임시 비밀번호 발급이 불가능합니다.");
+        }
 
         // 임시 비밀번호 생성 (영문 대소문자, 숫자, 특수문자 포함 12자리)
         String tempPassword = generateTempPassword();

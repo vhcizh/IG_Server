@@ -121,6 +121,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("message","임시 비밀번호가 발급되었습니다. 로그인 후 새 비밀번호로 변경하세요.");
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/common/password";
         }
         return "redirect:/common/login";
     }
