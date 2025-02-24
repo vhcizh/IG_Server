@@ -14,6 +14,8 @@
         <h2>이용한 쉼터 내역</h2>
         <div th:replace="common/mypage_nav"></div>
 
+        <div th:if="${error}" th:text="${error}" style="color: red"></div>
+
         <div class="mypage-container">
             <ul>
                 <li>
@@ -127,8 +129,6 @@
             <br>
             <button type="submit">등록</button>
         </form>
-
-        <div th:if="${error}" th:text="${error}" style="color: red"></div>
     </div>
 </div>
 

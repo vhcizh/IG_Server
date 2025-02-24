@@ -39,8 +39,12 @@ public class VisitedShelterController {
 
     // 쉼터 리뷰 작성
     @PostMapping("/shelter/review")
-    public String writeReview(@ModelAttribute ReviewRequest reviewRequest) {
-        visitedShelterService.createReview(reviewRequest);
+    public String writeReview(@ModelAttribute ReviewRequest reviewRequest, RedirectAttributes redirectAttributes) {
+        try {
+            visitedShelterService.createReview(reviewRequest);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/common/mypage";
     }
 
