@@ -17,6 +17,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         if (request.isUserInRole("ADMIN") && request.getRequestURI().startsWith("/common/mypage")) {
             response.sendRedirect("/admin/mypage");
         }
+        // session 만료시 로그아웃 하면 로그인 페이지로 이동
+        else if (request.getRequestURI().equals("/common/logout") || request.getRequestURI().equals("/admin/logout")) {
+            response.sendRedirect("/common/login");
+        }
         // 기본 403 에러 발생
         else {
             response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
