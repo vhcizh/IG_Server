@@ -59,3 +59,12 @@ function formatPhoneNumber(input) {
     // 결과를 입력 필드에 설정
     input.value = value;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("sendEmailForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        document.getElementById("sendEmailButton").disabled = true;
+        // 폼 제출 수동 실행
+        event.target.submit();
+    });
+});

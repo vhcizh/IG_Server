@@ -140,6 +140,7 @@ public class UserController {
             emailService.sendVerificationEmail(email, code);
 
             redirectAttributes.addFlashAttribute("message", "이메일이 성공적으로 발송되었습니다.");
+            redirectAttributes.addFlashAttribute("resend", "재전송");
             redirectAttributes.addFlashAttribute("showVerificationForm", true);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute("error", "이메일 발송에 실패했습니다.");

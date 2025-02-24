@@ -23,7 +23,7 @@
         <span th:text="${message}" style="color:green;"></span>
     </div>
 
-    <form th:action="@{/common/email}" method="post">
+    <form th:action="@{/common/email}" method="post" id="sendEmailForm">
         <div class="label-container">
             <label for="email">
                 <span class="label-name">이메일</span>
@@ -35,7 +35,9 @@
         <div class="flex-container">
             <input id="email" name="email" class="flex8" th:value="${user.email}" readonly/>
             <button th:unless="${user.verified}"
+                    th:text="${resend != null ? resend : '이메일 인증'}"
                     type="submit"
+                    id="sendEmailButton"
                     class="button">이메일 인증</button>
         </div>
     </form>
@@ -48,7 +50,7 @@
             </label>
         </div>
         <div class="flex-container">
-            <input type="text" name="code" id="code" class="flex8" placeholder="인증코드"/>
+            <input type="text" name="code" id="code" class="flex8" placeholder="인증코드" required/>
             <button type="submit" class="button">확인</button>
         </div>
     </form>
