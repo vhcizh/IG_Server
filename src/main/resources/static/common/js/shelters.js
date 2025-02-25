@@ -40,6 +40,7 @@ function loadFacilityTypes() {
         .then(response => response.json())
         .then(data => {
             const facilityTypeSelect = document.getElementById('facilityType');
+            facilityTypeSelect.innerHTML = '<option value="">시설 유형 선택</option>'; // 초기화
             data.forEach(type => {
                 const option = document.createElement('option');
                 option.value = type; // 시 ID
