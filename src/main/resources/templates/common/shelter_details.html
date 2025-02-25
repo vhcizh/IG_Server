@@ -27,7 +27,18 @@
                 </colgroup>
                 <tr>
                     <th class="list-title">도로명주소</th>
-                    <td th:text="${shelter.address}"></td>
+                    <td>
+                        <span th:text="${shelter.address}"></span>
+                        <a th:href="@{'https://map.kakao.com/link/to/'
+                           + ${shelter.shelterName} + ','
+                           + ${shelter.latitude} + ','
+                           + ${shelter.longitude}}"
+                           target="_blank"
+                           class="kakao-link">
+                            <span>길찾기</span>
+                        </a>
+                    </td>
+
                 </tr>
                 <tr>
                     <th class="list-title">현재인원/수용인원</th>

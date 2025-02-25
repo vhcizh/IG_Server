@@ -12,10 +12,25 @@ th, td {
     padding: 8px; /* 셀 안의 여백 */
     border: 1px solid #ccc; /* 셀 테두리 */
     text-align: left; /* 텍스트 정렬 */
+    vertical-align: middle; /* 모든 td의 텍스트를 수직 중앙 정렬 */
 }
 
-.review-avg {
 
+.kakao-link {
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    background-color: #ffdb4d;
+    border: 2px solid #ffcd00;
+}
+
+.kakao-link:hover {
+    background-color: #ffe898;
+    border: 2px solid #ffcd00;
+}
+
+.kakao-link:active {
+    background-color: #e3b200;
 }
 
 .review-container {
