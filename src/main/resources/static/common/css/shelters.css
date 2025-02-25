@@ -143,6 +143,11 @@
     background-color: #4CAF50;
 }
 
+.pagination .disabled {
+    color: #cccccc;
+    pointer-events: none;
+}
+
 .shelter_list ul {
     list-style-type: none;
     padding: 0;
