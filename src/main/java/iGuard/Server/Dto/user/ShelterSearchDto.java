@@ -15,5 +15,7 @@ public class ShelterSearchDto {
     private int page;
     private int size;
     private String sortBy;
+    private Float longitude;
+    private Float latitude;
 
 }

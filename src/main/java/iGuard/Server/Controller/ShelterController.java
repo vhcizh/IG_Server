@@ -51,6 +51,8 @@ public class ShelterController {
                 .queryParamIfPresent("allowsAccommodation", Optional.ofNullable(searchDto.getAllowsAccommodation()))
                 .queryParamIfPresent("isOpenOnHolidays", Optional.ofNullable(searchDto.getIsOpenOnHolidays()))
                 .queryParamIfPresent("sortBy", Optional.ofNullable(searchDto.getSortBy()))
+                .queryParamIfPresent("longitude", Optional.ofNullable(searchDto.getLongitude()))
+                .queryParamIfPresent("latitude", Optional.ofNullable(searchDto.getLatitude()))
                 .toUriString();
 
         model.addAttribute("searchParams", searchParams);
@@ -58,6 +60,7 @@ public class ShelterController {
         return "common/shelters";
     }
 
+    // 검색 필터용 api
     @GetMapping("/facilities")
     @ResponseBody
     public List<String> getFacilityTypes() {

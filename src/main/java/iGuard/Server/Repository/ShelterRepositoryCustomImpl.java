@@ -2,8 +2,12 @@ package iGuard.Server.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import iGuard.Server.Dto.user.ShelterDistanceDto;
 import iGuard.Server.Dto.user.ShelterSearchDto;
 import iGuard.Server.Entity.Shelter;
 import lombok.RequiredArgsConstructor;
@@ -24,19 +28,20 @@ public class ShelterRepositoryCustomImpl implements ShelterRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Shelter> search(ShelterSearchDto dto, Pageable pageable) {
+    public Page<ShelterDistanceDto> search(ShelterSearchDto dto, Pageable pageable) {
 
         // 필터 및 정렬 적용
         BooleanBuilder builder = applyFilters(dto);
         OrderSpecifier<?> orderSpecifier = applySorting(dto);
 
-        JPQLQuery<Shelter> query = queryFactory
-                .selectFrom(shelter)
+        JPQLQuery<ShelterDistanceDto> query = queryFactory
+                .select(Projections.constructor(ShelterDistanceDto.class, shelter, calculateDistance(dto)))
+                .from(shelter)
                 .where(builder)
                 .orderBy(orderSpecifier);
 
         // 페이징 적용
-        List<Shelter> content = query
+        List<ShelterDistanceDto> content = query
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -91,8 +96,20 @@ public class ShelterRepositoryCustomImpl implements ShelterRepositoryCustom {
         return switch (dto.getSortBy() != null ? dto.getSortBy() : "name") {
             case "name" -> shelter.shelterName.asc();
             case "currentUsage" -> shelter.currentOccupancy.asc();
+            case "distance" -> calculateDistance(dto).asc();
             default -> shelter.shelterName.asc();
         };
     }
+
+    // 사용자의 현재 위치와 쉼터의 위치를 비교하여 거리 계산 (단위 : m)
+    private NumberExpression<Float> calculateDistance(ShelterSearchDto dto) {
+        return Expressions.numberTemplate(
+                Float.class,
+                "function('ST_Distance_Sphere', POINT({0}, {1}), POINT({2}, {3}))",
+                dto.getLongitude(), dto.getLatitude(),
+                shelter.longitude, shelter.latitude
+        );
+    }
+
 
 }

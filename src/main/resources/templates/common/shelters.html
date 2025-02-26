@@ -14,6 +14,8 @@
         <h2>전국 무더위 쉼터</h2>
 
         <form id="filterForm" method="get" action="/common/shelters" th:object="${searchDto}">
+            <input type="hidden" th:field="*{longitude}" id="longitude"/>
+            <input type="hidden" th:field="*{latitude}" id="latitude"/>
             <!-- 필터링 섹션 -->
             <div class="filter">
 
