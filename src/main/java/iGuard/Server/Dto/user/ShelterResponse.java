@@ -20,7 +20,7 @@ public class ShelterResponse {
         ShelterResponse response = new ShelterResponse();
         response.setShelterId(shelter.getShelterId());
         response.setShelterName(shelter.getShelterName());
-        response.setCapacity(shelter.getCurrentOccupancy() + " / " + shelter.getCapacity());
+        response.setCapacity(shelter.getCapacity()+"명");
         response.setAddress(shelter.getAddress());
         response.setFanCount(shelter.getHasFan());
         response.setAirConditionerCount(shelter.getHasAirConditioner());

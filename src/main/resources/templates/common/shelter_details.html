@@ -41,20 +41,20 @@
 
                 </tr>
                 <tr>
-                    <th class="list-title">현재인원/수용인원</th>
+                    <th class="list-title">최대 수용인원</th>
                     <td th:text="${shelter.capacity}"></td>
                 </tr>
                 <tr>
                     <th class="list-title">선풍기</th>
-                    <td th:text="${shelter.fanCount}"></td>
+                    <td th:text="${shelter.fanCount}+대"></td>
                 </tr>
                 <tr>
                     <th class="list-title">에어컨</th>
-                    <td th:text="${shelter.airConditionerCount}"></td>
+                    <td th:text="${shelter.airConditionerCount}+대"></td>
                 </tr>
                 <tr>
-                    <th class="list-title">평점</th>
-                    <td th:if="${ratingAvg}" th:text="${ratingAvg}"></td>
+                    <th class="list-title">평점(평균)</th>
+                    <td th:if="${ratingAvg}" th:text="${ratingAvg}+점"></td>
                     <td th:unless="${ratingAvg}">아직 리뷰가 없습니다.</td>
                 </tr>
             </table>
