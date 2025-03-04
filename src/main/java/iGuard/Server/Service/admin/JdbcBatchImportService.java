@@ -25,6 +25,9 @@ public class JdbcBatchImportService implements CSVImportService {
 
     private static final int BATCH_SIZE = 1000;
 
+    private static final String[] SHELTER_HEADERS = {"시설유형","쉼터명칭","소재지도로명주소","사용여부","시설면적","이용가능인원수","선풍기보유현황","에어컨보유현황","야간개방","휴일개방","숙박가능여부","특이사항","관리기관","관리기관전화번호","시설유형명","위도","경도"};
+    private static final String[] PLACE_HEADERS = {"관광지명(소재지역)","위도","경도","주소"};
+
     @Override
     public Map<String, Integer> importCSVFiles(List<MultipartFile> csvFiles, String fileType) throws Exception {
         Map<String, Integer> result = new HashMap<>();
@@ -33,18 +36,20 @@ public class JdbcBatchImportService implements CSVImportService {
         for (MultipartFile file : csvFiles) {
             if (file.isEmpty()) continue;
 
-            try {
-                Map<String, Integer> fileImportResult = fileType.equals("shelter")
-                        ? importShelterCSV(file)
-                        : importPlaceCSV(file);
-
-                totalFiles++;
-                insertedCount += fileImportResult.get("inserted");
-                duplicatedCount += fileImportResult.get("duplicated");
-
-            } catch (Exception e) {
-                logger.error("CSV 파일 import 중 오류 발생: " + file.getOriginalFilename(), e);
+            // 파일 형식 검증
+            String fileName = file.getOriginalFilename();
+            if (fileName == null || !fileName.toLowerCase().endsWith(".csv")) {
+                throw new IllegalArgumentException("CSV 파일만 업로드할 수 있습니다.");
             }
+
+            Map<String, Integer> fileImportResult = fileType.equals("shelter")
+                    ? importShelterCSV(file)
+                    : importPlaceCSV(file);
+
+            totalFiles++;
+            insertedCount += fileImportResult.get("inserted");
+            duplicatedCount += fileImportResult.get("duplicated");
+
         }
 
         result.put("total", totalFiles);
@@ -58,18 +63,28 @@ public class JdbcBatchImportService implements CSVImportService {
         Map<String, Integer> result = new HashMap<>();
         int insertedCount = 0, duplicatedCount = 0;
 
-        // 기존 데이터의 unique key (이름+주소) 조회
-        Set<String> existingShelters = new HashSet<>(
-                jdbcTemplate.query(
-                        "SELECT CONCAT(shelter_name, '|', address) as unique_key FROM shelter",
-                        (rs, rowNum) -> rs.getString("unique_key")
-                )
-        );
-
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-            String[] headers = reader.readNext(); // 헤더 스킵
+            String[] headerLine = reader.readNext(); // 헤더 스킵
             List<String[]> batch = new ArrayList<>();
             String[] row;
+
+            // BOM 제거 후 헤더 비교
+            if (headerLine[0].startsWith("\uFEFF")) {
+                headerLine[0] = headerLine[0].substring(1); // BOM 제거
+            }
+
+            // 헤더 검증
+            if (headerLine == null || !Arrays.equals(headerLine, SHELTER_HEADERS)) {
+                throw new IllegalArgumentException("CSV 헤더가 올바르지 않습니다.");
+            }
+
+            // 기존 데이터의 unique key (이름+주소) 조회
+            Set<String> existingShelters = new HashSet<>(
+                    jdbcTemplate.query(
+                            "SELECT CONCAT(shelter_name, '|', address) as unique_key FROM shelter",
+                            (rs, rowNum) -> rs.getString("unique_key")
+                    )
+            );
 
             while ((row = reader.readNext()) != null) {
                 String uniqueKey = row[1] + "|" + row[2]; // 이름 + 주소
@@ -147,18 +162,28 @@ public class JdbcBatchImportService implements CSVImportService {
         Map<String, Integer> result = new HashMap<>();
         int insertedCount = 0, duplicatedCount = 0;
 
-        // 기존 데이터의 unique key (이름+주소) 조회
-        Set<String> existingPlaces = new HashSet<>(
-                jdbcTemplate.query(
-                        "SELECT CONCAT(name, '|', address) as unique_key FROM place",
-                        (rs, rowNum) -> rs.getString("unique_key")
-                )
-        );
-
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-            String[] headers = reader.readNext(); // 헤더 스킵
+            String[] headerLine = reader.readNext(); // 헤더 스킵
             List<String[]> batch = new ArrayList<>();
             String[] row;
+
+            // BOM 제거 후 헤더 비교
+            if (headerLine[0].startsWith("\uFEFF")) {
+                headerLine[0] = headerLine[0].substring(1); // BOM 제거
+            }
+
+            // 헤더 검증
+            if (headerLine == null || !Arrays.equals(headerLine, PLACE_HEADERS)) {
+                throw new IllegalArgumentException("CSV 헤더가 올바르지 않습니다.");
+            }
+
+            // 기존 데이터의 unique key (이름+주소) 조회
+            Set<String> existingPlaces = new HashSet<>(
+                    jdbcTemplate.query(
+                            "SELECT CONCAT(name, '|', address) as unique_key FROM place",
+                            (rs, rowNum) -> rs.getString("unique_key")
+                    )
+            );
 
             while ((row = reader.readNext()) != null) {
                 String uniqueKey = row[0] + "|" + row[3]; // 이름 + 주소
