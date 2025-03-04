@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean isVerified() {
+    public boolean isVerifiedEmail() {
         String id = userContextProvider.getLoginUserId();
         User user = userRepository.getById(id)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));

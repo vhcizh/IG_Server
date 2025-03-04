@@ -22,7 +22,7 @@ public interface UserService {
     void resetPassword(String userId, String email);
 
     // 이메일 인증 상태
-    boolean isVerified();
+    boolean isVerifiedEmail();
 
     // 이메일 인증
     void verifyEmail(String email);

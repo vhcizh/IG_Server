@@ -131,7 +131,12 @@ public class UserController {
     public String sendEmail(@RequestParam String email,
                             RedirectAttributes redirectAttributes) {
         try {
-            if(userService.isVerified()) {
+            if(!userService.getUser().getEmail().equals(email)) { // 이메일 조작 방지
+                redirectAttributes.addFlashAttribute("error", "올바르지 않은 접근입니다.");
+                return "redirect:/common/mypage/me";
+            }
+
+            if(userService.isVerifiedEmail()) {
                 redirectAttributes.addFlashAttribute("error", "이미 인증이 완료되었습니다.");
                 return "redirect:/common/mypage/me";
             }
