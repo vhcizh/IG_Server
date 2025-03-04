@@ -10,10 +10,8 @@
       <li><a th:href="@{/admin/shelters}">쉼터위치추천</a></li>
       <li><a th:href="@{/admin/mypage}">마이페이지</a></li>
       <li th:if="${#authentication.name != null and #authentication.name != 'anonymousUser'}">
-        <span th:text="${#authentication.name}+' 님'">username</span>
-      </li>
-      <li>
         <form method="post" th:action="@{/admin/logout}">
+          <span th:text="${#authentication.name}+' 님'">username</span>
           <button type="submit" class="logout">로그아웃</button>
         </form>
       </li>

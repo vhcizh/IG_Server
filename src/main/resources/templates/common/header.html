@@ -9,6 +9,8 @@
     <nav class="header_navbar">
         <ul>
             <li><a th:href="@{/common/home}">홈</a></li>
+            <li><a th:href="@{/common/mypage}">마이페이지</a></li>
+            <li><a th:href="@{/common/shelters}">무더위쉼터</a></li>
             <li th:if="${#authentication.name != null and #authentication.name != 'anonymousUser'}">
                 <form method="post" th:action="@{/common/logout}">
                     <span th:text="${#authentication.name}+' 님'">username</span>
@@ -20,8 +22,6 @@
                 /
                 <a th:href="@{/common/join}">회원가입</a>
             </li>
-            <li><a th:href="@{/common/mypage}">마이페이지</a></li>
-            <li><a th:href="@{/common/shelters}">무더위쉼터</a></li>
         </ul>
     </nav>
 </header>
