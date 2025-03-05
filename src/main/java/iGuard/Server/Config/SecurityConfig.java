@@ -98,8 +98,10 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .exceptionHandling((ex)->{
+                    ex.accessDeniedHandler(new CustomAccessDeniedHandler()); // 403 에러 커스텀 핸들러
+                })
+                .csrf(Customizer.withDefaults())
                 .headers(header -> header
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
