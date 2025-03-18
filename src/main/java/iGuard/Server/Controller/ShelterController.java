@@ -3,6 +3,7 @@ package iGuard.Server.Controller;
 import iGuard.Server.Dto.user.ShelterResponse;
 import iGuard.Server.Dto.user.ShelterSearchDto;
 import iGuard.Server.Service.user.ShelterService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,11 @@ public class ShelterController {
                            Model model,
                            HttpServletRequest request) {
 
+        if(searchDto.getLatitude() == null || searchDto.getLongitude() == null) {
+            searchDto.setLatitude(getCookieValue(request, "latitude"));
+            searchDto.setLongitude(getCookieValue(request, "longitude"));
+        }
+
         Page<ShelterResponse> shelterPage = shelterService.getShelters(searchDto, pageable);
 
         model.addAttribute("shelters", shelterPage.getContent());
@@ -42,7 +49,33 @@ public class ShelterController {
 
         // 페이지 버튼 클릭 시 서치 조건 유지
         // URL에 필요한 필터 값만 포함 (null 값 자동 제외)
-        String searchParams = UriComponentsBuilder.fromPath("")
+        model.addAttribute("searchParams", setSearchParams(searchDto));
+
+        return "common/shelters";
+    }
+
+    private Float getCookieValue(HttpServletRequest request, String name) {
+        if(request.getCookies() == null) return null;
+
+        Float reulst =  Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals(name))
+                .findFirst()
+                .map(Cookie::getValue)
+                .map(value -> {
+                    try {
+                        return Float.parseFloat(value);
+                    } catch (NumberFormatException e) {
+                        return null;
+                    }
+                })
+                .orElse(null);
+
+        System.out.println(name + " : " + reulst);
+        return reulst;
+    }
+
+    private String setSearchParams(ShelterSearchDto searchDto) {
+        return UriComponentsBuilder.fromPath("")
                 .queryParamIfPresent("city", Optional.ofNullable(searchDto.getCity()))
                 .queryParamIfPresent("gu", Optional.ofNullable(searchDto.getGu()))
                 .queryParamIfPresent("facilityType", Optional.ofNullable(searchDto.getFacilityType()))
@@ -54,10 +87,6 @@ public class ShelterController {
                 .queryParamIfPresent("longitude", Optional.ofNullable(searchDto.getLongitude()))
                 .queryParamIfPresent("latitude", Optional.ofNullable(searchDto.getLatitude()))
                 .toUriString();
-
-        model.addAttribute("searchParams", searchParams);
-
-        return "common/shelters";
     }
 
     // 검색 필터용 api

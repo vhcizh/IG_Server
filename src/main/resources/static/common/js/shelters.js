@@ -144,5 +144,5 @@ document.addEventListener('DOMContentLoaded', function () {
     loadFacilityTypes();
     checkboxColorChange();
     addClickEventEachShelterList();
-    setLocation();
+    // setLocation();
 });

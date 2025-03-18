@@ -93,7 +93,7 @@ public class ShelterRepositoryCustomImpl implements ShelterRepositoryCustom {
     }
 
     private OrderSpecifier<?> applySorting(ShelterSearchDto dto) {
-        return switch (dto.getSortBy() != null ? dto.getSortBy() : "name") {
+        return switch (dto.getSortBy() != null ? dto.getSortBy() : "distance") {
             case "name" -> shelter.shelterName.asc();
             case "currentUsage" -> shelter.currentOccupancy.asc();
             case "distance" -> calculateDistance(dto).asc();
