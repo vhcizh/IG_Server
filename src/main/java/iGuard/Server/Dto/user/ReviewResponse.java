@@ -1,5 +1,6 @@
 package iGuard.Server.Dto.user;
 
+import iGuard.Server.Entity.Review;
 import iGuard.Server.Enum.ShelterPreference;
 import lombok.*;
 
@@ -17,11 +18,11 @@ public class ReviewResponse {
     private List<ShelterPreference> categories;
     private String createdAt;
 
-    public ReviewResponse(Integer reviewId, String shelterName, Double rating, LocalDateTime createdAt) {
-        this.reviewId = reviewId;
-        this.shelterName = shelterName;
-        this.rating = rating;
-        this.createdAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    public ReviewResponse(Review review) {
+        this.reviewId = review.getReviewId();
+        this.shelterName = review.getShelter().getShelterName();
+        this.rating = review.getRating();
+        this.createdAt = review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
 }

@@ -112,7 +112,10 @@ public class VisitedShelterServiceImpl implements VisitedShelterService {
         String id = userContextProvider.getLoginUserId();
         User user = userRepository.getById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        List<ReviewResponse> reviewList = reviewRepository.findReviewListByUserId(user.getUserid());
+        List<ReviewResponse> reviewList = reviewRepository.findAllByUser(user)
+                .stream()
+                .map(ReviewResponse::new)
+                .toList();
 
         for (ReviewResponse review : reviewList) {
             List<ShelterPreference> categories = reviewCategoryRepository.findCategoriesByReviewId(review.getReviewId());

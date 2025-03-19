@@ -74,18 +74,6 @@ public class Shelter {
     private Float longitude;
 
     @OneToMany(mappedBy = "shelter")
-    private List<VisitedShelter> visitedShelters;
-
-    @OneToMany(mappedBy = "shelter")
-    private List<RecommendedShelter> recommendedShelters;
-
-    @OneToMany(mappedBy = "shelter")
-    private List<Feedback> feedbacks;
-
-    @OneToMany(mappedBy = "shelter")
-    private List<Review> reviews;
-
-    @OneToMany(mappedBy = "shelter")
     @JsonIgnore
     @JsonManagedReference
     private List<Job> jobs;

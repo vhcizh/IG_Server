@@ -50,13 +50,13 @@
                 // 마커를 지도에 표시합니다
                 marker.setMap(map);
 
-                // // 주변 장소 보기 버튼
-                // var placesButton = document.createElement('button');
-                // placesButton.textContent = '주변 장소 보기';
-                // placesButton.onclick = function() {
-                //     window.location.href = '/common/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
-                // };
-                // document.getElementById('button-container').appendChild(placesButton);
+                // 주변 장소 보기 버튼
+                var placesButton = document.createElement('button');
+                placesButton.textContent = '주변 장소 보기';
+                placesButton.onclick = function() {
+                    window.location.href = '/common/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
+                };
+                document.getElementById('button-container').appendChild(placesButton);
 
                 // 무더위 쉼터
                 var sheltersButton = document.createElement('button');

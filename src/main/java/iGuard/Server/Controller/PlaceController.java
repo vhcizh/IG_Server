@@ -25,10 +25,6 @@ public class PlaceController {
     private PlaceService ps;
     @Autowired
     private ShelterService ss;
-    @Autowired
-    private ToiletService ts;
-    @Autowired
-    private ShadeService sh;
 
     @GetMapping("")
     public String getPlaceNear(
@@ -39,14 +35,9 @@ public class PlaceController {
     ) {
         List<Place> places = ps.getPlacesNear(lat, lon, range);
         List<Shelter> shelters = ss.getNearestShelters(lat,lon);
-        List<Toilet> nearbyToilets = ts.getNearestToilets(lat, lon);
-        List<Shade> nearbyShades = sh.getNearestShades(lat, lon);
-
 
         model.addAttribute("places", places);
         model.addAttribute("shelters",shelters);
-        model.addAttribute("toilets", nearbyToilets);
-        model.addAttribute("shades", nearbyShades);
 
         return "common/places";
     }
