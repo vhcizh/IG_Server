@@ -11,7 +11,8 @@
 <body>
     <div th:replace="common/header :: header"></div>
     <div class="main-container">
-        <h1>주변 시설</h1>
+        <img src="/images/shimturo_text_logo.png" alt="쉼터로 로고" id="shimturoLogo"/>
+        <h3>내 주변 쉼터와 명소를 확인하세요</h3>
 
         <!-- 팝업 배경 -->
         <div id="popup-overlay" class="popup-overlay"></div>
@@ -22,9 +23,12 @@
                 <button style="pointer-events: none; cursor: default;">내 주변 조회</button>
                 를 클릭해주세요.</p>
         </div>
-        <div id="mapHelp"></div>
         <div class="map-container">
             <div id="map"></div>
+            <div id="tip">
+                <div><img src="/images/marker_skyblue.png" class="marker" alt="skyblue marker">쉼터</div>
+                <div><img src="/images/marker_red.png" class="marker" alt="red marker">명소</div>
+            </div>
         </div>
 
         <div id="button-container">
@@ -82,8 +86,8 @@
         const map = new kakao.maps.Map(mapContainer, mapOption);
 
         const markerImages = {
-            places: new kakao.maps.MarkerImage('/images/marker_red.png', new kakao.maps.Size(30, 32)),
-            shelters: new kakao.maps.MarkerImage('/images/marker_skyblue.png', new kakao.maps.Size(40, 40))
+            places: new kakao.maps.MarkerImage('/images/marker_red.png', new kakao.maps.Size(28, 32)),
+            shelters: new kakao.maps.MarkerImage('/images/marker_skyblue.png', new kakao.maps.Size(25, 30))
         };
 
         function addMarkers(data, markerType) {
@@ -100,7 +104,7 @@
                     const encodedName = encodeURIComponent(item.name || item.shelterName); // 주소 인코딩
                     const url = `https://map.kakao.com/link/to/${encodedName},${item.latitude},${item.longitude}`; // 카카오 길찾기 URL
                     const infoWindow = new kakao.maps.InfoWindow({
-                        content: `<div class="marker">
+                        content: `<div class="marker-container">
                                     <span class="marker-name">${name}</span>
                                     <a class="kakao-link" href="${url}" target="_blank">
                                         <span>길찾기</span>
