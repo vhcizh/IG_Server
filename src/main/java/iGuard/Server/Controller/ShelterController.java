@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -117,7 +119,11 @@ public class ShelterController {
     // 쉼터 상세 조회
     @GetMapping("/{shelterId}")
     public String getShelterDetails(@PathVariable Integer shelterId, Model model) {
-        model.addAttribute("shelter", shelterService.getShelterById(shelterId));
+        ShelterResponse shelter = shelterService.getShelterById(shelterId);
+        String encodedName = URLEncoder.encode(shelter.getShelterName(), StandardCharsets.UTF_8);
+
+        model.addAttribute("shelter", shelter);
+        model.addAttribute("encodedName", encodedName);
         model.addAttribute("ratingAvg", shelterService.getShelterReviewRatingAvg(shelterId));
         model.addAttribute("categoryCounts", shelterService.getShelterReviewCategoryCount(shelterId));
         return "common/shelter_details"; // 뷰 이름

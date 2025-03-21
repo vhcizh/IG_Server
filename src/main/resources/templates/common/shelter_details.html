@@ -30,7 +30,7 @@
                     <td>
                         <span th:text="${shelter.address}"></span>
                         <a th:href="@{'https://map.kakao.com/link/to/'
-                           + ${shelter.shelterName} + ','
+                           + ${encodedName} + ','
                            + ${shelter.latitude} + ','
                            + ${shelter.longitude}}"
                            target="_blank"
