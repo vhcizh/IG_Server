@@ -30,7 +30,7 @@ public class JobUserController {
 
     @GetMapping("/map")
     public String showJobsNearUser(@RequestParam float lat, @RequestParam float lon,  @RequestParam(defaultValue = "1") Integer userId, Model model) {
-        List<Shelter> shelters = ss.getNearestShelters(lat, lon);
+        List<Shelter> shelters = ss.getNearestShelters(lat, lon, 5);
         model.addAttribute("shelters", shelters);
         model.addAttribute("userId", userId); // 유저 아이디를 뷰로 전달
         return "jobUserMap"; // 사용자용 일자리 조회 뷰

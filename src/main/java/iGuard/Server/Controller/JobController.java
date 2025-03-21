@@ -32,7 +32,7 @@ public class JobController {
 
     @GetMapping
     public String showJobmap(@RequestParam float lat, @RequestParam float lon,Model model){
-        List<Shelter> shelters = ss.getNearestShelters(lat,lon);
+        List<Shelter> shelters = ss.getNearestShelters(lat,lon, 5);
 
         model.addAttribute("shelters",shelters);
 

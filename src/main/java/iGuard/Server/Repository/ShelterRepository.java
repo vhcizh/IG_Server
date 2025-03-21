@@ -12,14 +12,13 @@ import java.util.Optional;
 @Repository
 public interface ShelterRepository extends JpaRepository<Shelter, Integer>, ShelterRepositoryCustom {
 
-    @Query(value = "SELECT s.*, " +
-            "(6371 * acos(cos(radians(:latitude)) * cos(radians(s.latitude)) * " +
-            "cos(radians(s.longitude) - radians(:longitude)) + " +
-            "sin(radians(:latitude)) * sin(radians(s.latitude)))) AS distance " +
-            "FROM shelter s " +
-            "ORDER BY distance ASC " +
-            "LIMIT 5", nativeQuery = true)
-    List<Shelter> findNearestShelters(@Param("latitude") double latitude, @Param("longitude") double longitude);
+    @Query(value = "SELECT s FROM Shelter s WHERE " +
+            "(6371 * acos(cos(radians(:lat)) * cos(radians(s.latitude)) * " +
+            "cos(radians(s.longitude) - radians(:lon)) + sin(radians(:lat)) * " +
+            "sin(radians(s.latitude)))) < :range")
+    List<Shelter> findSheltersWithinRange(@Param("lat") float lat,
+                                      @Param("lon") float lon,
+                                      @Param("range") float range);
 
     @Query("SELECT DISTINCT s.facilityTypeName FROM Shelter s")
     List<String> findDistinctFacilityTypes();

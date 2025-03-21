@@ -13,7 +13,8 @@ public class ShelterService {
     @Autowired
     private ShelterRepository shelterRepository;
 
-    public List<Shelter> getNearestShelters(double latitude, double longitude) {
-        return shelterRepository.findNearestShelters(latitude, longitude);
+    public List<Shelter> getNearestShelters(float lat, float lon, float range) {
+
+        return shelterRepository.findSheltersWithinRange(lat, lon, range);
     }
 }

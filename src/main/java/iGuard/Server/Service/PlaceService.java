@@ -29,13 +29,8 @@ public class PlaceService {
     }
 
     public List<Place> getPlacesNear(float lat, float lon, float range) {
-        // 위도와 경도의 범위 계산
-        float latMin = lat - range;
-        float latMax = lat + range;
-        float lonMin = lon - range;
-        float lonMax = lon + range;
 
         // 장소를 데이터베이스에서 조회
-        return placeRepository.findByLatitudeBetweenAndLongitudeBetween(latMin, latMax, lonMin, lonMax);
+        return placeRepository.findPlacesWithinRange(lat, lon, range);
     }
 }
