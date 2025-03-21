@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>홈페이지</title>
+    <title>쉼터로</title>
     <!-- 카카오 지도 API를 불러오는 스크립트 -->
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9df70d710c18198fb4886dcf36d7f3c5"></script>
     <link rel="stylesheet" th:href="@{/common/css/home.css}" />
@@ -11,70 +11,139 @@
 <body>
     <div th:replace="common/header :: header"></div>
     <div class="main-container">
-        <h1>나의 위치</h1>
+        <h1>주변 시설</h1>
 
+        <!-- 팝업 배경 -->
+        <div id="popup-overlay" class="popup-overlay"></div>
+        <!-- 팝업 메시지 -->
+        <div id="popup-message" class="popup">
+            <p>위치 권한을 허용하지 않으면 쉼터로의 일부 기능을 사용할 수 없습니다.</p>
+            <p><span style="color: red; font-weight: bold; font-size: large">위치 권한을 허용</span>하고
+                <button style="pointer-events: none; cursor: default;">내 주변 조회</button>
+                를 클릭해주세요.</p>
+        </div>
+        <div id="mapHelp"></div>
         <div class="map-container">
             <div id="map"></div>
         </div>
 
         <div id="button-container">
+            <button id="location-button">내 주변 조회</button>
         </div>
     </div>
 
     <div th:replace="common/footer :: footer"></div>
+
 </body>
-<script type="text/javascript">
-    // 페이지가 로드될 때 실행될 함수
-    function initMap() {
-        // Geolocation API를 사용하여 현재 위치를 가져옵니다
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var lat = position.coords.latitude;
-                var lon = position.coords.longitude;
+<script th:inline="javascript">
+    const places = /*[[${places}]]*/ [];
+    const shelters = /*[[${shelters}]]*/ [];
 
-                // 지도 생성 및 표시
-                var mapContainer = document.getElementById('map'); // 지도를 표시할 div
-                var mapOption = {
-                    center: new kakao.maps.LatLng(lat, lon), // 사용자의 현재 위치로 중심 설정
-                    level: 3 // 지도의 확대 레벨
-                };
+    document.addEventListener("DOMContentLoaded", function() {
+        const button = document.getElementById("location-button");
 
-                // 지도를 생성합니다
-                var map = new kakao.maps.Map(mapContainer, mapOption);
+        // 위치정보 없을 경우 기본장소 표시 (서울시청)
+        if (!latitude || !longitude) {
+            initMap(37.566, 126.978);
+            initButton();
 
-                // 마커를 생성합니다
-                var marker = new kakao.maps.Marker({
-                    position: new kakao.maps.LatLng(lat, lon) // 마커의 위치
-                });
+            button.addEventListener("click", function() {
+                const popup = document.getElementById("popup-message");
+                const overlay = document.getElementById("popup-overlay");
+                getLocation()
+                    .then(() => location.reload())
+                    .catch(() => {
+                        // 팝업 표시
+                        popup.style.display = "block";
+                        overlay.style.display = "block";
 
-                // 마커를 지도에 표시합니다
-                marker.setMap(map);
-
-                // 주변 장소 보기 버튼
-                var placesButton = document.createElement('button');
-                placesButton.textContent = '주변 장소 보기';
-                placesButton.onclick = function() {
-                    window.location.href = '/common/places?lat=' + lat + '&lon=' + lon + '&range=0.01'; // 원하는 범위 설정
-                };
-                document.getElementById('button-container').appendChild(placesButton);
-
-                // 무더위 쉼터
-                var sheltersButton = document.createElement('button');
-                sheltersButton.textContent = '전국 쉼터 찾기';
-                sheltersButton.onclick = function() {
-                    window.location.href = '/common/shelters'; // 원하는 범위 설정
-                };
-                document.getElementById('button-container').appendChild(sheltersButton);
-
-            }, function(error) {
-                alert('위치 정보를 가져올 수 없습니다. 에러 코드: ' + error.code);
+                        // 1초 후 팝업 자동 닫기
+                        setTimeout(() => {
+                            popup.style.display = "none";
+                            overlay.style.display = "none";
+                        }, 2000);
+                    });
             });
         } else {
-            alert('이 브라우저는 Geolocation API를 지원하지 않습니다.');
+            button.style.display = 'none';
+            initMap(latitude, longitude);
+            initButton();
         }
+
+    });
+
+    function initMap(lat, lon) {
+        // 지도 생성
+        const mapContainer = document.getElementById('map');
+        const mapOption = {
+            center: new kakao.maps.LatLng(lat, lon),
+            level: 5
+        };
+        const map = new kakao.maps.Map(mapContainer, mapOption);
+
+        const markerImages = {
+            places: new kakao.maps.MarkerImage('/images/marker_red.png', new kakao.maps.Size(30, 32)),
+            shelters: new kakao.maps.MarkerImage('/images/marker_skyblue.png', new kakao.maps.Size(40, 40))
+        };
+
+        function addMarkers(data, markerType) {
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(item => {
+                    const name = `${item.name || item.shelterName}`;
+                    const position = new kakao.maps.LatLng(item.latitude, item.longitude);
+                    const marker = new kakao.maps.Marker({
+                        position: position,
+                        map: map,
+                        image: markerImages[markerType]
+                    });
+
+                    const encodedName = encodeURIComponent(item.name || item.shelterName); // 주소 인코딩
+                    const url = `https://map.kakao.com/link/to/${encodedName},${item.latitude},${item.longitude}`; // 카카오 길찾기 URL
+                    const infoWindow = new kakao.maps.InfoWindow({
+                        content: `<div class="marker">
+                                    <span class="marker-name">${name}</span>
+                                    <a class="kakao-link" href="${url}" target="_blank">
+                                        <span>길찾기</span>
+                                    </a>
+                                </div>`,
+                        disableAutoPan: false // 마커 클릭 시 자동으로 중앙으로 이동
+                    });
+
+                    let isOpen = false;
+                    // 마커 클릭 이벤트 추가
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        if(isOpen) {
+                            infoWindow.close();
+                        } else {
+                            infoWindow.open(map, marker);
+                        }
+                        isOpen = !isOpen;
+                    });
+
+                    // 마커 외부 클릭 시 InfoWindow 닫기
+                    kakao.maps.event.addListener(map, 'click', function () {
+                        infoWindow.close(); // InfoWindow 닫기
+                    });
+                });
+            } else {
+                console.log('데이터가 없습니다.');
+            }
+        }
+
+        // 마커 생성
+        addMarkers(places, 'places');
+        addMarkers(shelters, 'shelters');
     }
 
-    // 페이지 로드 후 지도 초기화
-    window.onload = initMap;
+    function initButton() {
+        // 무더위 쉼터
+        const sheltersButton = document.createElement('button');
+        sheltersButton.textContent = '전국 쉼터 찾기';
+        sheltersButton.onclick = function() {
+            window.location.href = '/common/shelters'; // 원하는 범위 설정
+        };
+        document.getElementById('button-container').appendChild(sheltersButton);
+    }
+
 </script>
 </html>
