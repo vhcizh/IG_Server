@@ -65,7 +65,7 @@ function checkboxColorChange() {
             }
 
             // 라벨 클릭 이벤트 (체크박스 클릭 제외)
-            label.addEventListener('click', function (e) {
+            label.addEventListener('click', function () {
                 checkbox.checked = !checkbox.checked;
                 label.classList.toggle('active');
             });
@@ -117,32 +117,10 @@ function initKakaoMap(lat, lng) {
     marker.setMap(map);
 }
 
-function setLocation() {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    // URI에 `lat`, `lng` 값이 없을 경우에만 실행
-    if (urlParams.has("latitude") || urlParams.has("longitude")) return;
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            document.getElementById("longitude").value = position.coords.longitude;
-            document.getElementById("latitude").value = position.coords.latitude;
-
-            document.getElementById("filterForm").submit();
-        }, function(error) {
-            console.error("위치 정보를 가져오는 데 실패했습니다.", error);
-        });
-    } else {
-        console.error("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
-    }
-}
-
-
 // 페이지 로드 완료 후 실행
 document.addEventListener('DOMContentLoaded', function () {
     loadGus();
     loadFacilityTypes();
     checkboxColorChange();
     addClickEventEachShelterList();
-    // setLocation();
 });

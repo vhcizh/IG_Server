@@ -18,9 +18,7 @@
         <!-- 팝업 메시지 -->
         <div id="popup-message" class="popup">
             <p>위치 권한을 허용하지 않으면 쉼터로의 일부 기능을 사용할 수 없습니다.</p>
-            <p><span style="color: red; font-weight: bold; font-size: large">위치 권한을 허용</span>하고
-                <button style="pointer-events: none; cursor: default;">내 주변 조회</button>
-                를 클릭해주세요.</p>
+            <p><span style="color: red; font-weight: bold; font-size: large">위치 권한을 허용</span>해주세요</p>
         </div>
         <div class="map-container">
             <div id="map"></div>
@@ -28,10 +26,14 @@
                 <div><img src="/images/marker_skyblue.png" class="marker" alt="skyblue marker">쉼터</div>
                 <div><img src="/images/marker_red.png" class="marker" alt="red marker">명소</div>
             </div>
+            <div id="target">
+                <button id="target-button">
+                    <img src="/images/target.png" alt="내 위치로 이동" />
+                </button>
+            </div>
         </div>
 
         <div id="button-container">
-            <button id="location-button">내 주변 조회</button>
         </div>
     </div>
 
@@ -43,35 +45,43 @@
     const shelters = /*[[${shelters}]]*/ [];
 
     document.addEventListener("DOMContentLoaded", function() {
-        const button = document.getElementById("location-button");
-
+        const popup = document.getElementById("popup-message");
+        const overlay = document.getElementById("popup-overlay");
+        const target = document.getElementById("target-button");
         // 위치정보 없을 경우 기본장소 표시 (서울시청)
         if (!latitude || !longitude) {
             initMap(37.566, 126.978);
-            initButton();
-
-            button.addEventListener("click", function() {
-                const popup = document.getElementById("popup-message");
-                const overlay = document.getElementById("popup-overlay");
-                getLocation()
-                    .then(() => location.reload())
-                    .catch(() => {
-                        // 팝업 표시
-                        popup.style.display = "block";
-                        overlay.style.display = "block";
-
-                        // 1초 후 팝업 자동 닫기
-                        setTimeout(() => {
-                            popup.style.display = "none";
-                            overlay.style.display = "none";
-                        }, 2000);
-                    });
-            });
         } else {
-            button.style.display = 'none';
             initMap(latitude, longitude);
-            initButton();
         }
+        initButton();
+
+        target.addEventListener("click", () => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // 쿠키 갱신
+                    setCookie("latitude", lat, 1); // 1일 동안 유지
+                    setCookie("longitude", lon, 1);
+
+                    // 위치 쿠키가 갱신되었으므로 리로드
+                    location.reload();
+                },
+                () => {
+                    // 팝업 표시
+                    popup.style.display = "block";
+                    overlay.style.display = "block";
+
+                    // 1초 후 팝업 자동 닫기
+                    setTimeout(() => {
+                        popup.style.display = "none";
+                        overlay.style.display = "none";
+                    }, 2000);
+                }
+            );
+        });
 
     });
 
