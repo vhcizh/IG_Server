@@ -1,19 +1,20 @@
 package iGuard.Server.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.benmanes.caffeine.cache.Cache;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+
+    private final Cache<String, String> verificationCodeCache;
 
     private static final int CODE_LENGTH = 6; // 일련번호 길이
     private static final String SENDER_EMAIL = "sybz0748@gmail.com";
@@ -21,7 +22,6 @@ public class EmailService {
     private static final String TEMP_PASSWORD_SUBJECT = "쉼터로 임시 비밀번호";
     private static final String VERIFICATION_TEMPLATE = "당신의 인증 코드는 : %s";
     private static final String TEMP_PASSWORD_TEMPLATE = "임시 비밀번호 : %s";
-    private final Map<String, String> verificationCodes = new HashMap<>(); // 이메일과 일련번호 매핑
     
     public String generateVerificationCode() { //일련번호 생성
         SecureRandom random = new SecureRandom();
@@ -33,11 +33,11 @@ public class EmailService {
         String content = String.format(VERIFICATION_TEMPLATE, code);
         SimpleMailMessage message = writeEmail(to, VERIFICATION_SUBJECT, content);
         mailSender.send(message);
-        verificationCodes.put(to, code);
+        verificationCodeCache.put(to, code);
     }
 
     public boolean verifyCode(String email, String code) {
-        String storedCode = verificationCodes.get(email);
+        String storedCode = verificationCodeCache.getIfPresent(email);
         return storedCode != null && storedCode.equals(code);
     }
 
