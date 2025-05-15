@@ -48,11 +48,19 @@
         const popup = document.getElementById("popup-message");
         const overlay = document.getElementById("popup-overlay");
         const target = document.getElementById("target-button");
-        // 위치정보 없을 경우 기본장소 표시 (서울시청)
-        if (!latitude || !longitude) {
-            initMap(37.566, 126.978);
-        } else {
+
+        // 위치정보가 존재할 경우
+        if(latitude && longitude) {
             initMap(latitude, longitude);
+        } else if ("geolocation" in navigator) { // 위치정보가 없을 경우
+            getLocation()
+                .then(()=>location.reload())
+                .catch((error)=> {
+                    initMap(37.566, 126.978);
+                    console.warn("위치 정보를 가져오지 못했습니다.", error);
+                });
+        } else { // 위치정보가 없고 geolocation api 가 없을 경우
+            initMap(37.566, 126.978);
         }
         initButton();
 

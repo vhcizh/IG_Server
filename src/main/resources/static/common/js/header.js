@@ -1,15 +1,6 @@
 const latitude = getCookie("latitude");
 const longitude = getCookie("longitude");
 
-document.addEventListener("DOMContentLoaded", function() {
-    if (!latitude || !longitude) {
-        getLocation()
-            .then(() => console.log("위치 정보 설정 완료"))
-            .catch(() => console.warn("위치 정보를 가져오지 못했습니다."));
-
-    }
-});
-
 function getLocation() {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -22,7 +13,7 @@ function getLocation() {
             resolve({lat, lon}); // 성공하면 좌표 반환
 
         }, function (error) {
-            console.error("위치 정보를 가져올 수 없습니다.", error);
+            console.warn("위치 정보를 가져올 수 없습니다.", error);
             reject(error); // 실패 시 에러 반환
         });
     });
