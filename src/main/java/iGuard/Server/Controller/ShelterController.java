@@ -3,7 +3,6 @@ package iGuard.Server.Controller;
 import iGuard.Server.Dto.user.ShelterResponse;
 import iGuard.Server.Dto.user.ShelterSearchDto;
 import iGuard.Server.Service.user.ShelterService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,12 +28,15 @@ public class ShelterController {
     @GetMapping("")
     public String shelters(@ModelAttribute ShelterSearchDto searchDto,
                            @PageableDefault(sort = "shelterName") Pageable pageable,
+                           @CookieValue(value = "latitude", defaultValue = "37.566") Float latitude,
+                           @CookieValue(value = "longitude", defaultValue = "126.978") Float longitude,
                            Model model,
                            HttpServletRequest request) {
 
-        if(searchDto.getLatitude() == null || searchDto.getLongitude() == null) {
-            searchDto.setLatitude(getCookieValue(request, "latitude"));
-            searchDto.setLongitude(getCookieValue(request, "longitude"));
+        // 검색 DTO에 위치 정보가 없으면 쿠키에서 가져온 값(또는 기본값)으로 설정
+        if (searchDto.getLatitude() == null || searchDto.getLongitude() == null) {
+            searchDto.setLatitude(latitude);
+            searchDto.setLongitude(longitude);
         }
 
         Page<ShelterResponse> shelterPage = shelterService.getShelters(searchDto, pageable);
@@ -54,26 +55,6 @@ public class ShelterController {
         model.addAttribute("searchParams", setSearchParams(searchDto));
 
         return "common/shelters";
-    }
-
-    private Float getCookieValue(HttpServletRequest request, String name) {
-        if(request.getCookies() == null) return null;
-
-        Float reulst =  Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals(name))
-                .findFirst()
-                .map(Cookie::getValue)
-                .map(value -> {
-                    try {
-                        return Float.parseFloat(value);
-                    } catch (NumberFormatException e) {
-                        return null;
-                    }
-                })
-                .orElse(null);
-
-        System.out.println(name + " : " + reulst);
-        return reulst;
     }
 
     private String setSearchParams(ShelterSearchDto searchDto) {
