@@ -1,11 +1,11 @@
 package iGuard.Server.Service.admin;
 
-import iGuard.Server.Entity.Shelter;
+import iGuard.Server.Dto.ShelterCsvRowDto;
+import iGuard.Server.Repository.ShelterRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +20,8 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class JdbcBatchImportService implements CSVImportService {
+
+    private final ShelterRepository shelterRepository;
     private final JdbcTemplate jdbcTemplate;
     private final Logger logger = LoggerFactory.getLogger(JdbcBatchImportService.class);
 
@@ -65,7 +67,7 @@ public class JdbcBatchImportService implements CSVImportService {
 
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String[] headerLine = reader.readNext(); // 헤더 스킵
-            List<String[]> batch = new ArrayList<>();
+            List<ShelterCsvRowDto> batch = new ArrayList<>();
             String[] row;
 
             // BOM 제거 후 헤더 비교
@@ -90,12 +92,12 @@ public class JdbcBatchImportService implements CSVImportService {
                 String uniqueKey = row[1] + "|" + row[2]; // 이름 + 주소
 
                 if (!existingShelters.contains(uniqueKey)) {
-                    batch.add(row);
+                    batch.add(ShelterCsvRowDto.from(row));
                     existingShelters.add(uniqueKey);
                     insertedCount++;
 
                     if (batch.size() >= BATCH_SIZE) {
-                        batchInsertShelters(batch);
+                        shelterRepository.batchInsertShelters(batch);
                         batch.clear();
                     }
                 } else {
@@ -105,7 +107,7 @@ public class JdbcBatchImportService implements CSVImportService {
 
             // 남은 데이터 처리
             if (!batch.isEmpty()) {
-                batchInsertShelters(batch);
+                shelterRepository.batchInsertShelters(batch);
             }
         }
 
@@ -113,48 +115,6 @@ public class JdbcBatchImportService implements CSVImportService {
         result.put("duplicated", duplicatedCount);
         return result;
     }
-
-    private void batchInsertShelters(List<String[]> rows) {
-        jdbcTemplate.batchUpdate(
-                """
-                INSERT INTO shelter (
-                    facility_type, shelter_name, address, is_available, area, 
-                    capacity, has_fan, has_air_conditioner, is_open_at_night, 
-                    is_open_on_holidays, allows_accommodation, notes, 
-                    management_agency, management_agency_phone, facility_type_name, 
-                    latitude, longitude
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                new org.springframework.jdbc.core.BatchPreparedStatementSetter() {
-                    @Override
-                    public void setValues(PreparedStatement ps, int i) throws java.sql.SQLException {
-                        String[] row = rows.get(i);
-                        ps.setString(1, row[0]);  // facility_type
-                        ps.setString(2, row[1]);  // shelter_name
-                        ps.setString(3, row[2]);  // address
-                        ps.setBoolean(4, "y".equalsIgnoreCase(row[3]));  // is_available
-                        ps.setDouble(5, Double.parseDouble(row[4]));  // area
-                        ps.setInt(6, Integer.parseInt(row[5]));  // capacity
-                        ps.setInt(7, Integer.parseInt(row[6]));  // has_fan
-                        ps.setInt(8, Integer.parseInt(row[7]));  // has_air_conditioner
-                        ps.setBoolean(9, "y".equalsIgnoreCase(row[8]));  // is_open_at_night
-                        ps.setBoolean(10, "y".equalsIgnoreCase(row[9]));  // is_open_on_holidays
-                        ps.setBoolean(11, "y".equalsIgnoreCase(row[10])); // allows_accommodation
-                        ps.setString(12, row[11]); // notes
-                        ps.setString(13, row[12]); // management_agency
-                        ps.setString(14, row[13]); // management_agency_phone
-                        ps.setString(15, row[14]); // facility_type_name
-                        ps.setFloat(16, Float.parseFloat(row[15])); // latitude
-                        ps.setFloat(17, Float.parseFloat(row[16])); // longitude
-                    }
-
-                    @Override
-                    public int getBatchSize() {
-                        return rows.size();
-                    }
-                }
-            );
-        }
 
 
     private Map<String, Integer> importPlaceCSV(MultipartFile file) throws Exception {

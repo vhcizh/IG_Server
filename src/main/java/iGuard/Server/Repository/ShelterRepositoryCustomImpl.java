@@ -7,16 +7,20 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import iGuard.Server.Dto.ShelterCsvRowDto;
 import iGuard.Server.Dto.user.ShelterDistanceDto;
 import iGuard.Server.Dto.user.ShelterSearchDto;
-import iGuard.Server.Entity.Shelter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import static iGuard.Server.Entity.QShelter.shelter;
@@ -26,6 +30,17 @@ import static iGuard.Server.Entity.QShelter.shelter;
 public class ShelterRepositoryCustomImpl implements ShelterRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final JdbcTemplate jdbcTemplate;
+    private static final String INSERT_SHELTER_SQL = """
+        INSERT INTO shelter (
+            facility_type, shelter_name, address, is_available, area, 
+            capacity, has_fan, has_air_conditioner, is_open_at_night, 
+            is_open_on_holidays, allows_accommodation, notes, 
+            management_agency, management_agency_phone, facility_type_name, 
+            latitude, longitude
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """;
+
 
     @Override
     public Page<ShelterDistanceDto> search(ShelterSearchDto dto, Pageable pageable) {
@@ -111,5 +126,39 @@ public class ShelterRepositoryCustomImpl implements ShelterRepositoryCustom {
         );
     }
 
+    @Override
+    public void batchInsertShelters(List<ShelterCsvRowDto> rows) {
+        jdbcTemplate.batchUpdate(
+                INSERT_SHELTER_SQL,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ShelterCsvRowDto dto = rows.get(i);
+                        ps.setString(1, dto.facilityType());
+                        ps.setString(2, dto.shelterName());
+                        ps.setString(3, dto.address());
+                        ps.setBoolean(4, dto.isAvailable());
+                        ps.setDouble(5, dto.area());
+                        ps.setInt(6, dto.capacity());
+                        ps.setInt(7, dto.hasFan());
+                        ps.setInt(8, dto.hasAirConditioner());
+                        ps.setBoolean(9, dto.isOpenAtNight());
+                        ps.setBoolean(10, dto.isOpenOnHolidays());
+                        ps.setBoolean(11, dto.allowsAccommodation());
+                        ps.setString(12, dto.notes());
+                        ps.setString(13, dto.managementAgency());
+                        ps.setString(14, dto.managementAgencyPhone());
+                        ps.setString(15, dto.facilityTypeName());
+                        ps.setFloat(16, dto.latitude());
+                        ps.setFloat(17, dto.latitude());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return rows.size();
+                    }
+                }
+        );
+    }
 
 }
