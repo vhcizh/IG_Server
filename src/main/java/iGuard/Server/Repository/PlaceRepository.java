@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PlaceRepository  extends JpaRepository<Place,String> {
+public interface PlaceRepository  extends JpaRepository<Place,String>, PlaceRepositoryCustom {
     @Query(value = "SELECT p FROM Place p WHERE " +
             "(6371 * acos(cos(radians(:lat)) * cos(radians(p.latitude)) * " +
             "cos(radians(p.longitude) - radians(:lon)) + sin(radians(:lat)) * " +
