@@ -12,4 +12,8 @@ public class CsvImportSummaryResult {
         this.combinedResult = combinedResult;
     }
 
+    public String formatSummary() {
+        return "총 %d개 파일 중 %s".formatted(totalFiles, combinedResult.formatSummary());
+    }
+
 }

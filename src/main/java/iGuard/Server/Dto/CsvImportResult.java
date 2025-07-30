@@ -18,4 +18,8 @@ public class CsvImportResult {
                 this.duplicatedCount + other.duplicatedCount
         );
     }
+
+    public String formatSummary() {
+        return "%d개 저장, %d개 중복됨".formatted(insertedCount, duplicatedCount);
+    }
 }

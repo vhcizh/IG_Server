@@ -30,13 +30,8 @@ public class CSVController {
             RedirectAttributes redirectAttributes
     ) {
         try {
-
-            CsvImportSummaryResult importResult = csvImportService.importCSVFiles(csvFiles, fileType);
-
             redirectAttributes.addFlashAttribute("successMessage",
-                    "총 " + importResult.getTotalFiles() + "개 중 " +
-                                        importResult.getCombinedResult().getInsertedCount() + "개 저장, " +
-                                        importResult.getCombinedResult().getDuplicatedCount() + "개 중복 스킵");
+                    csvImportService.importCSVFiles(csvFiles, fileType).formatSummary());
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "파일 업로드 중 오류 발생: " + e.getMessage());
