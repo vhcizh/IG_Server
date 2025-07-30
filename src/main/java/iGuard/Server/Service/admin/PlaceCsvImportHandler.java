@@ -3,7 +3,6 @@ package iGuard.Server.Service.admin;
 import iGuard.Server.Dto.PlaceCsvRowDto;
 import iGuard.Server.Repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import java.util.*;
 
@@ -11,7 +10,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PlaceCsvImportHandler extends AbstractCsvImportHandler<PlaceCsvRowDto> {
 
-    private final JdbcTemplate jdbcTemplate;
     private final PlaceRepository placeRepository;
     private static final String[] PLACE_HEADERS = {"관광지명(소재지역)","위도","경도","주소"};
 
@@ -27,10 +25,7 @@ public class PlaceCsvImportHandler extends AbstractCsvImportHandler<PlaceCsvRowD
 
     @Override
     protected Set<String> getExistingKeys() {
-        return new HashSet<>(jdbcTemplate.query(
-                "SELECT CONCAT(name, '|', address) as unique_key FROM place",
-                (rs, rowNum) -> rs.getString("unique_key")
-        ));
+        return new HashSet<>(placeRepository.findAllUniqueKeys());
     }
 
     @Override

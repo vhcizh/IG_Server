@@ -32,6 +32,8 @@ public interface ShelterRepository extends JpaRepository<Shelter, Integer>, Shel
     @Query("SELECT DISTINCT SUBSTRING(s.address, LOCATE(' ', s.address, LOCATE(' ', s.address) + 1) + 1) FROM Shelter s WHERE s.address LIKE ?1 AND s.address LIKE '%동'")
     List<String> findDongsByCityAndGu(String addressPattern);
 
+    @Query("SELECT CONCAT(s.shelterName, '|', s.address) FROM Shelter s")
+    List<String> findAllUniqueKeys();
 
     boolean existsByShelterNameAndAddress(String shelterName, String address);
 

@@ -16,6 +16,9 @@ public interface PlaceRepository  extends JpaRepository<Place,String>, PlaceRepo
                                       @Param("lon") float lon,
                                       @Param("range") float range);
 
+    @Query("SELECT DISTINCT CONCAT(p.name, '|', p.address) FROM Place p")
+    List<String> findAllUniqueKeys();
+
 
     boolean existsByNameAndAddress(String name, String address);
 }

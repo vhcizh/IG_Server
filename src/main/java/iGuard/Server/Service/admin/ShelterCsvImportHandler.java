@@ -3,7 +3,6 @@ package iGuard.Server.Service.admin;
 import iGuard.Server.Dto.ShelterCsvRowDto;
 import iGuard.Server.Repository.ShelterRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import java.util.*;
 
@@ -11,7 +10,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ShelterCsvImportHandler extends AbstractCsvImportHandler<ShelterCsvRowDto> {
 
-    private final JdbcTemplate jdbcTemplate;
     private final ShelterRepository shelterRepository;
     private static final String[] SHELTER_HEADERS = {"시설유형","쉼터명칭","소재지도로명주소","사용여부","시설면적","이용가능인원수","선풍기보유현황","에어컨보유현황","야간개방","휴일개방","숙박가능여부","특이사항","관리기관","관리기관전화번호","시설유형명","위도","경도"};
 
@@ -27,10 +25,7 @@ public class ShelterCsvImportHandler extends AbstractCsvImportHandler<ShelterCsv
 
     @Override
     protected Set<String> getExistingKeys() {
-        return new HashSet<>(jdbcTemplate.query(
-                "SELECT CONCAT(shelter_name, '|', address) FROM shelter",
-                (rs, rowNum) -> rs.getString(1)
-        ));
+        return new HashSet<>(shelterRepository.findAllUniqueKeys());
     }
 
     @Override
