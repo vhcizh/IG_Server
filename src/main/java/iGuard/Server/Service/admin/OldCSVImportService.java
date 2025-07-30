@@ -1,12 +1,12 @@
 package iGuard.Server.Service.admin;
 
 import com.opencsv.CSVReader;
+import iGuard.Server.Dto.CsvImportResult;
+import iGuard.Server.Dto.CsvImportSummaryResult;
 import iGuard.Server.Entity.Place;
 import iGuard.Server.Entity.Shelter;
 import iGuard.Server.Repository.PlaceRepository;
 import iGuard.Server.Repository.ShelterRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,8 +27,7 @@ public class OldCSVImportService implements CSVImportService {
     private final PlaceRepository placeRepository;
     private final Logger logger = LoggerFactory.getLogger(OldCSVImportService.class);
 
-    public Map<String, Integer> importCSVFiles(List<MultipartFile> csvFiles, String fileType) throws Exception {
-        Map<String, Integer> result = new HashMap<>();
+    public CsvImportSummaryResult importCSVFiles(List<MultipartFile> csvFiles, String fileType) throws Exception {
         int totalFiles = 0, insertedCount = 0, duplicatedCount = 0;
 
         for (MultipartFile file : csvFiles) {
@@ -48,10 +47,7 @@ public class OldCSVImportService implements CSVImportService {
             }
         }
 
-        result.put("total", totalFiles);
-        result.put("inserted", insertedCount);
-        result.put("duplicated", duplicatedCount);
-        return result;
+        return new CsvImportSummaryResult(totalFiles, new CsvImportResult(insertedCount, duplicatedCount));
     }
 
 

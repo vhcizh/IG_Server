@@ -1,6 +1,8 @@
 package iGuard.Server.Service.admin;
 
 import com.opencsv.CSVReader;
+import iGuard.Server.Dto.CsvImportResult;
+import iGuard.Server.Dto.CsvImportSummaryResult;
 import iGuard.Server.Entity.Place;
 import iGuard.Server.Entity.Shelter;
 import iGuard.Server.Repository.PlaceRepository;
@@ -28,8 +30,7 @@ public class HibernateBatchImportService implements CSVImportService {
     private final EntityManager entityManager;
 
     @Override
-    public Map<String, Integer> importCSVFiles(List<MultipartFile> csvFiles, String fileType) throws Exception {
-        Map<String, Integer> result = new HashMap<>();
+    public CsvImportSummaryResult importCSVFiles(List<MultipartFile> csvFiles, String fileType) throws Exception {
         int totalFiles = 0, insertedCount = 0, duplicatedCount = 0;
 
         for (MultipartFile file : csvFiles) {
@@ -49,10 +50,7 @@ public class HibernateBatchImportService implements CSVImportService {
             }
         }
 
-        result.put("total", totalFiles);
-        result.put("inserted", insertedCount);
-        result.put("duplicated", duplicatedCount);
-        return result;
+        return new CsvImportSummaryResult(totalFiles, new CsvImportResult(insertedCount, duplicatedCount));
     }
 
 
