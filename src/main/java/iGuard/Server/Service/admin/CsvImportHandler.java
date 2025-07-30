@@ -1,13 +1,12 @@
 package iGuard.Server.Service.admin;
 
+import iGuard.Server.Dto.CsvImportResult;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Map;
 
 public interface CsvImportHandler {
 
     String getFileType();
 
-    Map<String, Integer> importCSV(MultipartFile file) throws Exception;
+    CsvImportResult importCSV(MultipartFile file) throws Exception;
 
 }

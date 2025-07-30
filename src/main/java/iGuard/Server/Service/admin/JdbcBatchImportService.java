@@ -1,5 +1,7 @@
 package iGuard.Server.Service.admin;
 
+import iGuard.Server.Dto.CsvImportResult;
+import iGuard.Server.Dto.CsvImportSummaryResult;
 import iGuard.Server.Dto.ShelterCsvRowDto;
 import iGuard.Server.Repository.ShelterRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,9 @@ public class JdbcBatchImportService implements CSVImportService {
     private final CsvImportDispatcher dispatcher;
 
     @Override
-    public Map<String, Integer> importCSVFiles(List<MultipartFile> csvFiles, String fileType) throws Exception {
-        Map<String, Integer> result = new HashMap<>();
-        int totalFiles = 0, insertedCount = 0, duplicatedCount = 0;
+    public CsvImportSummaryResult importCSVFiles(List<MultipartFile> csvFiles, String fileType) throws Exception {
+        int totalFiles = 0;
+        CsvImportResult totalResult = new CsvImportResult(0, 0);
 
         CsvImportHandler handler = dispatcher.getHandler(fileType);
 
@@ -34,18 +36,14 @@ public class JdbcBatchImportService implements CSVImportService {
 
             validateFile(file);
 
-            Map<String, Integer> fileImportResult = handler.importCSV(file);
+            CsvImportResult fileImportResult = handler.importCSV(file);
 
             totalFiles++;
-            insertedCount += fileImportResult.getOrDefault("inserted", 0);
-            duplicatedCount += fileImportResult.getOrDefault("duplicated", 0);
+            totalResult = totalResult.add(fileImportResult);
 
         }
 
-        result.put("total", totalFiles);
-        result.put("inserted", insertedCount);
-        result.put("duplicated", duplicatedCount);
-        return result;
+        return new CsvImportSummaryResult(totalFiles, totalResult);
     }
 
     private void validateFile(MultipartFile file) {

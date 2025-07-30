@@ -1,6 +1,7 @@
 package iGuard.Server.Service.admin;
 
 import com.opencsv.CSVReader;
+import iGuard.Server.Dto.CsvImportResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStreamReader;
@@ -12,7 +13,7 @@ public abstract class AbstractCsvImportHandler<T> implements CsvImportHandler {
     private static final int BATCH_SIZE = 1000;
 
     @Override
-    public Map<String, Integer> importCSV(MultipartFile file) throws Exception {
+    public CsvImportResult importCSV(MultipartFile file) throws Exception {
         Map<String, Integer> result = new HashMap<>();
         int insertedCount = 0, duplicatedCount = 0;
         List<T> batch = new ArrayList<>();
@@ -47,9 +48,7 @@ public abstract class AbstractCsvImportHandler<T> implements CsvImportHandler {
             }
         }
 
-        result.put("inserted", insertedCount);
-        result.put("duplicated", duplicatedCount);
-        return result;
+        return new CsvImportResult(insertedCount, duplicatedCount);
     }
 
     private String[] stripBOM(String[] headers) {
