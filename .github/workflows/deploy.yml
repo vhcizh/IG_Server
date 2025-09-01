@@ -11,15 +11,6 @@ jobs:
 
     env: # 전역 환경변수 설정
       SPRING_PROFILES_ACTIVE: prod  # application-prod.properties 활성화
-      DB_URL: ${{ secrets.DB_URL }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      MAIL_HOST: ${{ secrets.MAIL_HOST }}
-      MAIL_PORT: ${{ secrets.MAIL_PORT }}
-      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
     steps:
       # 1. 코드 체크아웃 (GitHub 저장소에서 코드 가져오기)
@@ -45,23 +36,16 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ env.DOCKER_HUB_USERNAME }}
-          password: ${{ env.DOCKER_HUB_PASSWORD }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       # 6. Docker 이미지 빌드 및 푸시
       - name: Build and push Docker image
-        run: |
-          docker build --build-arg SPRING_PROFILES_ACTIVE="${{ env.SPRING_PROFILES_ACTIVE }}" \
-                 --build-arg DB_URL="${{ env.DB_URL }}" \
-                 --build-arg DB_USERNAME="${{ env.DB_USERNAME }}" \
-                 --build-arg DB_PASSWORD="${{ env.DB_PASSWORD }}" \
-                 --build-arg MAIL_HOST="${{ env.MAIL_HOST }}" \
-                 --build-arg MAIL_PORT="${{ env.MAIL_PORT }}" \
-                 --build-arg MAIL_USERNAME="${{ env.MAIL_USERNAME }}" \
-                 --build-arg MAIL_PASSWORD="${{ env.MAIL_PASSWORD }}" \
-                 --build-arg DOCKER_HUB_USERNAME="${{ env.DOCKER_HUB_USERNAME }}" \
-                 -t ${{ env.DOCKER_HUB_USERNAME }}/shimturo:latest .
-          docker push ${{ env.DOCKER_HUB_USERNAME }}/shimturo:latest
+        uses: docker/build-push-action@v5
+        with:
+          context: . # 현재 디렉토리 기준으로 이미지 생성
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
 
       # 7. EC2에 배포
       - name: Deploy on EC2
@@ -73,12 +57,20 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
           script: |
             echo "Pulling Docker image..."
-            docker pull ganadi/shimturo:latest
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
             echo "Stopping existing container (if any)..."
             docker stop shimturo || true
             docker rm shimturo || true
-            echo "Running the container..."
+            echo "Running the container with secrets..."
             docker run -d --name shimturo -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=${{ env.SPRING_PROFILES_ACTIVE }} \
+              -e DB_URL=${{ secrets.DB_URL }} \
+              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -e MAIL_HOST=${{ secrets.MAIL_HOST }} \
+              -e MAIL_PORT=${{ secrets.MAIL_PORT }} \
+              -e MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
+              -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
               --network host \
               --restart unless-stopped \
-              ganadi/shimturo:latest
+              ${{ secrets.DOCKER_HUB_USERNAME }}/shimturo:latest
